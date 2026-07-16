@@ -465,7 +465,6 @@ const UserDashboard = () => {
                 {memberDetails ? `${memberDetails.direct_referrals?.length || 0}/${memberDetails.direct_referrals?.length || 0}` : '—'}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <span className="material-icons text-base md:text-lg">person</span>
                 <Typography variant="caption">Direct</Typography>
               </Box>
             </Box>
@@ -482,8 +481,7 @@ const UserDashboard = () => {
                 {memberDetails ? `${memberDetails.total_team || 0}/${memberDetails.total_team || 0}` : '—'}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <span className="material-icons text-base md:text-lg">groups</span>
-                <Typography variant="caption">Team</Typography>
+                <Typography variant="caption">Total</Typography>
               </Box>
             </Box>
           </Box>
@@ -668,10 +666,16 @@ const UserDashboard = () => {
         }}
       >
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Benefits" />
+          <DashboardCard amount={loading ? 0 : directBenefitsAmount} title="Direct Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : directBenefitsAmount} title="Direct Benefits" />
+          <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Income" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard amount={0} title="Daily ROI" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard amount={0} title="Global Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />

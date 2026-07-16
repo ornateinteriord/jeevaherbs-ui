@@ -66,9 +66,24 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: true,
     subItems: [
       {
+        name: "Direct Income",
+        path: "/user/earnings/direct-benefits",
+        icon: <TrendingUpIcon />,
+      },
+      {
         name: "Level Income",
         path: "/user/earnings/level-benefits",
         icon: <TrendingUpIcon />,
+      },
+      {
+        name: "Daily ROI",
+        path: "/user/earnings/daily-roi",
+        icon: <PaymentsIcon />,
+      },
+      {
+        name: "Global Income",
+        path: "/user/earnings/global-income",
+        icon: <ShowChartIcon />,
       },
       {
         name: "Daily Payouts",
