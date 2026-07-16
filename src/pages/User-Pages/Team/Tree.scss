@@ -1,0 +1,113 @@
+.tree-container {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+.tree-user-profile {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 0;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .tree-user-avatar {
+    width: 70px !important;
+    height: 70px !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .sponsor-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+
+
+
+  .sponsor-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    margin-bottom: 0.5rem;
+    background-color: var(--secondary-color);
+  }
+
+  .SponsoredProfile{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 800;
+    gap: 40px;
+    cursor: pointer;
+  }
+  .sponsor-popup-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .sponsor-popup {
+    position: relative;
+    background-color: white;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    min-width: 300px;
+    height: 320px;
+    border: 1px solid black;
+  }
+
+  .accordion-summary {
+    background-color: #2c8786!important;
+    color: #fff !important;
+    .MuiSvgIcon-root {
+      color: #fff;
+    }
+  }
+
+  @media(max-width: 821px) {
+    .tree-container{
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 50px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .sponsor-popup-container {
+      display: flex;
+      justify-content: center; 
+      align-items: center; 
+      width: 100%;
+     
+    }
+  
+    .sponsor-popup {
+      min-width: 250px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+   
+    .SponsoredProfile {
+      display: flex;
+      flex-wrap: nowrap; 
+      overflow-x: auto;  
+     justify-content: flex-start;
+      gap: 16px;
+      padding: 10px;
+      max-width: 100%;
+      -ms-overflow-style: none; 
+      scrollbar-width: none; 
+    }
+  
+    /* Hides scrollbar for WebKit browsers (Chrome, Safari) */
+    .SponsoredProfile::-webkit-scrollbar {
+      display: none;
+    }
+    
+}
+  
+ 
+  

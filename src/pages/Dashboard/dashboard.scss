@@ -1,0 +1,33 @@
+// Dashboard specific styles
+.dashboard-header {
+  background-color: #2c8786 !important;
+}
+
+.dashboard-card {
+  background: linear-gradient(to right, #2c8786, #3da1a0) !important;
+  color: white !important;
+}
+
+.dashboard-statistics-title {
+  color: #2c8786 !important;
+  font-weight: bold !important;
+}
+
+// Button styles using the new color
+.btn-dashboard {
+  background-color: #2c8786 !important;
+  color: white !important;
+  
+  &:hover {
+    background-color: #236d6c !important;
+  }
+}
+
+.btn-dashboard-outline {
+  border: 1px solid #2c8786 !important;
+  color: #2c8786 !important;
+  
+  &:hover {
+    background-color: rgba(44, 135, 134, 0.1) !important;
+  }
+}

@@ -1,0 +1,25 @@
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .filter-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column !important;
+    align-items: center;
+    gap: 1rem;
+
+    .filter-actions {
+      flex-direction: column;
+      width: 100%;
+
+      button {
+        width: fit-content;
+      }
+    }
+  }
+}

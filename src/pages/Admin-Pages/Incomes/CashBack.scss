@@ -1,0 +1,26 @@
+.Cashback-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .Cashback-content{
+    display: flex;
+    gap: 1rem;
+  }
+  @media (max-width: 768px){
+    flex-direction: column !important;
+    align-items: center;
+    gap: 1rem;
+
+    .Cashback-content{
+        flex-direction: column;
+        width: 100%;
+     .member-id{
+      width: 74% !important;
+     }
+        button {
+          width: fit-content;
+        }
+    }
+  }
+}

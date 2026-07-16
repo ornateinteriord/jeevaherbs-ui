@@ -1,0 +1,27 @@
+.addnews-container{
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-bottom: 0%;
+    justify-content: center;
+}
+.date-label{
+    font-size: 15px;
+    color: rgb(109, 108, 108);
+}
+.date-container{
+    width: 100% ;
+}
+
+@media (max-width: 480px){
+    .addnews-container{
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 10px;
+        margin-left: 15px;
+        gap: 10px;
+    }
+    
+    
+}

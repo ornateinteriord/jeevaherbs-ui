@@ -1,0 +1,66 @@
+.logout-btn {
+     padding:0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    svg {
+      width: 30px;  
+      height: 30px; 
+    }
+  }
+
+  .admin-panel-container{
+    display: flex;
+    justify-content: flex-end;
+  }
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .admin-panel-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 8px;
+    cursor: pointer;
+    margin-right: 8px;
+  }
+  .custom-menu {
+    background-color: white !important;
+    color: black;
+    border-radius: 8px;
+    border-top-left-radius: 0%;
+    border-top-right-radius: 0%;
+    width: 200px;
+    padding: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: absolute !important;
+    top: 64px !important; 
+
+    &.open {
+      animation: slideUp 0.5s ease-in-out forwards;
+    }
+  }
+
+  .admin-panel-menuitems{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px){
+    .use-avatar{
+      display: none;
+    }
+    .custom-menu {
+      top: 57px !important; 
+    }
+  }
