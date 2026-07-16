@@ -76,7 +76,7 @@ const Navbar = ({
             style={{ marginLeft: "12px", cursor: "pointer" }}
             onClick={() => navigate("/")}
           >
-            VGK-Club
+            JeevaHerbs
           </Typography>
 
           <div style={{ marginLeft: "auto" }}>
