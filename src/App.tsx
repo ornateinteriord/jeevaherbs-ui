@@ -37,7 +37,7 @@ import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 
 
 // public pages
-// const Home = lazy(() => import("./pages/Home/Home"));
+const Home = lazy(() => import("./pages/Home/Home"));
 const Login = lazy(() => import("./pages/Auth/Login"));
 const Register = lazy(() => import("./pages/Auth/Register"));
 const RecoverPassword = lazy(() => import("./pages/Auth/RecoverPassword"))
@@ -219,7 +219,7 @@ const RoutesProvider = ({
         >
           <Routes>
             {/* public routes */}
-            <Route index element={<Login />} />
+            <Route index element={<Home />} />
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

@@ -191,6 +191,16 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <TrendingUpIcon />,
       },
       {
+        name: "Daily ROI",
+        path: "/admin/income/daily-roi",
+        icon: <PaymentsIcon />,
+      },
+      {
+        name: "Global Income",
+        path: "/admin/income/global-income",
+        icon: <ShowChartIcon />,
+      },
+      {
         name: "Daily Payout Records",
         path: "/admin/income/daily-payouts",
         icon: <PaymentsIcon />,

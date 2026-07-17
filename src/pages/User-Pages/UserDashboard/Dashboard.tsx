@@ -252,6 +252,8 @@ const UserDashboard = () => {
   const totalEarningsAmount = walletOverview?.totalBenefits || 0;
   const totalWithdrawsAmount = walletOverview?.totalWithdrawal || 0;
   const walletBalanceAmount = walletOverview?.balance || 0;
+  const dailyRoiAmount = walletOverview?.dailyRoi || 0;
+  const globalIncomeAmount = walletOverview?.globalIncome || 0;
 
   const tableData = [
     {
@@ -672,10 +674,10 @@ const UserDashboard = () => {
           <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={0} title="Daily ROI" />
+          <DashboardCard amount={loading ? 0 : dailyRoiAmount} title="Daily ROI" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={0} title="Global Income" />
+          <DashboardCard amount={loading ? 0 : globalIncomeAmount} title="Global Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />

@@ -4,12 +4,14 @@ import "./navbar.scss";
 import {
   AppBar,
   Avatar,
+  Box,
   Divider,
   IconButton,
   Menu as MuiMenu,
   MenuItem,
   Toolbar,
   Typography,
+  Button as MuiButton,
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/use-auth";
@@ -17,6 +19,7 @@ import TokenService from "../../api/token/tokenService";
 import { deepOrange } from "@mui/material/colors";
 import {  useState } from "react";
 import { useGetMemberDetails } from "../../api/Memeber";
+import logoImg from "../../assets/jeeva_logo.png";
 //ok
 
 const Navbar = ({
@@ -62,22 +65,53 @@ const Navbar = ({
         className="navbar"
         style={{
           background: "#2c8786",
+          height: "65px",
+          justifyContent: "center"
         }}
       >
-        <Toolbar className="navbar-toolbar">
+        <Toolbar className="navbar-toolbar" sx={{ display: "flex", justifyContent: "space-between", width: "100%", px: { xs: 1, sm: 2 }, minHeight: "60px !important", position: "relative" }}>
           {!shouldHide && (
-            <IconButton onClick={() => toggelSideBar()}>
+            <IconButton 
+              onClick={() => toggelSideBar()}
+              sx={{ display: { xs: 'flex', md: 'none' } }}
+            >
               <Menu color="white" />
             </IconButton>
           )}
-          <Typography
-            variant="h4"
-            className="navbar-title"
-            style={{ marginLeft: "12px", cursor: "pointer" }}
+          <Box 
+            sx={{ display: 'flex', alignItems: 'center', cursor: "pointer" }} 
             onClick={() => navigate("/")}
           >
-            JeevaHerbs
-          </Typography>
+            <Box
+              component="img"
+              src={logoImg}
+              alt="JeevaHerbs Logo"
+              sx={{ height: { xs: 70, md: 80 }, width: "auto", objectFit: "contain" }}
+            />
+          </Box>
+          
+          {!isLoggedIn && (
+            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 4, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+              <Typography 
+                onClick={() => {
+                  if (location.pathname !== "/") navigate("/");
+                  setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                }} 
+                sx={{ color: "white", cursor: "pointer", fontWeight: 700, fontSize: "16px", "&:hover": { color: "#4ade80" } }}
+              >
+                About Us
+              </Typography>
+              <Typography 
+                onClick={() => {
+                  if (location.pathname !== "/") navigate("/");
+                  setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                }} 
+                sx={{ color: "white", cursor: "pointer", fontWeight: 700, fontSize: "16px", "&:hover": { color: "#4ade80" } }}
+              >
+                Contact Us
+              </Typography>
+            </Box>
+          )}
 
           <div style={{ marginLeft: "auto" }}>
             {isLoggedIn ? (
@@ -119,7 +153,26 @@ const Navbar = ({
                 )}
               </div>
             ) : (
-              <div></div>
+              <div style={{ display: "flex", gap: "12px", marginRight: "16px", alignItems: "center" }}>
+                <MuiButton
+                  variant="outlined"
+                  onClick={() => navigate("/login")}
+                  sx={{ 
+                    borderColor: "white", 
+                    color: "white", 
+                    fontWeight: "bold",
+                    borderRadius: "20px",
+                    px: { xs: 1.5, sm: 3 },
+                    fontSize: { xs: "0.8rem", sm: "0.9rem" },
+                    "&:hover": {
+                      backgroundColor: "rgba(255,255,255,0.1)",
+                      borderColor: "white"
+                    }
+                  }}
+                >
+                  Login
+                </MuiButton>
+              </div>
             )}
           </div>
         </Toolbar>

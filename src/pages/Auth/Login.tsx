@@ -11,9 +11,12 @@ import {
   InputAdornment,
   Checkbox,
   FormControlLabel,
+  IconButton,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useLoginMutation } from "../../api/Auth";
 import Footer from "../../components/Footer/Footer";
 
@@ -23,10 +26,17 @@ const Login = () => {
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("rememberedUsername");
-    if (savedUsername) {
+    const savedPassword = localStorage.getItem("rememberedPassword");
+    if (savedUsername && savedPassword) {
+      setFormData({ username: savedUsername, password: savedPassword });
+      setRememberMe(true);
+    } else if (savedUsername) {
       setFormData((prev) => ({ ...prev, username: savedUsername }));
       setRememberMe(true);
     }
@@ -47,8 +57,10 @@ const Login = () => {
     e.preventDefault();
     if (rememberMe) {
       localStorage.setItem("rememberedUsername", formData.username);
+      localStorage.setItem("rememberedPassword", formData.password);
     } else {
       localStorage.removeItem("rememberedUsername");
+      localStorage.removeItem("rememberedPassword");
     }
     mutate(formData);
   };
@@ -87,7 +99,7 @@ const Login = () => {
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   autoComplete="current-password"
                   value={formData.password}
@@ -96,6 +108,17 @@ const Login = () => {
                     startAdornment: (
                       <InputAdornment position="start">
                         <LockIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
                       </InputAdornment>
                     ),
                   }}

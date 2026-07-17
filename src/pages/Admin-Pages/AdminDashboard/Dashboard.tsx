@@ -67,19 +67,7 @@ const pendingMembers = members.filter((member: any) =>
           py: { xs: 6, md: 0 }
         }}
       >
-        <Box 
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            bgcolor: '#2c8786',
-            zIndex: 20,
-            pointerEvents: 'none',
-            maskImage: 'radial-gradient(transparent,white)'
-          }} 
-        />
-        
+
         <Box 
           sx={{
             display: 'flex',
