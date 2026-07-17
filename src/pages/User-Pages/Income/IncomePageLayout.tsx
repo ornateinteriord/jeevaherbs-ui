@@ -56,12 +56,13 @@ const IncomePageLayout: React.FC<IncomePageLayoutProps> = ({ title, balanceLabel
       
       if (filterTypes.length > 0) {
         specificTransactions = transactions.filter((tx: any) => {
-          const type = tx.transaction_type?.toLowerCase() || '';
-          const desc = tx.description?.toLowerCase() || '';
+          const type = tx.transaction_type?.toLowerCase().trim() || '';
+          const desc = tx.description?.toLowerCase().trim() || '';
           
-          return filterTypes.some(filter => 
-            type.includes(filter.toLowerCase()) || desc.includes(filter.toLowerCase())
-          );
+          return filterTypes.some(filter => {
+            const f = filter.toLowerCase().trim();
+            return type === f || desc === f;
+          });
         });
       }
 

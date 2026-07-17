@@ -206,7 +206,17 @@ export const PendingMembers = () => {
   const { mutate: updateMemberStatus, isPending: isActivating } = useUpdateMemberStatus();
 
   const handleActivateClick = (memberId: string) => {
-    updateMemberStatus({ memberId, status: 'active' });
+    updateMemberStatus(
+      { memberId, status: 'active' },
+      {
+        onSuccess: () => {
+          toast.success('Member activated successfully!');
+        },
+        onError: () => {
+          toast.error('Failed to activate member.');
+        }
+      }
+    );
   };
 
   return (
