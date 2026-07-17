@@ -10,6 +10,7 @@ interface DashboardCardProps {
   type?: 'default' | 'loan';
   dueAmount?: string | number;
   onRepay?: () => void;
+  onClick?: () => void;
   isRepayEnabled?: boolean;
   alreadyRepaidToday?: boolean;
 }
@@ -22,6 +23,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   type = 'default',
   dueAmount = 0,
   onRepay,
+  onClick,
   isRepayEnabled = false,
   alreadyRepaidToday = false
 }) => {
@@ -152,6 +154,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 
   return (
     <Card
+      onClick={onRepay || onClick}
       sx={{
         background: 'linear-gradient(to right, #2c8786, #3da1a0)',
         color: '#fff',
@@ -164,6 +167,12 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         minHeight: { xs: '120px', sm: '160px' },
         width: '100%',
         flexDirection: { xs: 'row', sm: 'row' },
+        cursor: (onRepay || onClick) ? 'pointer' : 'default',
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        '&:hover': (onRepay || onClick) ? {
+          transform: 'translateY(-4px)',
+          boxShadow: 6,
+        } : {},
       }}
     >
       <Box

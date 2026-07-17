@@ -1,6 +1,6 @@
 // components/UserDashboard.tsx
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -43,6 +43,7 @@ import { toast } from 'react-toastify';
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [claimDialogOpen, setClaimDialogOpen] = useState(false);
   const [repaymentDialogOpen, setRepaymentDialogOpen] = useState(false);
@@ -668,25 +669,25 @@ const UserDashboard = () => {
         }}
       >
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : directBenefitsAmount} title="Direct Income" />
+          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Income" />
+          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : dailyRoiAmount} title="Daily ROI" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Daily ROI" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : globalIncomeAmount} title="Global Income" />
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Global Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
+          <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" />
+          <DashboardCard onClick={() => navigate('/user/withdrawals')} amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
+          <DashboardCard onClick={() => navigate('/user/transactions')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
         </Grid>
 
         {isLoanApproved && (
@@ -977,6 +978,7 @@ const UserDashboard = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
 
       {/* Member Statistics */}
       <Box sx={{ mt: 10, p: 4, borderRadius: 2, boxShadow: 2 }}>

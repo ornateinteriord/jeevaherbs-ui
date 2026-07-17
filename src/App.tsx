@@ -25,6 +25,12 @@ import {
   UsedPackages,
 } from "./pages/Admin-Pages/Packages/Packages";
 import KYCApproval from "./pages/Admin-Pages/KYCApproval/KYCApproval";
+import DirectIncome from "./pages/User-Pages/Income/DirectIncome";
+import LevelIncome from "./pages/User-Pages/Income/LevelIncome";
+import DailyROI from "./pages/User-Pages/Income/DailyROI";
+import GlobalIncome from "./pages/User-Pages/Income/GlobalIncome";
+import TotalEarnings from "./pages/User-Pages/Income/TotalEarnings";
+import TotalWithdrawals from "./pages/User-Pages/Income/TotalWithdrawals";
 import Tree from "./pages/User-Pages/Team/Tree";
 import Team from "./pages/User-Pages/Team/Team";
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
@@ -316,6 +322,13 @@ const RoutesProvider = ({
 
             <Route element={<ProtectedRoute allowedRoles={["USER"]} />}>
               <Route path="/user/dashboard" element={<UserDashboard />} />
+              <Route path="/user/income/direct" element={<DirectIncome />} />
+              <Route path="/user/income/level" element={<LevelIncome />} />
+              <Route path="/user/income/daily-roi" element={<DailyROI />} />
+              <Route path="/user/income/global" element={<GlobalIncome />} />
+              <Route path="/user/earnings" element={<TotalEarnings />} />
+              <Route path="/user/withdrawals" element={<TotalWithdrawals />} />
+              
               {/* user account routes */}
               <Route path="/user/account/profile" element={<UserProfile />} />
               <Route path="/user/account/kyc" element={<UserKYC />} />
