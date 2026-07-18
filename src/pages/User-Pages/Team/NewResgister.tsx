@@ -574,6 +574,7 @@ const NewResgister: React.FC = () => {
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
                   <MenuItem value="5000">5000 INR Package</MenuItem>
+                  <MenuItem value="1">1 INR Test </MenuItem>
                 </TextField>
 
               </form>
