@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-
+  MenuItem
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
@@ -33,6 +33,10 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import ExploreIcon from "@mui/icons-material/Explore";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
+import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
+// @ts-ignore
+import { load } from "@cashfreepayments/cashfree-js";
+import axios from "axios";
 
 import "./Register.scss";
 import { useGetSponserRef, useSignupMutation } from "../../api/Auth";
@@ -59,6 +63,8 @@ const Register = () => {
     district: "",
     city: "",
     taluk: "",
+    paymentMode: "offline",
+    package_value: "",
   });
   
   const [isChecked, setIsChecked] = useState(false);
@@ -69,6 +75,7 @@ const Register = () => {
     memberId: '',
     password: ''
   });
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   
   const { 
     data: sponsorData,
@@ -191,28 +198,76 @@ const Register = () => {
 
     try {
       // Create the final data object with the required structure
+      setPaymentDialogOpen(true);
+    } catch (error) {
+      console.error("Registration validation failed:", error);
+      setErrorMessage("Registration failed. Please try again.");
+    }
+  };
+
+  const confirmRegistration = () => {
+    try {
       const finalData = {
-        sponsor_id: formData.Sponsor_code,  // Using Sponsor_code as sponsor_id
+        sponsor_id: formData.Sponsor_code,
         Sponsor_code: formData.Sponsor_code,
         Sponsor_name: formData.Sponsor_name,
-        ...formData // Spread all other form data
+        ...formData 
       };
 
       mutate(finalData, {
-        onSuccess: (response) => {
+        onSuccess: async (response) => {
           if (response.success) {
             setRegistrationData({
               memberId: response.user.Member_id, 
               password: formData.password
             });
-            setSuccessDialogOpen(true);
+
+            if (formData.paymentMode === 'online') {
+              try {
+                const cashfree = await load({ mode: "sandbox" });
+                const orderResponse = await axios.post('http://localhost:5051/api/payment/create-order', {
+                  amount: formData.package_value,
+                  customer: {
+                    customer_id: response.user.Member_id,
+                    customer_name: formData.Name,
+                    customer_email: formData.email,
+                    customer_phone: formData.mobileno,
+                  }
+                });
+
+                if (orderResponse.data.payment_session_id) {
+                  let checkoutOptions = {
+                    paymentSessionId: orderResponse.data.payment_session_id,
+                    redirectTarget: "_modal",
+                  };
+
+                  cashfree.checkout(checkoutOptions).then((result: any) => {
+                    if (result.error) {
+                      setErrorMessage("Payment failed or cancelled. Please try again.");
+                    } else if (result.redirect) {
+                      console.log("Payment will be redirected");
+                    } else if (result.paymentDetails) {
+                      console.log("Payment successful!");
+                    }
+                    setPaymentDialogOpen(false);
+                    setSuccessDialogOpen(true);
+                  });
+                }
+              } catch (error) {
+                console.error("Payment initiation failed:", error);
+                setErrorMessage("Failed to initiate payment. Please contact support.");
+              }
+            } else {
+              setPaymentDialogOpen(false);
+              setSuccessDialogOpen(true);
+            }
           }
         },
         onError: (error) => {
           setErrorMessage(error.response?.data?.message || "Registration failed");
+          setPaymentDialogOpen(false);
         }
       });
-
     } catch (error) {
       console.error("Registration failed:", error);
       setErrorMessage("Registration failed. Please try again.");
@@ -681,6 +736,32 @@ const Register = () => {
                   </FormHelperText>
                 )}
                 
+                <TextField
+                  select
+                  label="Select Package"
+                  name="package_value"
+                  value={formData.package_value}
+                  onChange={(e) => handleChange({ target: { name: 'package_value', value: e.target.value } } as any)}
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CardGiftcardIcon sx={{ color: '#2c8786' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      '&:hover fieldset': { borderColor: '#2c8786' },
+                      '&.Mui-focused fieldset': { borderColor: '#2c8786' }
+                    }
+                  }}
+                >
+                  <MenuItem value="" disabled><em>Select Package</em></MenuItem>
+                  <MenuItem value="5000">5000 INR Package</MenuItem>
+                </TextField>
+                
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -745,6 +826,129 @@ const Register = () => {
             </Typography>
           </CardContent>
         </Card>
+
+        {/* Payment Dialog */}
+        <Dialog
+          open={paymentDialogOpen}
+          onClose={() => setPaymentDialogOpen(false)}
+          aria-labelledby="payment-dialog"
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle 
+            id="payment-dialog"
+            sx={{ 
+              backgroundColor: '#2c8786', 
+              color: 'white',
+              textAlign: 'center'
+            }}
+          >
+            Select Payment Method
+          </DialogTitle>
+          <DialogContent sx={{ padding: '2rem' }}>
+            <Box sx={{ mb: 3, p: 2, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0' }}>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                ORDER SUMMARY
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+                <Typography variant="body1" fontWeight="bold">
+                  {formData.package_value ? `${formData.package_value} INR Package` : 'No Package Selected'}
+                </Typography>
+                <Typography variant="h6" color="#2c8786" fontWeight="bold">
+                  ₹{formData.package_value || '0'}
+                </Typography>
+              </Box>
+            </Box>
+            <Typography variant="body1" sx={{ textAlign: 'center', mb: 3 }}>
+              Please select your preferred payment method to complete the registration.
+            </Typography>
+            <FormControl fullWidth>
+              <RadioGroup
+                name="paymentMode"
+                value={formData.paymentMode}
+                onChange={handleRadioChange}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2
+                }}
+              >
+                <Box sx={{ 
+                  border: '1px solid', 
+                  borderColor: formData.paymentMode === 'offline' ? '#2c8786' : '#e2e8f0',
+                  borderRadius: 1, 
+                  p: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  backgroundColor: formData.paymentMode === 'offline' ? '#f0fdfa' : 'transparent',
+                }} onClick={() => handleChange({ target: { name: 'paymentMode', value: 'offline' } } as any)}>
+                  <FormControlLabel
+                    value="offline"
+                    control={<Radio sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
+                    label={
+                      <Box>
+                        <Typography variant="subtitle1" fontWeight="bold">Offline Payment</Typography>
+                        <Typography variant="body2" color="text.secondary">Admin will activate your account later</Typography>
+                      </Box>
+                    }
+                    sx={{ flexGrow: 1, m: 0 }}
+                  />
+                </Box>
+                <Box sx={{ 
+                  border: '1px solid', 
+                  borderColor: formData.paymentMode === 'online' ? '#2c8786' : '#e2e8f0',
+                  borderRadius: 1, 
+                  p: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  backgroundColor: formData.paymentMode === 'online' ? '#f0fdfa' : 'transparent',
+                }} onClick={() => handleChange({ target: { name: 'paymentMode', value: 'online' } } as any)}>
+                  <FormControlLabel
+                    value="online"
+                    control={<Radio sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
+                    label={
+                      <Box>
+                        <Typography variant="subtitle1" fontWeight="bold">Online Payment</Typography>
+                        <Typography variant="body2" color="text.secondary">Pay now to activate immediately</Typography>
+                      </Box>
+                    }
+                    sx={{ flexGrow: 1, m: 0 }}
+                  />
+                </Box>
+              </RadioGroup>
+            </FormControl>
+          </DialogContent>
+          <DialogActions sx={{ padding: '1rem 2rem 2rem', justifyContent: 'space-between' }}>
+            <Button 
+              onClick={() => setPaymentDialogOpen(false)}
+              variant="outlined"
+              sx={{
+                color: '#2c8786',
+                borderColor: '#2c8786',
+                '&:hover': {
+                  borderColor: '#1f6362',
+                  backgroundColor: '#f0fdfa'
+                }
+              }}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={confirmRegistration}
+              variant="contained"
+              sx={{
+                backgroundColor: '#2c8786',
+                '&:hover': {
+                  backgroundColor: '#1f6362'
+                }
+              }}
+            >
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         {/* Success Dialog */}
         <Dialog

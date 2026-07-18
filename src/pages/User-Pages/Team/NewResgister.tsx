@@ -18,13 +18,19 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Typography,
   Autocomplete,
+  MenuItem,
+  Typography,
+  Box
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+// @ts-ignore
+import { load } from '@cashfreepayments/cashfree-js';
+import axios from 'axios';
 
 import WcIcon from '@mui/icons-material/Wc';
 import LockIcon from '@mui/icons-material/Lock';
@@ -40,7 +46,7 @@ import { toast } from 'react-toastify';
 
 const NewResgister: React.FC = () => {
   const {user} = useContext(UserContext)
-  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<Record<string, string>>({ paymentMode: 'offline', package_value: '' });
   
   const { data: states } = useGetStates();
   const { data: districts } = useGetDistricts(formData.state);
@@ -58,6 +64,7 @@ const NewResgister: React.FC = () => {
     memberId: '',
     password: ''
   });
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -87,33 +94,78 @@ const NewResgister: React.FC = () => {
       return;
     }
     try {
+      setPaymentDialogOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const confirmRegistration = () => {
+    try {
       mutate({ 
         sponsor_id: user.Member_id, 
         Sponsor_code: user.Member_id,
         Sponsor_name: user.Name,
         ...formData 
       }, {
-        onSuccess: (response) => {
+        onSuccess: async (response) => {
           if (response.success) {
-            // toast.success("Registration successful");
             setRegistrationData({
               memberId: response.user.Member_id, 
               password: formData.password
             });
-            setSuccessDialogOpen(true);
-            toast.success("Registration successful");
+
+            if (formData.paymentMode === 'online') {
+              try {
+                const cashfree = await load({ mode: "sandbox" });
+                const orderResponse = await axios.post('http://localhost:5051/api/payment/create-order', {
+                  amount: formData.package_value,
+                  customer: {
+                    customer_id: response.user.Member_id,
+                    customer_name: formData.Name,
+                    customer_email: formData.email,
+                    customer_phone: formData.mobileno,
+                  }
+                });
+
+                if (orderResponse.data.payment_session_id) {
+                  let checkoutOptions = {
+                    paymentSessionId: orderResponse.data.payment_session_id,
+                    redirectTarget: "_modal",
+                  };
+
+                  cashfree.checkout(checkoutOptions).then((result: any) => {
+                    if (result.error) {
+                      toast.error("Payment failed or cancelled. Please try again.");
+                    } else if (result.redirect) {
+                      console.log("Payment will be redirected");
+                    } else if (result.paymentDetails) {
+                      toast.success("Payment successful! Your account is now active.");
+                    }
+                    setPaymentDialogOpen(false);
+                    setSuccessDialogOpen(true);
+                  });
+                }
+              } catch (error) {
+                console.error("Payment initiation failed:", error);
+                toast.error("Failed to initiate payment. Please contact support.");
+              }
+            } else {
+              setPaymentDialogOpen(false);
+              setSuccessDialogOpen(true);
+              toast.success("Registration successful");
+            }
           }
         },
-        onError: (error) => {
-          toast.error(error.response?.data?.message || "Registration failed");
+        onError: (error: any) => {
+          console.error("Mutation error:", error);
+          const errorMessage = error.response?.data?.message || "Something went wrong! Please try again.";
+          setErrorMessage(errorMessage);
+          setPaymentDialogOpen(false);
         }
       });
-
     } catch (error) {
-      console.error("Registration failed:", error);
-      toast.error("Registration failed. Please try again.");
-    } finally {
-      // Don't clear form immediately, wait for success
+      console.error(error);
     }
   };
 
@@ -500,6 +552,30 @@ const NewResgister: React.FC = () => {
                     }
                   }}
                 />
+                
+                <TextField
+                  select
+                  label="Select Package"
+                  name="package_value"
+                  value={formData.package_value || ''}
+                  onChange={(e) => {
+                    handleInputChange({ target: { name: 'package_value', value: e.target.value } } as any);
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  sx={{ mt: 2 }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CardGiftcardIcon sx={{ color: '#2c8786' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                >
+                  <MenuItem value="" disabled><em>Select Package</em></MenuItem>
+                  <MenuItem value="5000">5000 INR Package</MenuItem>
+                </TextField>
+
               </form>
             </AccordionDetails>
           </Accordion>
@@ -527,6 +603,130 @@ const NewResgister: React.FC = () => {
         </CardContent>
         {isPending && <LoadingComponent/>}
       </Card>
+
+      {/* Payment Dialog */}
+      <Dialog
+        open={paymentDialogOpen}
+        onClose={() => setPaymentDialogOpen(false)}
+        aria-labelledby="payment-dialog"
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle 
+          id="payment-dialog"
+          sx={{ 
+            backgroundColor: '#2c8786', 
+            color: 'white',
+            textAlign: 'center'
+          }}
+        >
+          Select Payment Method
+        </DialogTitle>
+        <DialogContent sx={{ padding: '2rem' }}>
+          <Box sx={{ mb: 1, p: 2, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0' }}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              ORDER SUMMARY
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+              <Typography variant="body1" fontWeight="bold">
+                {formData.package_value ? `${formData.package_value} INR Package` : 'No Package Selected'}
+              </Typography>
+              <Typography variant="h6" color="#2c8786" fontWeight="bold">
+                ₹{formData.package_value || '0'}
+              </Typography>
+            </Box>
+          </Box>
+          <Typography variant="body1" sx={{ textAlign: 'center', mb: 1 }}>
+            Please select your preferred payment method.
+          </Typography>
+          <FormControl fullWidth>
+            <RadioGroup
+              name="paymentMode"
+              value={formData.paymentMode || 'offline'}
+              onChange={handleInputChange}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2
+              }}
+            >
+              <Box sx={{ 
+                border: '1px solid', 
+                borderColor: formData.paymentMode === 'offline' ? '#2c8786' : '#e2e8f0',
+                borderRadius: 1, 
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                backgroundColor: formData.paymentMode === 'offline' ? '#f0fdfa' : 'transparent',
+              }} onClick={() => handleInputChange({ target: { name: 'paymentMode', value: 'offline' } } as any)}>
+                <FormControlLabel
+                  value="offline"
+                  control={<Radio sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
+                  label={
+                    <Box>
+                      <Typography variant="subtitle1" fontWeight="bold">Offline Payment</Typography>
+                      <Typography variant="body2" color="text.secondary">Admin will activate your account later</Typography>
+                    </Box>
+                  }
+                  sx={{ flexGrow: 1, m: 0 }}
+                />
+              </Box>
+              <Box sx={{ 
+                border: '1px solid', 
+                borderColor: formData.paymentMode === 'online' ? '#2c8786' : '#e2e8f0',
+                borderRadius: 1, 
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                backgroundColor: formData.paymentMode === 'online' ? '#f0fdfa' : 'transparent',
+              }} onClick={() => handleInputChange({ target: { name: 'paymentMode', value: 'online' } } as any)}>
+                <FormControlLabel
+                  value="online"
+                  control={<Radio sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
+                  label={
+                    <Box>
+                      <Typography variant="subtitle1" fontWeight="bold">Online Payment</Typography>
+                      <Typography variant="body2" color="text.secondary">Pay now to activate immediately</Typography>
+                    </Box>
+                  }
+                  sx={{ flexGrow: 1, m: 0 }}
+                />
+              </Box>
+            </RadioGroup>
+          </FormControl>
+        </DialogContent>
+        <DialogActions sx={{ padding: '1rem 2rem 2rem', justifyContent: 'space-between' }}>
+          <Button 
+            onClick={() => setPaymentDialogOpen(false)}
+            variant="outlined"
+            sx={{
+              color: '#2c8786',
+              borderColor: '#2c8786',
+              '&:hover': {
+                borderColor: '#1f6362',
+                backgroundColor: '#f0fdfa'
+              }
+            }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={confirmRegistration}
+            variant="contained"
+            disabled={isPending}
+            sx={{
+              backgroundColor: '#2c8786',
+              '&:hover': {
+                backgroundColor: '#1f6362'
+              }
+            }}
+          >
+            {isPending ? "Processing..." : "Confirm & Register"}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Success Dialog */}
       <Dialog
