@@ -224,7 +224,7 @@ const Register = () => {
 
             if (formData.paymentMode === 'online') {
               try {
-                const cashfree = await load({ mode: "sandbox" });
+                const cashfree = await load({ mode: import.meta.env.PROD ? "production" : "sandbox" });
                 const orderResponse = await axios.post(`${import.meta.env.VITE_MLM_API_URL}/api/payment/create-order`, {
                   amount: formData.package_value,
                   customer: {
