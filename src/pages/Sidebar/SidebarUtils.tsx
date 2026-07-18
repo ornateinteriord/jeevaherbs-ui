@@ -81,7 +81,7 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />,
       },
       {
-        name: "Global Income",
+        name: "Reward",
         path: "/user/income/global",
         icon: <ShowChartIcon />,
       },
@@ -196,7 +196,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />,
       },
       {
-        name: "Global Income",
+        name: "Reward",
         path: "/admin/income/global-income",
         icon: <ShowChartIcon />,
       },

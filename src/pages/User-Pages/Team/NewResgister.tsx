@@ -118,7 +118,7 @@ const NewResgister: React.FC = () => {
             if (formData.paymentMode === 'online') {
               try {
                 const cashfree = await load({ mode: "sandbox" });
-                const orderResponse = await axios.post('http://localhost:5051/api/payment/create-order', {
+                const orderResponse = await axios.post(`${import.meta.env.VITE_MLM_API_URL}api/payment/create-order`, {
                   amount: formData.package_value,
                   customer: {
                     customer_id: response.user.Member_id,

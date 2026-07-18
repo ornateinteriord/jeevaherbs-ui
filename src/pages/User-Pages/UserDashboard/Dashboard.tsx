@@ -678,7 +678,7 @@ const UserDashboard = () => {
           <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Daily ROI" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Global Income" />
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Reward" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />

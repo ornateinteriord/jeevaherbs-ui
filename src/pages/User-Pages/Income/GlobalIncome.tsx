@@ -10,10 +10,10 @@ const GlobalIncome = () => {
 
   return (
     <IncomePageLayout 
-      title="Global Income" 
+      title="Reward" 
       balanceLabel="Available Balance" 
       amount={globalIncomeAmount} 
-      filterTypes={['global income', 'global', 'global_income']} 
+      filterTypes={['global income', 'global', 'global_income', 'reward']} 
     />
   );
 };
