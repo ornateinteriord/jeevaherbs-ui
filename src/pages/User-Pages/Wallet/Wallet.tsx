@@ -64,7 +64,7 @@ const Wallet = () => {
 
     if (selectedAmount && selectedAmount !== "0") {
       const withdrawalAmount = parseFloat(selectedAmount);
-      const calculatedDeduction = withdrawalAmount * 0.15;
+      const calculatedDeduction = withdrawalAmount * 0.10;
       const calculatedNetAmount = withdrawalAmount - calculatedDeduction;
 
       setDeduction(calculatedDeduction);
@@ -343,7 +343,7 @@ const Wallet = () => {
               </FormControl>
 
               <TextField
-                label="Deduction Amount (15%)"
+                label="Deduction Amount (10%)"
                 value={`₹${deduction.toFixed(2)}`}
                 fullWidth
                 size="medium"
@@ -385,11 +385,12 @@ const Wallet = () => {
                   </Typography>
                   <Box sx={{ display: "flex", gap: 4, flexDirection: isMobile ? "column" : "row" }}>
                     <Box>
-                      <Typography variant="body2">• 15% deduction applied</Typography>
+                      <Typography variant="body2">• 10% deduction applied</Typography>
                       <Typography variant="body2">• Minimum withdrawal: ₹500</Typography>
+                      <Typography variant="body2">• Maximum withdrawal: ₹1000</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="body2">• Maximum withdrawal: ₹1000</Typography>
+                      <Typography variant="body2">• Allowed on 10th and 25th only</Typography>
                       <Typography variant="body2">• One withdrawal per day allowed</Typography>
                     </Box>
                   </Box>

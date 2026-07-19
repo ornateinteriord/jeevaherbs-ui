@@ -1,5 +1,6 @@
 import { Card, CardContent, Grid, Typography, Box, Container } from '@mui/material';
 import { useGetAllMembersDetails } from '../../../api/Admin';
+import { useGetTransactionDetails } from '../../../api/Memeber';
 import DashboardTable from '../../Dashboard/DashboardTable';
 import DashboardCard from '../../../components/common/DashboardCard';
 import { getAdminDashboardTableColumns } from '../../../utils/DataTableColumnsProvider';
@@ -10,7 +11,19 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
 
 const AdminDashboard = () => { 
-  const { data: members = [], isLoading, error } = useGetAllMembersDetails();
+  const { data: members = [], isLoading: membersLoading, error: membersError } = useGetAllMembersDetails();
+  const { data: transactionsData, isLoading: transactionsLoading } = useGetTransactionDetails("all");
+  const transactions = transactionsData?.data || [];
+  
+  // Calculate total Daily Incentive distributed
+  const totalDailyIncentive = transactions
+    .filter((tx: any) => 
+      (tx.transaction_type?.toLowerCase() === "daily incentive" || 
+       tx.description?.toLowerCase() === "daily incentive" ||
+       tx.description?.toLowerCase().includes("daily incentive")) &&
+      tx.status === "Completed"
+    )
+    .reduce((acc: number, tx: any) => acc + (parseFloat(tx.ew_credit) || 0), 0);
 
   // Sort members by most recent registration date
   const sortedMembers = [...members].sort((a, b) => {
@@ -32,7 +45,7 @@ const pendingMembers = members.filter((member: any) =>
   const totalEvents = 0;
   const totalLikes = 0; 
 
-  if (isLoading) {
+  if (membersLoading || transactionsLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="64vh">
         <Typography variant="h6">Loading dashboard data...</Typography>
@@ -40,11 +53,11 @@ const pendingMembers = members.filter((member: any) =>
     );
   }
 
-  if (error) {
+  if (membersError) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="64vh">
         <Typography color="error">
-          Error loading dashboard data: {(error as Error).message}
+          Error loading dashboard data: {(membersError as Error).message}
         </Typography>
       </Box>
     );
@@ -219,6 +232,14 @@ const pendingMembers = members.filter((member: any) =>
             amount={pendingMembers} 
             title="Pending Members" 
             subTitle={`${pendingMembers} pending activation`} 
+            IconComponent={PersonIcon} 
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard 
+            amount={totalDailyIncentive} 
+            title="Total Daily Incentive" 
+            subTitle={`₹${totalDailyIncentive.toFixed(2)} distributed`} 
             IconComponent={PersonIcon} 
           />
         </Grid>

@@ -254,6 +254,7 @@ const UserDashboard = () => {
   const totalWithdrawsAmount = walletOverview?.totalWithdrawal || 0;
   const walletBalanceAmount = walletOverview?.balance || 0;
   const dailyRoiAmount = walletOverview?.dailyRoi || 0;
+  const dailyIncentiveAmount = walletOverview?.dailyIncentive || 0;
   const globalIncomeAmount = walletOverview?.globalIncome || 0;
 
   const tableData = [
@@ -676,6 +677,9 @@ const UserDashboard = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Daily ROI" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Reward" />

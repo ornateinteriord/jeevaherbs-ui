@@ -28,6 +28,7 @@ import KYCApproval from "./pages/Admin-Pages/KYCApproval/KYCApproval";
 import DirectIncome from "./pages/User-Pages/Income/DirectIncome";
 import LevelIncome from "./pages/User-Pages/Income/LevelIncome";
 import DailyROI from "./pages/User-Pages/Income/DailyROI";
+import DailyIncentive from "./pages/User-Pages/Income/DailyIncentive";
 import GlobalIncome from "./pages/User-Pages/Income/GlobalIncome";
 import TotalEarnings from "./pages/User-Pages/Income/TotalEarnings";
 import TotalWithdrawals from "./pages/User-Pages/Income/TotalWithdrawals";
@@ -325,6 +326,7 @@ const RoutesProvider = ({
               <Route path="/user/income/direct" element={<DirectIncome />} />
               <Route path="/user/income/level" element={<LevelIncome />} />
               <Route path="/user/income/daily-roi" element={<DailyROI />} />
+              <Route path="/user/income/daily-incentive" element={<DailyIncentive />} />
               <Route path="/user/income/global" element={<GlobalIncome />} />
               <Route path="/user/earnings" element={<TotalEarnings />} />
               <Route path="/user/withdrawals" element={<TotalWithdrawals />} />
