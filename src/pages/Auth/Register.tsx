@@ -751,13 +751,16 @@ const Register = () => {
                       </InputAdornment>
                     ),
                   }}
+                  SelectProps={{
+                    displayEmpty: true
+                  }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': { borderColor: '#2c8786' },
                       '&.Mui-focused fieldset': { borderColor: '#2c8786' }
                     },
-                    '& .MuiSelect-select': { color: 'black' },
-                    '& .MuiInputBase-input': { color: 'black' }
+                    '& .MuiSelect-select': { color: '#000 !important' },
+                    '& .MuiInputBase-input': { color: '#000 !important' }
                   }}
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>

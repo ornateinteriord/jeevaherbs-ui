@@ -569,8 +569,8 @@ const NewResgister: React.FC = () => {
                       '&:hover fieldset': { borderColor: '#2c8786' },
                       '&.Mui-focused fieldset': { borderColor: '#2c8786' }
                     },
-                    '& .MuiSelect-select': { color: 'black' },
-                    '& .MuiInputBase-input': { color: 'black' }
+                    '& .MuiSelect-select': { color: '#000 !important' },
+                    '& .MuiInputBase-input': { color: '#000 !important' }
                   }}
                   InputProps={{
                     startAdornment: (
@@ -578,6 +578,9 @@ const NewResgister: React.FC = () => {
                         <CardGiftcardIcon sx={{ color: '#2c8786' }} />
                       </InputAdornment>
                     ),
+                  }}
+                  SelectProps={{
+                    displayEmpty: true
                   }}
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
