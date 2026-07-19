@@ -563,7 +563,15 @@ const NewResgister: React.FC = () => {
                   }}
                   fullWidth
                   variant="outlined"
-                  sx={{ mt: 2 }}
+                  sx={{ 
+                    mt: 2,
+                    '& .MuiOutlinedInput-root': {
+                      '&:hover fieldset': { borderColor: '#2c8786' },
+                      '&.Mui-focused fieldset': { borderColor: '#2c8786' }
+                    },
+                    '& .MuiSelect-select': { color: 'black' },
+                    '& .MuiInputBase-input': { color: 'black' }
+                  }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -574,7 +582,6 @@ const NewResgister: React.FC = () => {
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
                   <MenuItem value="5000">5000 INR Package</MenuItem>
-                  <MenuItem value="1">1 INR Test </MenuItem>
                 </TextField>
 
               </form>

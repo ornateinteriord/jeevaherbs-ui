@@ -755,12 +755,13 @@ const Register = () => {
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': { borderColor: '#2c8786' },
                       '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                    }
+                    },
+                    '& .MuiSelect-select': { color: 'black' },
+                    '& .MuiInputBase-input': { color: 'black' }
                   }}
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
                   <MenuItem value="5000">5000 INR Package</MenuItem>
-                  <MenuItem value="1">1 INR </MenuItem>
                 </TextField>
                 
                 <FormControlLabel
