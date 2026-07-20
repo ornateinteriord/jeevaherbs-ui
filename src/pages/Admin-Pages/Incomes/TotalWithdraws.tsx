@@ -14,27 +14,21 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
 import {
   DASHBOARD_CUTSOM_STYLE,
-  getAdminLevelBenifitsColumns,
+  getAdminDailyBenifitsColumns,
 
 } from "../../../utils/DataTableColumnsProvider";
-import { useGetAllTransactionDetails } from '../../../api/Admin';
+import { useGetAllDailyPayouts } from '../../../api/Admin';
 
-const LevelBenifits = () => {
+
+const TotalWithdraws = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Properly destructure the useQuery return values
+  const { data: dailyBenefits, isLoading, isError } = useGetAllDailyPayouts();
+  console.log(dailyBenefits);
 
-  // Use the same transaction hook and filter for level benefits
-  const { data: allTransactions, isLoading, isError } = useGetAllTransactionDetails();
-
-  // Filter transactions to get only level benefits
-  const levelBenefits = allTransactions?.filter((transaction: any) => 
-    transaction.type === 'level_benefit' || 
-    transaction.transactionType === 'level' ||
-    transaction.category === 'level_benefits' ||
-    // Add other conditions that identify level benefits in your data
-    transaction.description?.toLowerCase().includes('level')
-  ) || [];
-
-  const filteredData = levelBenefits?.filter((benefit: any) =>
+  // Handle the data structure from API
+  const filteredData = dailyBenefits?.filter((benefit: any) =>
     Object.values(benefit).some(
       value => 
         value && 
@@ -59,7 +53,7 @@ const LevelBenifits = () => {
   return (
     <>
       <Typography variant="h4" sx={{ margin: "2rem", mt: 10 }}>
-        Level Benefits
+        Total Withdraws
       </Typography>
       <Card sx={{ margin: "2rem", mt: 2 }}>
         <CardContent>
@@ -72,7 +66,7 @@ const LevelBenifits = () => {
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
             >
-              List of Level Benefits
+              List of Daily Benefits Payouts
             </AccordionSummary>
             <AccordionDetails>
               <Box
@@ -92,7 +86,7 @@ const LevelBenifits = () => {
                 />
               </Box>
               <DataTable
-                columns={getAdminLevelBenifitsColumns()}
+                columns={getAdminDailyBenifitsColumns()}
                 data={filteredData}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}
@@ -109,4 +103,4 @@ const LevelBenifits = () => {
   );
 };
 
-export default LevelBenifits;
+export default TotalWithdraws;

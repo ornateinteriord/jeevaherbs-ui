@@ -67,14 +67,29 @@ const UpdatePassword = lazy(() => import("./pages/Admin-Pages/admin-panel/Update
 const AdminDashboard = lazy(
   () => import("./pages/Admin-Pages/AdminDashboard/Dashboard")
 );
-const AdminCashBack = lazy(
-  () => import("./pages/Admin-Pages/Incomes/CashBack")
+const AdminDirectIncome = lazy(
+  () => import("./pages/Admin-Pages/Incomes/DirectIncome")
 );
-const AdminDailyBenifitsPayouts = lazy(
-  () => import("./pages/Admin-Pages/Incomes/DailyBenifitsPayouts")
+const AdminLevelIncome = lazy(
+  () => import("./pages/Admin-Pages/Incomes/LevelIncome")
 );
-const AdminLevelBenifits = lazy(
-  () => import("./pages/Admin-Pages/Incomes/LevelBenifits")
+const AdminDailyROI = lazy(
+  () => import("./pages/Admin-Pages/Incomes/DailyROI")
+);
+const AdminDailyIncentive = lazy(
+  () => import("./pages/Admin-Pages/Incomes/DailyIncentive")
+);
+const AdminReward = lazy(
+  () => import("./pages/Admin-Pages/Incomes/Reward")
+);
+const AdminTotalEarnings = lazy(
+  () => import("./pages/Admin-Pages/Incomes/TotalEarnings")
+);
+const AdminTotalWithdraws = lazy(
+  () => import("./pages/Admin-Pages/Incomes/TotalWithdraws")
+);
+const AdminWalletBalance = lazy(
+  () => import("./pages/Admin-Pages/Incomes/WalletBalance")
 );
 const AdminPayout = lazy(() => import("./pages/Admin-Pages/Payout/Payout"));
 
@@ -279,16 +294,36 @@ const RoutesProvider = ({
               />
               {/* admin income routes */}
               <Route
-                path="/admin/income/cashback"
-                element={<AdminCashBack />}
+                path="/admin/income/direct"
+                element={<AdminDirectIncome />}
               />
               <Route
-                path="/admin/income/level-benefits"
-                element={<AdminLevelBenifits />}
+                path="/admin/income/level"
+                element={<AdminLevelIncome />}
               />
               <Route
-                path="/admin/income/daily-payouts"
-                element={<AdminDailyBenifitsPayouts />}
+                path="/admin/income/daily-roi"
+                element={<AdminDailyROI />}
+              />
+              <Route
+                path="/admin/income/daily-incentive"
+                element={<AdminDailyIncentive />}
+              />
+              <Route
+                path="/admin/income/reward"
+                element={<AdminReward />}
+              />
+              <Route
+                path="/admin/income/total-earnings"
+                element={<AdminTotalEarnings />}
+              />
+              <Route
+                path="/admin/income/total-withdraws"
+                element={<AdminTotalWithdraws />}
+              />
+              <Route
+                path="/admin/income/wallet-balance"
+                element={<AdminWalletBalance />}
               />
               <Route path="/admin/payout" element={<AdminPayout />} />
 

@@ -6,7 +6,7 @@ import DataTable from "react-data-table-component";
 import { DASHBOARD_CUTSOM_STYLE, getCashBackColumns } from "../../../utils/DataTableColumnsProvider";
 import { useState } from "react";
 
-const CashBack = () => {
+const DirectIncome = () => {
   const [fromDate, setFromDate] = useState<string | null>(null);
   const [toDate, setToDate] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,7 +38,7 @@ const CashBack = () => {
         className="Cashback-container"
         sx={{ margin: "2rem", mt: 12 }}
       >
-        <Typography variant="h4">Daily Benefits</Typography>
+        <Typography variant="h4">Direct Income</Typography>
         <Grid className="Cashback-content">
           <TextField
             size="small"
@@ -120,4 +120,4 @@ const CashBack = () => {
   )
 }
 
-export default CashBack
+export default DirectIncome;

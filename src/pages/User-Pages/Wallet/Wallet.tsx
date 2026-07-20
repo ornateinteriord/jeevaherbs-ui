@@ -10,10 +10,6 @@ import {
   Grid,
   Box,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -60,6 +56,11 @@ const Wallet = () => {
 
   const handleAmountChange = (e: any) => {
     const selectedAmount = e.target.value;
+
+    if (selectedAmount !== "" && !/^\d+$/.test(selectedAmount)) {
+      return;
+    }
+
     setAmount(selectedAmount);
 
     if (selectedAmount && selectedAmount !== "0") {
@@ -312,35 +313,20 @@ const Wallet = () => {
                 }}
               />
 
-              <FormControl fullWidth size="medium">
-                <InputLabel>Withdrawal Amount</InputLabel>
-                <Select
-                  value={amount}
-                  onChange={handleAmountChange}
-                  label="Withdrawal Amount"
-                  disabled={withdrawMutation.isPending || !isWithdrawalAllowed}
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: isWithdrawalAllowed ? "inherit" : "#ff9800",
-                    },
-                  }}
-                >
-                  <MenuItem value="0">
-                    <em>Select Amount</em>
-                  </MenuItem>
-                  {[500, 1000].map((value) => (
-                    <MenuItem 
-                      key={value} 
-                      value={value}
-                      disabled={value > displayBalance || !isWithdrawalAllowed}
-                    >
-                      ₹{value} 
-                      {value > displayBalance ? " (Insufficient Balance)" : ""}
-                      {!isWithdrawalAllowed ? " (Withdrawal Disabled)" : ""}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <TextField
+                label="Withdrawal Amount"
+                value={amount}
+                onChange={handleAmountChange}
+                fullWidth
+                size="medium"
+                disabled={withdrawMutation.isPending || !isWithdrawalAllowed}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#2c8786" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#2c8786" : "#ff9800" },
+                  },
+                }}
+              />
 
               <TextField
                 label="Deduction Amount (10%)"
@@ -387,11 +373,11 @@ const Wallet = () => {
                     <Box>
                       <Typography variant="body2">• 10% deduction applied</Typography>
                       <Typography variant="body2">• Minimum withdrawal: ₹500</Typography>
-                      <Typography variant="body2">• Maximum withdrawal: ₹1000</Typography>
+                     
                     </Box>
                     <Box>
                       <Typography variant="body2">• Allowed on 10th and 25th only</Typography>
-                      <Typography variant="body2">• One withdrawal per day allowed</Typography>
+                    
                     </Box>
                   </Box>
                   {!isWithdrawalAllowed && (

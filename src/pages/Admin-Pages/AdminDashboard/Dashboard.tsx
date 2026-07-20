@@ -68,130 +68,126 @@ const pendingMembers = members.filter((member: any) =>
       {/* Dashboard Header */}
       <Box 
         sx={{
-          height: { xs: 'auto', md: '40' },
           width: '100%',
-          overflow: 'hidden',
-          bgcolor: '#2c8786',
+          mt: 9,
+          mb: 3,
+          py: { xs: 3, md: 4 },
+          background: 'linear-gradient(135deg, #1b5e20 0%, #2c8786 50%, #004d40 100%)',
+          borderRadius: { xs: 0, md: '0 0 16px 16px' },
+          boxShadow: '0 6px 20px rgba(44, 135, 134, 0.2)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          mt: 10,
-          py: { xs: 6, md: 0 }
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
+        {/* Decorative background shapes */}
+        <Box sx={{
+          position: 'absolute', top: '-50%', left: '-10%', width: '40%', height: '200%',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%)',
+          transform: 'rotate(30deg)', pointerEvents: 'none'
+        }} />
+        <Box sx={{
+          position: 'absolute', bottom: '-50%', right: '-5%', width: '30%', height: '150%',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%)',
+          transform: 'rotate(-20deg)', pointerEvents: 'none'
+        }} />
 
         <Box 
           sx={{
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-between',
             alignItems: 'center',
             width: '100%',
-            px: { xs: 4, md: 8 },
+            maxWidth: '1400px',
+            px: { xs: 3, md: 6 },
             position: 'relative',
-            zIndex: 20,
-            gap: { xs: 6, md: 0 }
+            zIndex: 2,
+            gap: { xs: 3, md: 2 }
           }}
         >
-          <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Box sx={{ textAlign: { xs: 'center', md: 'left' }, flex: 1.5 }}>
             <Typography 
-              variant="h4" 
+              variant="h3" 
               sx={{ 
                 color: 'white',
-                fontSize: { xs: '1.5rem', md: '2.5rem' }
+                fontWeight: 700,
+                letterSpacing: '-0.5px',
+                fontSize: { xs: '1.5rem', md: '2rem' },
+                textShadow: '0 2px 5px rgba(0,0,0,0.2)'
               }}
             >
               Welcome to Admin Dashboard
             </Typography>
             <Typography 
-              variant="body1" 
+              variant="h6" 
               sx={{ 
-                mt: 2, 
-                color: 'neutral.300', 
+                mt: 0.5, 
+                color: 'rgba(255,255,255,0.85)', 
+                fontWeight: 400,
                 fontSize: { xs: '0.875rem', md: '1rem' } 
               }}
             >
-              Manage your network and track your success
+              Manage your network, track earnings, and oversee growth.
             </Typography>
           </Box>
 
           <Box 
             sx={{
-              display: { xs: 'grid', md: 'flex' },
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              alignItems: 'center',
-              gap: { xs: 6, md: 12 },
-              color: 'white'
+              display: 'flex',
+              flexWrap: 'nowrap',
+              justifyContent: 'space-between',
+              gap: { xs: 0.5, sm: 1, md: 2 },
+              color: 'white',
+              flex: 1,
+              width: '100%'
             }}
           >
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography 
-                variant="h4" 
+            {[
+              { label: 'Likes', value: `${totalLikes}k`, icon: <ThumbUpIcon sx={{ fontSize: { xs: 12, md: 16 } }} /> },
+              { label: 'Degrees', value: totalDegrees, icon: <SchoolIcon sx={{ fontSize: { xs: 12, md: 16 } }} /> },
+              { label: 'Events', value: totalEvents, icon: <EventIcon sx={{ fontSize: { xs: 12, md: 16 } }} /> },
+              { label: 'Cities', value: totalCities, icon: <LocationOnIcon sx={{ fontSize: { xs: 12, md: 16 } }} /> }
+            ].map((stat, idx) => (
+              <Box 
+                key={idx}
                 sx={{ 
-                  fontSize: { xs: '1.25rem', md: '1.5rem' }, 
-                  fontWeight: 'bold', 
-                  mb: 2 
+                  textAlign: 'center',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: { xs: '8px', md: '12px' },
+                  padding: { xs: '6px 2px', sm: '10px 8px', md: '10px 16px' },
+                  minWidth: { xs: '60px', sm: '75px', md: '90px' },
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                  transition: 'transform 0.3s ease, background 0.3s ease',
+                  flex: { xs: 1, md: 'none' }, 
+                  '&:hover': {
+                    transform: 'translateY(-3px)',
+                    background: 'rgba(255, 255, 255, 0.15)',
+                  }
                 }}
               >
-                {totalLikes}k
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <ThumbUpIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                <Typography variant="caption">Great</Typography>
+                <Typography 
+                  variant="h4" 
+                  sx={{ 
+                    fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' }, 
+                    fontWeight: 'bold', 
+                    mb: 0.2,
+                    textShadow: '0 1px 3px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  {stat.value}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, opacity: 0.9 }}>
+                  {stat.icon}
+                  <Typography variant="body2" sx={{ fontSize: { xs: '0.65rem', md: '0.75rem' }, fontWeight: 500, letterSpacing: '0.5px' }}>{stat.label}</Typography>
+                </Box>
               </Box>
-            </Box>
-            
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  fontSize: { xs: '1.25rem', md: '1.5rem' }, 
-                  fontWeight: 'bold', 
-                  mb: 2 
-                }}
-              >
-                {totalDegrees}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <SchoolIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                <Typography variant="caption">Degrees</Typography>
-              </Box>
-            </Box>
-            
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  fontSize: { xs: '1.25rem', md: '1.5rem' }, 
-                  fontWeight: 'bold', 
-                  mb: 2 
-                }}
-              >
-                {totalEvents}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <EventIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                <Typography variant="caption">Events</Typography>
-              </Box>
-            </Box>
-            
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  fontSize: { xs: '1.25rem', md: '1.5rem' }, 
-                  fontWeight: 'bold', 
-                  mb: 2 
-                }}
-              >
-                {totalCities}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <LocationOnIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                <Typography variant="caption">Cities</Typography>
-              </Box>
-            </Box>
+            ))}
           </Box>
         </Box>
       </Box>

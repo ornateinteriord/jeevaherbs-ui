@@ -52,7 +52,7 @@ const MailBox = () => {
 
   useEffect(() => {
     if (isError) {
-      toast.error(error.message || "Failed to fetch Transaction details");
+      toast.error(error.message || "Failed to fetch Ticket details");
     }
   }, [isError, error]);
 

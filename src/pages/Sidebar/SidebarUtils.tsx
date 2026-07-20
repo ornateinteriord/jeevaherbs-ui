@@ -5,7 +5,6 @@ import {
   AccountCircleIcon,
   CheckCircleIcon,
   GroupIcon,
-  MonetizationOnIcon,
   ShowChartIcon,
   CreditCardIcon,
   MailOutlineIcon,
@@ -15,14 +14,13 @@ import {
   PeopleIcon,
   AccountTreeIcon,
   PersonAddIcon,
-  TrendingUpIcon,
   PaymentsIcon,
   SupportIcon,
   AnnouncementIcon,
   EventIcon,
   SmsIcon,
 } from "../Icons";
-import { AccountBalance, CardMembershipRounded, Pending } from "@mui/icons-material";
+import { CardMembershipRounded, Pending } from "@mui/icons-material";
 
 export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -60,7 +58,7 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-  {
+  /* {
     name: "My Earnings",
     icon: <MonetizationOnIcon />,
     isExpandable: true,
@@ -81,6 +79,11 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />,
       },
       {
+        name: "Daily Incentive",
+        path: "/user/income/daily-incentive",
+        icon: <PaymentsIcon />,
+      },
+      {
         name: "Reward",
         path: "/user/income/global",
         icon: <ShowChartIcon />,
@@ -91,12 +94,13 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />,
       },
     ],
-  },
- {
+  }, */
+  {
     name: "My Transactions",
     icon: <ShowChartIcon />,
-    isExpandable: true,
-    subItems: [
+    path: "/user/transactions",
+    isExpandable: false,
+    /* subItems: [
       {
         name: "Wallet History",
         path: "/user/transactions",
@@ -107,7 +111,7 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         path: "/user/loantransactions",
         icon: <AccountBalance />,
       },
-    ],
+    ], */
   },
   {
     name: "Wallet Summary",
@@ -175,19 +179,19 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-  {
+  /* {
     name: "Income Management",
     icon: <MonetizationOnIcon />,
     isExpandable: true,
     subItems: [
       {
-        name: "Cash Rewards",
-        path: "/admin/income/cashback",
+        name: "Direct Income",
+        path: "/admin/income/direct",
         icon: <PaymentsIcon />,
       },
       {
-        name: "Level Commissions",
-        path: "/admin/income/level-benefits",
+        name: "Level Income",
+        path: "/admin/income/level",
         icon: <TrendingUpIcon />,
       },
       {
@@ -196,17 +200,32 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />,
       },
       {
+        name: "Daily Incentive",
+        path: "/admin/income/daily-incentive",
+        icon: <PaymentsIcon />,
+      },
+      {
         name: "Reward",
-        path: "/admin/income/global-income",
+        path: "/admin/income/reward",
         icon: <ShowChartIcon />,
       },
       {
-        name: "Daily Payout Records",
-        path: "/admin/income/daily-payouts",
+        name: "Total Earnings",
+        path: "/admin/income/total-earnings",
         icon: <PaymentsIcon />,
       },
+      {
+        name: "Total Withdraws",
+        path: "/admin/income/total-withdraws",
+        icon: <PaymentsIcon />,
+      },
+      {
+        name: "Wallet Balance",
+        path: "/admin/income/wallet-balance",
+        icon: <AccountBalance />,
+      },
     ],
-  },
+  }, */
 
 {
   name: "Loan Services",

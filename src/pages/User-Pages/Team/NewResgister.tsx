@@ -37,7 +37,6 @@ import LockIcon from '@mui/icons-material/Lock';
 import MapIcon from "@mui/icons-material/Map";
 import DomainIcon from "@mui/icons-material/Domain";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
-import ExploreIcon from "@mui/icons-material/Explore";
 import UserContext from '../../../context/user/userContext';
 import { useSignupMutation } from '../../../api/Auth';
 import { useGetStates, useGetDistricts, useGetCitiesAndTaluks } from "../../../api/Location";
@@ -55,7 +54,7 @@ const NewResgister: React.FC = () => {
   const stateOptions = states || [];
   const districtOptions = districts || [];
   const cityOptions = citiesAndTaluks?.cities || [];
-  const talukOptions = citiesAndTaluks?.taluks || [];
+  // const talukOptions = citiesAndTaluks?.taluks || [];
 
   const [genderError, setGenderError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -179,7 +178,7 @@ const NewResgister: React.FC = () => {
     <>
       <Card sx={{ margin: '2rem', mt: 10, boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}>
         <CardContent>
-          {/* First Accordion - Joining Details */}
+          {/* First Accordion - Joining Details 
           <Accordion 
             defaultExpanded
             sx={{
@@ -256,8 +255,9 @@ const NewResgister: React.FC = () => {
               </form>
             </AccordionDetails>
           </Accordion>
+          */}
 
-          {/* Second Accordion - New Member Details */}
+          {/* Second Accordion - Registration form */}
           <Accordion 
             defaultExpanded
             sx={{
@@ -276,7 +276,7 @@ const NewResgister: React.FC = () => {
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
             >
-              New Member Details
+              Registration form
             </AccordionSummary>
             <AccordionDetails sx={{ padding: '2rem' }}>
               <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -400,40 +400,7 @@ const NewResgister: React.FC = () => {
                   )}
                 />
 
-                <Autocomplete
-                  freeSolo
-                  options={talukOptions}
-                  value={formData.taluk || ''}
-                  onChange={(_, newValue) => {
-                    handleInputChange({ target: { name: 'taluk', value: newValue || '' } } as any);
-                  }}
-                  onInputChange={(_, newInputValue) => {
-                    handleInputChange({ target: { name: 'taluk', value: newInputValue } } as any);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Taluk"
-                      name="taluk"
-                      fullWidth
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <ExploreIcon sx={{ color: '#2c8786' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '&:hover fieldset': { borderColor: '#2c8786' },
-                          '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                        }
-                      }}
-                    />
-                  )}
-                />
+
 
                 <FormControl error={!!genderError}>
                   <FormLabel sx={{ color: '#2c8786', display: 'flex', alignItems: 'center', gap: '8px' }}>

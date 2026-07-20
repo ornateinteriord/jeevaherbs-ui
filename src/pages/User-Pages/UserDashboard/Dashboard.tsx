@@ -436,7 +436,7 @@ const UserDashboard = () => {
             >
               Welcome to Dashboard
             </Typography>
-            <Typography
+            {/* <Typography
               variant="body1"
               sx={{
                 mt: 2,
@@ -446,7 +446,7 @@ const UserDashboard = () => {
               }}
             >
               Manage your network and track your success
-            </Typography>
+            </Typography> */}
           </Box>
 
           <Box
@@ -640,7 +640,7 @@ const UserDashboard = () => {
           </Box>
         </Box>
 
-        <Typography
+        {/* <Typography
           variant="caption"
           sx={{
             display: 'block',
@@ -651,7 +651,7 @@ const UserDashboard = () => {
           }}
         >
           Share this link with friends and earn rewards when they join!
-        </Typography>
+        </Typography> */}
       </Box>
 
       {/* Dashboard Cards Grid */}
@@ -676,13 +676,13 @@ const UserDashboard = () => {
           <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Daily ROI" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Reward" />
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
