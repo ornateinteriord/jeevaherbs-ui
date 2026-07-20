@@ -13,6 +13,7 @@ interface DashboardCardProps {
   onClick?: () => void;
   isRepayEnabled?: boolean;
   alreadyRepaidToday?: boolean;
+  background?: string;
 }
 
 const DashboardCard: React.FC<DashboardCardProps> = ({ 
@@ -25,7 +26,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   onRepay,
   onClick,
   isRepayEnabled = false,
-  alreadyRepaidToday = false
+  alreadyRepaidToday = false,
+  background
 }) => {
   
   const getRepayButtonText = () => {
@@ -38,7 +40,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     return (
       <Card
         sx={{
-          background: 'linear-gradient(to right, #2c8786, #3da1a0)',
+          background: background || 'linear-gradient(to right, #2c8786, #3da1a0)',
           color: '#fff',
           borderRadius: '10px',
           padding: { xs: '6px', sm: '8px' },
@@ -156,7 +158,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     <Card
       onClick={onRepay || onClick}
       sx={{
-        background: 'linear-gradient(to right, #2c8786, #3da1a0)',
+        background: background || 'linear-gradient(to right, #2c8786, #3da1a0)',
         color: '#fff',
         borderRadius: '10px',
         padding: { xs: '12px', sm: '16px' },

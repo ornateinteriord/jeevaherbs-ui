@@ -4,22 +4,23 @@ import { Link } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const slideImages = [
   {
     url: "/images/milk_product.png",
-    title: "Pure Ingredients",
-    description: "Sourced from the finest natural herbs, ensuring you get the most potent and pure extracts for your health.",
+    title: "Healthy Living",
+    description: "Nature's care for your wellness. 100% Herbal Wellness.",
   },
   {
     url: "/images/holistic_wellness.png",
-    title: "Holistic Wellness",
-    description: "Embrace a lifestyle of holistic well-being with ancient remedies formulated for modern everyday challenges.",
+    title: "Smart Income",
+    description: "Along with quality products, Jeeva Herbs offers a rewarding business opportunity.",
   },
   {
     url: "/images/pure_ingredients.png",
-    title: "Sustainable Growth",
-    description: "Join a community that supports sustainable agriculture and ethical harvesting of nature's greatest gifts.",
+    title: "Better Future",
+    description: "Grow through referrals, team building, and repeat purchases for sustainable income.",
   }
 ];
 
@@ -80,13 +81,16 @@ const Home = () => {
           }}
         >
           <Container maxWidth="md">
-            <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: "2.5rem", md: "4rem" }, textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
-              Welcome to JeevaHerbs
+            <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: "2.3rem", md: "4rem" }, textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+              JEEVA HERBS
             </Typography>
-            <Typography variant="h5" sx={{ mb: 2, fontWeight: "500", textShadow: "1px 1px 3px rgba(0,0,0,0.5)", color: "#4ade80" }}>
+            <Typography variant="h4" sx={{fontSize:{xs:"1.76rem", md:"4rem"}, mb: {xs:1, md:2}, fontWeight: "bold", textShadow: "1px 1px 3px rgba(0,0,0,0.5)", color: "#fff" }}>
+              Herbal Wellness Business Plan
+            </Typography>
+            <Typography variant="h5" sx={{ mb: {xs:1, md:2}, fontWeight: "500", textShadow: "1px 1px 3px rgba(0,0,0,0.5)", color: "#4ade80" }}>
               {slideImages[currentSlide].title}
             </Typography>
-            <Typography variant="h6" sx={{ mb: 6, fontWeight: "normal", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)", minHeight: "60px" }}>
+            <Typography variant="h6" sx={{ mb: {xs:3, md:6}, fontWeight: "normal", opacity: 0.9, textShadow: "1px 1px 3px rgba(0,0,0,0.5)", minHeight: "60px" }}>
               {slideImages[currentSlide].description}
             </Typography>
             <Box sx={{ display: "flex", gap: 3, justifyContent: "center", flexWrap: "wrap" }}>
@@ -145,7 +149,7 @@ const Home = () => {
       </Box>
 
       {/* About Section */}
-      <Box id="about" sx={{ py: 10, px: 2, backgroundColor: "white" }}>
+      <Box id="about" sx={{ py: {xs:2, md:10}, px: 2, backgroundColor: "white" }}>
         <Container maxWidth="lg">
           <Grid container spacing={6} alignItems="center">
             <Grid item xs={12} md={6}>
@@ -158,16 +162,122 @@ const Home = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h3" fontWeight="bold" color="#2c8786" gutterBottom>
-                About JeevaHerbs
+                ABOUT US
               </Typography>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 4, lineHeight: 1.8 }}>
-                We are dedicated to bringing the purest herbal remedies to the world. Our journey started with a simple belief: nature holds the key to holistic wellness. By combining ancient Ayurvedic wisdom with modern practices, we source, craft, and deliver the finest natural extracts to empower your health.
+              <Typography variant="h6" color="text.secondary" sx={{ mb: 3, lineHeight: 1.8 }}>
+                Jeeva Herbs is a wellness-focused company committed to providing herbal products that promote healthier lifestyles through natural ingredients. Our products are crafted with carefully selected herbs to support relaxation, comfort, and everyday wellness.
               </Typography>
-              <Typography variant="body1" color="text.secondary">
-                Join our community to access exclusive wellness resources, grow your network, and embark on a healthier lifestyle rooted in nature's greatest gifts.
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 4, fontSize: "1.1rem" }}>
+                Along with quality products, Jeeva Herbs also offers a rewarding business opportunity where members can grow through referrals, team building, and repeat purchases.
               </Typography>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ backgroundColor: "#f8f5ff", p: 3, borderRadius: 2, height: "100%" }}>
+                    <Typography variant="h5" fontWeight="bold" color="#2c8786" gutterBottom>
+                      Our Vision
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      To become one of India's most trusted herbal wellness companies by delivering natural products together with sustainable income opportunities.
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ backgroundColor: "#f0fdf4", p: 3, borderRadius: 2, height: "100%" }}>
+                    <Typography variant="h5" fontWeight="bold" color="#2c8786" gutterBottom>
+                      Our Mission
+                    </Typography>
+                    <Box component="ul" sx={{ color: "text.secondary", pl: 2, '& li': { mb: 1, fontSize: "0.95rem" } }}>
+                      <li>Promote herbal wellness.</li>
+                      <li>Build a strong business community.</li>
+                      <li>Deliver quality products.</li>
+                      <li>Support financial growth.</li>
+                      <li>Create long-term relationships.</li>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
+        </Container>
+      </Box>
+
+      {/* Why Choose Jeeva Herbs Section */}
+      <Box sx={{ py: {xs:2, md:6}, px: 2, background: "linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%)", position: "relative", overflow: "hidden" }}>
+        <Container maxWidth="md" sx={{ position: "relative", zIndex: 2 }}>
+          <Box sx={{ textAlign: "center", mb: 5 }}>
+            <Typography variant="h4" fontWeight="bold" sx={{ color: "#2c8786", mb: 1 }}>
+              WHY CHOOSE JEEVA HERBS?
+            </Typography>
+            <Typography variant="subtitle1" sx={{ color: "#b48600", fontWeight: "bold", letterSpacing: 1 }}>
+              NATURAL CARE • SMART INCOME • BETTER FUTURE
+            </Typography>
+          </Box>
+          <Grid container spacing={2} justifyContent="center">
+            {[
+              "Premium Herbal Product",
+              "Cashback Benefits",
+              "Affordable Package",
+              "Fast Wallet System",
+              "Simple Business Plan",
+              "Team Growth",
+              "Daily Income Opportunities",
+              "Repeat Income"
+            ].map((feature, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <Box 
+                  sx={{ 
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: 1.5, 
+                    backgroundColor: "white", 
+                    p: 1.5, 
+                    borderRadius: "12px", 
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.04)",
+                    border: "1px solid transparent",
+                    transition: "all 0.2s ease",
+                    cursor: "default",
+                    "&:hover": {
+                      borderColor: "#4ade80",
+                      transform: "translateY(-3px)",
+                      boxShadow: "0 8px 20px rgba(44, 135, 134, 0.1)"
+                    }
+                  }}
+                >
+                  <Box sx={{ 
+                    display: "flex", 
+                    justifyContent: "center", 
+                    alignItems: "center", 
+                    width: 32, 
+                    height: 32, 
+                    borderRadius: "50%", 
+                    backgroundColor: "#e6f4f1",
+                    flexShrink: 0
+                  }}>
+                    <CheckCircleIcon sx={{ color: "#2c8786", fontSize: 20 }} />
+                  </Box>
+                  <Typography variant="body2" fontWeight="bold" color="#333" sx={{ lineHeight: 1.2 }}>
+                    {feature}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+          
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <Box sx={{ 
+              backgroundColor: "#2c8786", 
+              color: "white", 
+              py: 0.5, 
+              px: 3, 
+              borderRadius: "20px",
+              boxShadow: "0 2px 8px rgba(44,135,134,0.2)",
+              border: "2px solid #eab308"
+            }}>
+              <Typography variant="body2" fontWeight="bold">
+                ★ NATURAL • SAFE • EFFECTIVE ★
+              </Typography>
+            </Box>
+          </Box>
         </Container>
       </Box>
 
@@ -176,11 +286,11 @@ const Home = () => {
         <Container maxWidth="lg">
           <Grid container spacing={6} alignItems="center">
             <Grid item xs={12} md={5}>
-              <Typography variant="h3" fontWeight="bold" color="#2c8786" gutterBottom>
-                Contact Us
+              <Typography variant="h3" fontWeight="bold" color="#2c8786" gutterBottom sx={{fontSize:{xs:"2.3rem", md:"4rem"}}}>
+                GET IN TOUCH
               </Typography>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 6 }}>
-                Have questions? We'd love to hear from you.
+              <Typography variant="h6" color="text.secondary" sx={{ mb: {xs:2, md:6}, fontSize:{xs:"1rem", md:"4rem"} }}>
+                Have questions about our premium herbal products or simple business plan? We're here to help you build a better future!
               </Typography>
               
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>

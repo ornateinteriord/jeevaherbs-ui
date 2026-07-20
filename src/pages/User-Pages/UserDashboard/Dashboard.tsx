@@ -670,28 +670,28 @@ const UserDashboard = () => {
         }}
       >
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" />
+          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="linear-gradient(to right, #607d8b, #78909c)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" />
+          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="linear-gradient(to right, #5c8a8a, #73a9a9)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="linear-gradient(to right, #a08c70, #c4a986)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="linear-gradient(to right, #8b6b60, #a98274)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" />
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="linear-gradient(to right, #7a6b8a, #9583a8)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
+          <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" background="linear-gradient(to right, #507b5a, #659a72)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/withdrawals')} amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" />
+          <DashboardCard onClick={() => navigate('/user/withdrawals')} amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" background="linear-gradient(to right, #9a6060, #bc7676)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/transactions')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
+          <DashboardCard onClick={() => navigate('/user/transactions')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="linear-gradient(to right, #5d6d7e, #758aa1)" />
         </Grid>
 
         {isLoanApproved && (

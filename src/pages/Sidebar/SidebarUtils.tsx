@@ -19,8 +19,10 @@ import {
   AnnouncementIcon,
   EventIcon,
   SmsIcon,
+  MonetizationOnIcon,
+  TrendingUpIcon,
 } from "../Icons";
-import { CardMembershipRounded, Pending } from "@mui/icons-material";
+import { AccountBalance, Pending, CurrencyRupee, EmojiEvents, Savings, Output } from "@mui/icons-material";
 
 export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -179,7 +181,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-  /* {
+   {
     name: "Income Management",
     icon: <MonetizationOnIcon />,
     isExpandable: true,
@@ -197,12 +199,12 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       {
         name: "Daily ROI",
         path: "/admin/income/daily-roi",
-        icon: <PaymentsIcon />,
+        icon: <CurrencyRupee />,
       },
       {
         name: "Daily Incentive",
         path: "/admin/income/daily-incentive",
-        icon: <PaymentsIcon />,
+        icon: <EmojiEvents />,
       },
       {
         name: "Reward",
@@ -212,12 +214,12 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       {
         name: "Total Earnings",
         path: "/admin/income/total-earnings",
-        icon: <PaymentsIcon />,
+        icon: <Savings />,
       },
       {
         name: "Total Withdraws",
         path: "/admin/income/total-withdraws",
-        icon: <PaymentsIcon />,
+        icon: <Output />,
       },
       {
         name: "Wallet Balance",
@@ -225,26 +227,26 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <AccountBalance />,
       },
     ],
-  }, */
+  }, 
 
-{
-  name: "Loan Services",
-  icon: <CreditCardIcon />,
-  isExpandable: true,
-  subItems: [
-    { 
-      name: "Pending Applications", 
-      path: "/admin/member/pending", 
-      icon: <Pending/> 
-    },
-    { 
-      name: "Processed Loans", 
-      path: "/admin/member/processed", 
-      icon: <CardMembershipRounded /> 
-    },
+// {
+//   name: "Loan Services",
+//   icon: <CreditCardIcon />,
+//   isExpandable: true,
+//   subItems: [
+//     { 
+//       name: "Pending Applications", 
+//       path: "/admin/member/pending", 
+//       icon: <Pending/> 
+//     },
+//     { 
+//       name: "Processed Loans", 
+//       path: "/admin/member/processed", 
+//       icon: <CardMembershipRounded /> 
+//     },
    
-  ],
-},
+//   ],
+// },
 {
   name: "Repayment Tracking",
   icon: <PaymentsIcon />,
