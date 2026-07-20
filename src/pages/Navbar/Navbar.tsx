@@ -64,7 +64,8 @@ const Navbar = ({
         position="fixed"
         className="navbar"
         style={{
-          background: "#2c8786",
+          background: "#ffffff",
+          color: "#333333",
           height: "65px",
           justifyContent: "center"
         }}
@@ -75,7 +76,7 @@ const Navbar = ({
               onClick={() => toggelSideBar()}
               sx={{ display: { xs: 'flex', md: 'none' } }}
             >
-              <Menu color="white" />
+              <Menu color="#333333" />
             </IconButton>
           )}
           <Box 
@@ -86,7 +87,13 @@ const Navbar = ({
               component="img"
               src={logoImg}
               alt="JeevaHerbs Logo"
-              sx={{ height: { xs: 70, md: 80 }, width: "auto", objectFit: "contain" }}
+              sx={{ 
+                height: { xs: 45, md: 55 }, 
+                width: "auto", 
+                objectFit: "contain",
+                ml: { xs: 0, md: 2 },
+                borderRadius: "8px"
+              }}
             />
           </Box>
           
@@ -97,7 +104,7 @@ const Navbar = ({
                   if (location.pathname !== "/") navigate("/");
                   setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100);
                 }} 
-                sx={{ color: "white", cursor: "pointer", fontWeight: 700, fontSize: "16px", "&:hover": { color: "#4ade80" } }}
+                sx={{ color: "#333333", cursor: "pointer", fontWeight: 700, fontSize: "16px", "&:hover": { color: "#2c8187" } }}
               >
                 About Us
               </Typography>
@@ -106,7 +113,7 @@ const Navbar = ({
                   if (location.pathname !== "/") navigate("/");
                   setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100);
                 }} 
-                sx={{ color: "white", cursor: "pointer", fontWeight: 700, fontSize: "16px", "&:hover": { color: "#4ade80" } }}
+                sx={{ color: "#333333", cursor: "pointer", fontWeight: 700, fontSize: "16px", "&:hover": { color: "#2c8187" } }}
               >
                 Contact Us
               </Typography>
@@ -127,11 +134,11 @@ const Navbar = ({
                         ? memberDetails.Name.charAt(0).toUpperCase()
                         : "U"}
                     </Avatar>
-                    <Typography variant="body1" sx={{ color: "white" }}>
+                    <Typography variant="body1" sx={{ color: "#333333", fontWeight: 500 }}>
                       {memberDetails?.Name || "Admin"}
                     </Typography>
                     <ChevronDown
-                      color="white"
+                      color="#333333"
                       size={22}
                       style={{
                         transform: anchorEl ? "rotate(180deg)" : "rotate(0deg)",
@@ -158,15 +165,15 @@ const Navbar = ({
                   variant="outlined"
                   onClick={() => navigate("/login")}
                   sx={{ 
-                    borderColor: "white", 
-                    color: "white", 
+                    borderColor: "#2c8187", 
+                    color: "#2c8187", 
                     fontWeight: "bold",
                     borderRadius: "20px",
                     px: { xs: 1.5, sm: 3 },
                     fontSize: { xs: "0.8rem", sm: "0.9rem" },
                     "&:hover": {
-                      backgroundColor: "rgba(255,255,255,0.1)",
-                      borderColor: "white"
+                      backgroundColor: "rgba(44,129,135,0.1)",
+                      borderColor: "#2c8187"
                     }
                   }}
                 >
