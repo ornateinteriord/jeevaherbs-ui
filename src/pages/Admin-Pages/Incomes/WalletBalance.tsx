@@ -14,27 +14,23 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
 import {
   DASHBOARD_CUTSOM_STYLE,
-  getAdminDailyBenifitsColumns,
-
+  getAdminPageTransactionColumns,
 } from "../../../utils/DataTableColumnsProvider";
-import { useGetAllDailyPayouts } from '../../../api/Admin';
+import { useGetAllTransactionDetails } from '../../../api/Admin';
 
 
 const WalletBalance = () => {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Properly destructure the useQuery return values
-  const { data: dailyBenefits, isLoading, isError } = useGetAllDailyPayouts();
-  console.log(dailyBenefits);
+  const { data: transactions, isLoading, isError } = useGetAllTransactionDetails();
 
-  // Handle the data structure from API
-  const filteredData = dailyBenefits?.filter((benefit: any) =>
-    Object.values(benefit).some(
+  const filteredData = (transactions || []).filter((tx: any) =>
+    Object.values(tx).some(
       value => 
         value && 
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
-  ) || [];
+  );
 
   const noDataComponent = (
     <div style={{ padding: "24px" }}>
@@ -66,7 +62,7 @@ const WalletBalance = () => {
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
             >
-              List of Daily Benefits Payouts
+              Wallet Transactions
             </AccordionSummary>
             <AccordionDetails>
               <Box
@@ -86,7 +82,7 @@ const WalletBalance = () => {
                 />
               </Box>
               <DataTable
-                columns={getAdminDailyBenifitsColumns()}
+                columns={getAdminPageTransactionColumns()}
                 data={filteredData}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}

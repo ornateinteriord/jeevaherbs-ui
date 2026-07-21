@@ -1,4 +1,3 @@
-import { CheckCircle2Icon, PackageIcon } from "lucide-react";
 import { SideBarMenuItemType } from "../../store/store";
 import {
   DashboardIcon,
@@ -18,7 +17,6 @@ import {
   SupportIcon,
   AnnouncementIcon,
   EventIcon,
-  SmsIcon,
   MonetizationOnIcon,
   TrendingUpIcon,
 } from "../Icons";
@@ -164,7 +162,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-   {
+   /* {
     name: "Activation Center", 
     icon: <DashboardIcon />,
     isExpandable: true, 
@@ -180,7 +178,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         path: "/admin/ActivatePackage",
       },
     ],
-  },
+  }, */
    {
     name: "Income Management",
     icon: <MonetizationOnIcon />,
@@ -197,7 +195,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <TrendingUpIcon />,
       },
       {
-        name: "Daily ROI",
+        name: "Cash Back",
         path: "/admin/income/daily-roi",
         icon: <CurrencyRupee />,
       },
@@ -247,7 +245,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
    
 //   ],
 // },
-{
+/* {
   name: "Repayment Tracking",
   icon: <PaymentsIcon />,
   isExpandable: true,
@@ -258,7 +256,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       icon: <PaymentsIcon /> 
     },
   ],
-},
+}, */
 
 
   {
@@ -276,19 +274,8 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
   {
     name: "Transaction Records",
     icon: <ShowChartIcon />,
-    isExpandable: true,
-    subItems: [
-      {
-        name: "Financial Transactions",
-        path: "/admin/transactions",
-        icon: <ShowChartIcon />,
-      },
-      {
-        name: "SMS Logs",
-        path: "/admin/transactions/sms",
-        icon: <SmsIcon />,
-      },
-    ],
+    path: "/admin/transactions",
+    isExpandable: false,
   },
   {
     name: "Support Center",
