@@ -50,19 +50,20 @@ const DailyROI = () => {
         alignItems="center"
         sx={{ margin: "2rem", mt: 12 }}
       >
-        <Typography variant="h4">Daily ROI Management</Typography>
+        <Typography variant="h4" sx={{fontSize: {xs:"1.2rem", md:"2.5rem"}}}>Daily ROI Management</Typography>
         <Button
           variant="contained"
           onClick={handleTriggerROI}
           disabled={loading}
           sx={{
             backgroundColor: "#2c8786",
-            padding: "8px 24px",
-            fontSize: "1rem",
+            padding: "4px 12px",
+            fontSize: {xs:"0.9rem", md:"1.3rem"},
             "&:hover": { backgroundColor: "#206463" },
+            textTransform: "capitalize"
           }}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Trigger Daily ROI Now"}
+          {loading ? <CircularProgress size={24} color="inherit" /> : "Trigger ROI "}
         </Button>
       </Grid>
       

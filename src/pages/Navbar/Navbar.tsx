@@ -88,7 +88,7 @@ const Navbar = ({
               src={logoImg}
               alt="JeevaHerbs Logo"
               sx={{ 
-                height: { xs: 45, md: 55 }, 
+                height: { xs: 75, md: 80 }, 
                 width: "auto", 
                 objectFit: "contain",
                 ml: { xs: 0, md: 2 },

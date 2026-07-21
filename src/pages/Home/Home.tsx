@@ -84,7 +84,7 @@ const Home = () => {
             <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: "2.3rem", md: "4rem" }, textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
               JEEVA HERBS
             </Typography>
-            <Typography variant="h4" sx={{fontSize:{xs:"1.76rem", md:"4rem"}, mb: {xs:1, md:2}, fontWeight: "bold", textShadow: "1px 1px 3px rgba(0,0,0,0.5)", color: "#fff" }}>
+            <Typography variant="h4" sx={{fontSize:{xs:"1.3rem", md:"3rem"}, mb: {xs:1, md:2}, fontWeight: "bold", textShadow: "1px 1px 3px rgba(0,0,0,0.5)", color: "#fff" }}>
               Herbal Wellness Business Plan
             </Typography>
             <Typography variant="h5" sx={{ mb: {xs:1, md:2}, fontWeight: "500", textShadow: "1px 1px 3px rgba(0,0,0,0.5)", color: "#4ade80" }}>
@@ -161,10 +161,10 @@ const Home = () => {
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h3" fontWeight="bold" color="#2c8786" gutterBottom>
+              <Typography variant="h3" fontWeight="bold" color="#2c8786" gutterBottom fontSize={{xs:"1.3rem", md:"2.5rem"}}>
                 ABOUT US
               </Typography>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 3, lineHeight: 1.8 }}>
+              <Typography variant="h6" color="text.secondary" sx={{ mb: 3, lineHeight: 1.8, fontSize: {xs:"0.9rem", md:"1.1rem"} }}>
                 Jeeva Herbs is a wellness-focused company committed to providing herbal products that promote healthier lifestyles through natural ingredients. Our products are crafted with carefully selected herbs to support relaxation, comfort, and everyday wellness.
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ mb: 4, fontSize: "1.1rem" }}>
@@ -205,7 +205,7 @@ const Home = () => {
       <Box sx={{ py: {xs:2, md:6}, px: 2, background: "linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%)", position: "relative", overflow: "hidden" }}>
         <Container maxWidth="md" sx={{ position: "relative", zIndex: 2 }}>
           <Box sx={{ textAlign: "center", mb: 5 }}>
-            <Typography variant="h4" fontWeight="bold" sx={{ color: "#2c8786", mb: 1 }}>
+            <Typography variant="h4" fontWeight="bold" sx={{ color: "#2c8786", mb: 1, fontSize: {xs:"1.3rem", md:"3rem"} }}>
               WHY CHOOSE JEEVA HERBS?
             </Typography>
             <Typography variant="subtitle1" sx={{ color: "#b48600", fontWeight: "bold", letterSpacing: 1 }}>
@@ -286,10 +286,10 @@ const Home = () => {
         <Container maxWidth="lg">
           <Grid container spacing={6} alignItems="center">
             <Grid item xs={12} md={5}>
-              <Typography variant="h3" fontWeight="bold" color="#2c8786" gutterBottom sx={{fontSize:{xs:"2.3rem", md:"4rem"}}}>
+              <Typography variant="h3" fontWeight="bold" color="#2c8786" gutterBottom sx={{fontSize:{xs:"2.3rem", md:"3rem"}}}>
                 GET IN TOUCH
               </Typography>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: {xs:2, md:6}, fontSize:{xs:"1rem", md:"4rem"} }}>
+              <Typography variant="h6" color="text.secondary" sx={{ mb: {xs:2, md:6}, fontSize:{xs:"1rem", md:"1.8rem"} }}>
                 Have questions about our premium herbal products or simple business plan? We're here to help you build a better future!
               </Typography>
               

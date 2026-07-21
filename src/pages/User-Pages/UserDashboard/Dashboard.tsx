@@ -388,15 +388,15 @@ const UserDashboard = () => {
 
       <Box
         sx={{
-          height: { xs: 'auto', md: '100px' },
+          height: { xs: '220px', md: '100px' },
           width: '100%',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          mt: { xs: 6, md: 8 },
-          py: { xs: 6, md: 0 },
+          mt: { xs: 3, md: 8 },
+          py: { xs: 2, md: 0 },
           backgroundColor: "#299592",
           position: 'relative'
         }}
@@ -420,10 +420,10 @@ const UserDashboard = () => {
             justifyContent: 'space-evenly',
             alignItems: 'center',
             width: '100%',
-            px: { xs: 4, md: 8 },
+            px: { xs: 2, md: 4 },
             position: 'relative',
             zIndex: 20,
-            gap: { xs: 6, md: 0 }
+            gap: { xs: 2, md: 0 }
           }}
         >
           <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
