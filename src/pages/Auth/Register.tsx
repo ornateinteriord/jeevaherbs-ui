@@ -30,7 +30,6 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MapIcon from "@mui/icons-material/Map";
 import DomainIcon from "@mui/icons-material/Domain";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
-import ExploreIcon from "@mui/icons-material/Explore";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
@@ -92,7 +91,7 @@ const Register = () => {
   const stateOptions = states || [];
   const districtOptions = districts || [];
   const cityOptions = citiesAndTaluks?.cities || [];
-  const talukOptions = citiesAndTaluks?.taluks || [];
+  // const talukOptions = citiesAndTaluks?.taluks || [];
 
   // Auto-populate sponsor code from URL when component mounts
   useEffect(() => {
@@ -655,7 +654,7 @@ const Register = () => {
                   )}
                 />
 
-                <Autocomplete
+                {/* <Autocomplete
                   freeSolo
                   options={talukOptions}
                   value={formData.taluk || ''}
@@ -688,7 +687,7 @@ const Register = () => {
                       }}
                     />
                   )}
-                />
+                /> */}
                 
                 <FormControl
                   error={!!genderError}
