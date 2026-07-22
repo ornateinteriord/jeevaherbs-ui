@@ -17,24 +17,21 @@ import {
   getAdminDailyBenifitsColumns,
 
 } from "../../../utils/DataTableColumnsProvider";
-import { useGetAllDailyPayouts } from '../../../api/Admin';
+import { useGetTransactionsByType } from '../../../api/Admin';
 
 
 const DailyIncentive = () => {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Properly destructure the useQuery return values
-  const { data: dailyBenefits, isLoading, isError } = useGetAllDailyPayouts();
-  console.log(dailyBenefits);
+  const { data: rawData, isLoading, isError } = useGetTransactionsByType("Daily Incentive");
 
-  // Handle the data structure from API
-  const filteredData = dailyBenefits?.filter((benefit: any) =>
+  const filteredData = (rawData || []).filter((benefit: any) =>
     Object.values(benefit).some(
       value => 
         value && 
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
-  ) || [];
+  );
 
   const noDataComponent = (
     <div style={{ padding: "24px" }}>

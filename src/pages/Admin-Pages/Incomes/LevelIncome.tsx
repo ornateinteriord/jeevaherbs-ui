@@ -17,30 +17,22 @@ import {
   getAdminLevelBenifitsColumns,
 
 } from "../../../utils/DataTableColumnsProvider";
-import { useGetAllTransactionDetails } from '../../../api/Admin';
+import { useGetTransactionsByType } from '../../../api/Admin';
 
 const LevelIncome = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Use the same transaction hook and filter for level benefits
-  const { data: allTransactions, isLoading, isError } = useGetAllTransactionDetails();
+  // Fetch Level Benefits and filter for Level Income (indirect - level 2 to 10)
+  const { data: rawData, isLoading, isError } = useGetTransactionsByType("Level Benefits");
+  const levelBenefits = (rawData || []).filter((tx: any) => tx.benefit_type === 'indirect' || (tx.level && tx.level >= 2));
 
-  // Filter transactions to get only level benefits
-  const levelBenefits = allTransactions?.filter((transaction: any) => 
-    transaction.type === 'level_benefit' || 
-    transaction.transactionType === 'level' ||
-    transaction.category === 'level_benefits' ||
-    // Add other conditions that identify level benefits in your data
-    transaction.description?.toLowerCase().includes('level')
-  ) || [];
-
-  const filteredData = levelBenefits?.filter((benefit: any) =>
+  const filteredData = levelBenefits.filter((benefit: any) =>
     Object.values(benefit).some(
-      value => 
-        value && 
+      value =>
+        value &&
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
-  ) || [];
+  );
 
   const noDataComponent = (
     <div style={{ padding: "24px" }}>

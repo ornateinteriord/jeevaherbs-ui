@@ -18,7 +18,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  CircularProgress
+  CircularProgress,
+  Avatar
 } from '@mui/material';
 import '../../Dashboard/dashboard.scss';
 import DashboardTable from '../../Dashboard/DashboardTable';
@@ -278,15 +279,15 @@ const UserDashboard = () => {
     },
     {
       title: 'Total Registration',
-      direct: memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0,
-      indirect: (memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0),
-      total: memberDetails?.total_team || 0,
+      direct: memberDetails?.registration_stats?.direct ?? memberDetails?.direct_referrals?.length ?? 0,
+      indirect: memberDetails?.registration_stats?.indirect ?? ((memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.length || 0)),
+      total: memberDetails?.registration_stats?.total ?? memberDetails?.total_team ?? 0,
     },
     {
       title: 'Total Activation',
-      direct: memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0,
-      indirect: (memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0),
-      total: memberDetails?.total_team || 0,
+      direct: memberDetails?.registration_stats?.direct ?? memberDetails?.direct_referrals?.length ?? 0,
+      indirect: memberDetails?.registration_stats?.indirect ?? ((memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.length || 0)),
+      total: memberDetails?.registration_stats?.total ?? memberDetails?.total_team ?? 0,
     },
     {
       title: 'Current Month Activation',
@@ -360,6 +361,9 @@ const UserDashboard = () => {
     }
   };
 
+  const memberName = memberDetails?.Name || memberDetails?.name || memberDetails?.username || 'Member';
+  const firstLetter = memberName ? memberName.charAt(0).toUpperCase() : 'M';
+
   return (
     <>
       {/* Payment verification loading overlay */}
@@ -388,17 +392,18 @@ const UserDashboard = () => {
 
       <Box
         sx={{
-          height: { xs: '220px', md: '100px' },
+          minHeight: { xs: 'auto', md: '160px' },
           width: '100%',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          mt: { xs: 3, md: 8 },
-          py: { xs: 2, md: 0 },
+          mt: { xs: 8, sm: 8, md: 8 },
+          py: { xs: 4, sm: 4, md: 5 },
           backgroundColor: "#299592",
-          position: 'relative'
+          position: 'relative',
+          boxShadow: '0 4px 12px rgba(41, 149, 146, 0.2)'
         }}
       >
         <Box
@@ -416,22 +421,22 @@ const UserDashboard = () => {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            justifyContent: 'space-evenly',
+            flexDirection: { xs: 'column', lg: 'row' },
+            justifyContent: 'space-between',
             alignItems: 'center',
             width: '100%',
-            px: { xs: 2, md: 4 },
+            px: { xs: 2, sm: 4, md: 6 },
             position: 'relative',
             zIndex: 20,
-            gap: { xs: 2, md: 0 }
+            gap: { xs: 3, sm: 4 }
           }}
         >
-          <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Box sx={{ textAlign: { xs: 'center', lg: 'left' } }}>
             <Typography
               variant="h4"
               sx={{
                 color: 'white',
-                fontSize: { xs: '1.5rem', md: '2.5rem' }
+                fontSize: { xs: '1.7rem', sm: '1.8rem', md: '2.5rem' }
               }}
             >
               Welcome to Dashboard
@@ -447,14 +452,141 @@ const UserDashboard = () => {
             >
               Manage your network and track your success
             </Typography> */}
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: 2,
+                mt: 2,
+                justifyContent: { xs: 'center', lg: 'flex-start' }
+              }}
+            >
+              <Avatar
+                src={memberDetails?.profile_image}
+                alt={memberName}
+                sx={{
+                  width: { xs: 48, md: 54 },
+                  height: { xs: 48, md: 54 },
+                  bgcolor: '#ffffff',
+                  color: '#299592',
+                  fontWeight: 'bold',
+                  fontSize: { xs: '1.3rem', md: '1.5rem' },
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  border: '2px solid rgba(255, 255, 255, 0.9)'
+                }}
+              >
+                {!memberDetails?.profile_image && firstLetter}
+              </Avatar>
+              <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    lineHeight: 1.2,
+                    fontSize: { xs: '1.1rem', md: '1.3rem' }
+                  }}
+                >
+                  {memberName}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: { xs: '0.85rem', md: '0.95rem' },
+                    mt: 0.3
+                  }}
+                >
+                  ID: <span style={{ fontWeight: 'bold', color: 'white' }}>{memberDetails?.Member_id || memberId || '—'}</span>
+                </Typography>
+              </Box>
+            </Box>
           </Box>
 
+          {/* Center Box: Total Earnings & Total Withdrawals */}
           <Box
             sx={{
               display: 'flex',
+              flexWrap: 'wrap',
               alignItems: 'center',
-              gap: { xs: 6, md: 12 },
-              color: 'white'
+              gap: { xs: 2, sm: 3, md: 4 },
+              justifyContent: 'center'
+            }}
+          >
+            <Box
+              sx={{
+                textAlign: 'center',
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(6, 95, 70, 0.35) 100%)',
+                border: '1px solid rgba(52, 211, 153, 0.55)',
+                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '16px',
+                px: { xs: 2, sm: 3 },
+                py: 1.5,
+                minWidth: { xs: '110px', sm: '130px' }
+              }}
+            >
+              <Typography
+                variant="h4"
+                sx={{
+                  fontSize: { xs: '1.25rem', md: '1.6rem' },
+                  fontWeight: 'bold',
+                  mb: 0.3,
+                  color: '#6ee7b7'
+                }}
+              >
+                {loading ? '₹0' : totalEarningsAmount}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="caption" sx={{ color: '#d1fae5', fontWeight: 600, letterSpacing: 0.5 }}>
+                  Total Earnings
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                textAlign: 'center',
+                background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.22) 0%, rgba(154, 52, 18, 0.35) 100%)',
+                border: '1px solid rgba(251, 146, 60, 0.55)',
+                boxShadow: '0 4px 15px rgba(249, 115, 22, 0.25)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '16px',
+                px: { xs: 2, sm: 3 },
+                py: 1.5,
+                minWidth: { xs: '110px', sm: '130px' }
+              }}
+            >
+              <Typography
+                variant="h4"
+                sx={{
+                  fontSize: { xs: '1.25rem', md: '1.6rem' },
+                  fontWeight: 'bold',
+                  mb: 0.3,
+                  color: '#fdba74'
+                }}
+              >
+                {loading ? '₹0' : totalWithdrawsAmount}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="caption" sx={{ color: '#ffedd5', fontWeight: 600, letterSpacing: 0.5 }}>
+                  Total Withdraws
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          {/* Right Corner Box: Direct & Total Team */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: { xs: 6, md: 10 },
+              color: 'white',
+              justifyContent: 'center'
             }}
           >
             <Box sx={{ textAlign: 'center' }}>
@@ -463,10 +595,10 @@ const UserDashboard = () => {
                 sx={{
                   fontSize: { xs: '1.25rem', md: '1.5rem' },
                   fontWeight: 'bold',
-                  mb: 2
+                  mb: 0.5
                 }}
               >
-                {memberDetails ? `${memberDetails.direct_referrals?.length || 0}/${memberDetails.direct_referrals?.length || 0}` : '—'}
+                {memberDetails ? (memberDetails.registration_stats?.direct ?? memberDetails.direct_referrals?.length ?? 0) : '—'}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
                 <Typography variant="caption">Direct</Typography>
@@ -479,10 +611,10 @@ const UserDashboard = () => {
                 sx={{
                   fontSize: { xs: '1.25rem', md: '1.5rem' },
                   fontWeight: 'bold',
-                  mb: 2
+                  mb: 0.5
                 }}
               >
-                {memberDetails ? `${memberDetails.total_team || 0}/${memberDetails.total_team || 0}` : '—'}
+                {memberDetails ? (memberDetails.registration_stats?.total ?? memberDetails.total_team ?? 0) : '—'}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
                 <Typography variant="caption">Total</Typography>
@@ -521,10 +653,10 @@ const UserDashboard = () => {
           mx: { xs: 2, sm: 3, md: 4 },
           my: 1.5,
           p: 2,
-          backgroundColor: '#f8f5ff',
+          backgroundColor: '#f8f5ff9b',
           borderRadius: 2,
           border: '1px solid #e9d5ff',
-          boxShadow: '0 2px 8px rgba(44, 135, 134, 0.1)',
+          boxShadow: '0 2px 8px rgba(44, 135, 134, 0.10)',
         }}
       >
         <Typography
@@ -659,39 +791,38 @@ const UserDashboard = () => {
         container
         spacing={{ xs: 2, sm: 3 }}
         sx={{
-          mx: { xs: 1, sm: 2 },
+          px: { xs: 2, sm: 3, md: 4 },
           my: 2,
           pt: 3,
-          pr: 7,
-          width: 'auto',
+          width: '100%',
           '& .MuiGrid-item': {
             display: 'flex',
           }
         }}
       >
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="linear-gradient(to right, #607d8b, #78909c)" />
+          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="blur_gray" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="linear-gradient(to right, #5c8a8a, #73a9a9)" />
+          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="blur_gray" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="linear-gradient(to right, #a08c70, #c4a986)" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="blur_gray" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="linear-gradient(to right, #8b6b60, #a98274)" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="blur_gray" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="linear-gradient(to right, #7a6b8a, #9583a8)" />
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="blur_gray" />
+        </Grid>
+        {/* <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" background="blur_gray" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" background="linear-gradient(to right, #507b5a, #659a72)" />
-        </Grid>
+          <DashboardCard onClick={() => navigate('/user/withdrawals')} amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" background="blur_gray" />
+        </Grid> */}
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/withdrawals')} amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" background="linear-gradient(to right, #9a6060, #bc7676)" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/transactions')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="linear-gradient(to right, #5d6d7e, #758aa1)" />
+          <DashboardCard onClick={() => navigate('/user/transactions')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="blur_gray" />
         </Grid>
 
         {isLoanApproved && (
@@ -701,6 +832,7 @@ const UserDashboard = () => {
               dueAmount={dueAmount}
               title="Loan Amount"
               type="loan"
+              background="blur_gray"
               onRepay={handleRepayClick}
               isRepayEnabled={isRepayEnabled}
               alreadyRepaidToday={alreadyRepaidToday}

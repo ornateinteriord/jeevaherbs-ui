@@ -86,6 +86,22 @@ export const useGetAllTransactionDetails = () => {
   });
 };
 
+// Fetch admin transactions filtered by transaction_type
+export const useGetTransactionsByType = (transaction_type: string) => {
+  return useQuery({
+    queryKey: ["AdminTransactionsByType", transaction_type],
+    queryFn: async () => {
+      const response = await get("/admin/transactions", transaction_type === "all" ? {} : { transaction_type });
+      if (response.success) {
+        return response.data || [];
+      } else {
+        return [];
+      }
+    },
+    enabled: !!transaction_type,
+  });
+};
+
 export const useGetAllTickets = ()=>{
   return useQuery({
     queryKey:["AllTickets"],

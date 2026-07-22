@@ -14,31 +14,27 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
 import {
   DASHBOARD_CUTSOM_STYLE,
-  getAdminDailyBenifitsColumns,
-
+  getRewardColumns,
 } from "../../../utils/DataTableColumnsProvider";
-import { useGetAllDailyPayouts } from '../../../api/Admin';
+import { useGetTransactionsByType } from '../../../api/Admin';
 
 
 const Reward = () => {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Properly destructure the useQuery return values
-  const { data: dailyBenefits, isLoading, isError } = useGetAllDailyPayouts();
-  console.log(dailyBenefits);
+  const { data: rewardTransactions, isLoading, isError } = useGetTransactionsByType("Reward");
 
-  // Handle the data structure from API
-  const filteredData = dailyBenefits?.filter((benefit: any) =>
+  const filteredData = (rewardTransactions || []).filter((benefit: any) =>
     Object.values(benefit).some(
       value => 
         value && 
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
-  ) || [];
+  );
 
   const noDataComponent = (
     <div style={{ padding: "24px" }}>
-      {isError ? "Error loading data" : "No data available in table"}
+      {isError ? "Error loading data" : "No reward data available in table"}
     </div>
   );
 
@@ -53,7 +49,7 @@ const Reward = () => {
   return (
     <>
       <Typography variant="h4" sx={{ margin: "2rem", mt: 10 }}>
-        Reward
+        Reward Management
       </Typography>
       <Card sx={{ margin: "2rem", mt: 2 }}>
         <CardContent>
@@ -66,7 +62,7 @@ const Reward = () => {
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
             >
-              List of Daily Benefits Payouts
+              List of Reward Payouts
             </AccordionSummary>
             <AccordionDetails>
               <Box
@@ -86,7 +82,7 @@ const Reward = () => {
                 />
               </Box>
               <DataTable
-                columns={getAdminDailyBenifitsColumns()}
+                columns={getRewardColumns()}
                 data={filteredData}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}

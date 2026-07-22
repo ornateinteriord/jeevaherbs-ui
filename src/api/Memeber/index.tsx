@@ -296,12 +296,14 @@ export const useGetMemberDetails = (userId: string | null) => {
     queryKey: ["memberDetails", userId],
     queryFn: async () => {
       const response = await getUser(userId);
-      if (response.success) {
-        setUser(response.data);
-        return response.data;
-      } else {
-        throw new Error(response.message || "Failed to fetch member details");
+      // Handle both response shapes: { success, data } and { success, member }
+      const memberData = response?.data || response?.member || null;
+      if (response?.success && memberData) {
+        setUser(memberData);
+        return memberData;
       }
+      // Return null instead of undefined to satisfy TanStack Query
+      return memberData || null;
     },
     enabled: !!userId,
   });

@@ -20,7 +20,7 @@ import {
   MonetizationOnIcon,
   TrendingUpIcon,
 } from "../Icons";
-import { AccountBalance, Pending, CurrencyRupee, EmojiEvents, Savings, Output } from "@mui/icons-material";
+import { AccountBalance, CurrencyRupee, EmojiEvents, Savings, Output } from "@mui/icons-material";
 
 export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -265,12 +265,12 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     path: "/admin/payout",
     isExpandable: false,
   },
-  {
+  /* {
     name: "Withdrawal Requests",
     icon: <Pending />,
     path: "/admin/withdraw-pending",
     isExpandable: false,
-  },
+  }, */
   {
     name: "Transaction Records",
     icon: <ShowChartIcon />,

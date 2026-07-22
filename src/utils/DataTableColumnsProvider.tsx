@@ -892,22 +892,28 @@ export const getPayblesColumns = () =>[
 export const getCashBackColumns = () =>[
   {
     name: "Date",
-    selector: (row: any) => getFormattedDate(row.date),
+    selector: (row: any) => getFormattedDate(row.transaction_date || row.createdAt),
     sortable: true,
   },
   {
-    name: "Member",
-    selector: (row: any) => row.Member,
+    name: "Member ID",
+    selector: (row: any) => row.member_id || "-",
+    sortable: true,
+  },
+  {
+    name: "Description",
+    selector: (row: any) => row.description || "-",
     sortable: true,
   },
   {
     name: "Amount",
-    selector: (row: any) => row.amount,
+    selector: (row: any) => row.ew_credit || row.amount || "0",
     sortable: true,
+    format: (row: any) => `₹${parseFloat(row.ew_credit || row.amount || 0).toFixed(2)}`,
   },
   {
-    name: "Action",
-    selector: (row: any) => row.action,
+    name: "Status",
+    selector: (row: any) => row.status || "-",
     sortable: true,
   },
 ]
@@ -959,7 +965,7 @@ export const getMultiLevelColumns = () => [
 export const getAdminDailyBenifitsColumns = () => [
   {
     name: "Date",
-    selector: (row: any) => getFormattedDate(row.date),
+    selector: (row: any) => getFormattedDate(row.transaction_date || row.createdAt),
     sortable: true,
   },
   {
@@ -968,41 +974,128 @@ export const getAdminDailyBenifitsColumns = () => [
     sortable: true,
   },
   {
-    name: "Gross Profit",
-    selector: (row: any) => row.gross_profit || "0.00",
+    name: "Description",
+    selector: (row: any) => row.description || "-",
     sortable: true,
-    format: (row: any) => `₹${parseFloat(row.gross_profit || 0).toFixed(2)}`,
   },
- 
+  {
+    name: "Level",
+    selector: (row: any) => row.level ? `Level ${row.level}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Amount",
+    selector: (row: any) => row.ew_credit || "0",
+    sortable: true,
+    format: (row: any) => `₹${parseFloat(row.ew_credit || 0).toFixed(2)}`,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+  },
+];
+
+export const getRewardColumns = () => [
+  {
+    name: "Date",
+    selector: (row: any) => getFormattedDate(row.transaction_date || row.createdAt),
+    sortable: true,
+  },
+  {
+    name: "Member ID",
+    selector: (row: any) => row.member_id || "N/A",
+    sortable: true,
+  },
+  {
+    name: "Description",
+    selector: (row: any) => row.description || "-",
+    sortable: true,
+  },
+  {
+    name: "Amount",
+    selector: (row: any) => row.ew_credit || "0",
+    sortable: true,
+    format: (row: any) => `₹${parseFloat(row.ew_credit || 0).toFixed(2)}`,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+  },
+];
+
+export const getTotalEarningsColumns = () => [
+  {
+    name: "Date",
+    selector: (row: any) => getFormattedDate(row.transaction_date || row.createdAt),
+    sortable: true,
+  },
+  {
+    name: "Member ID",
+    selector: (row: any) => row.member_id || "N/A",
+    sortable: true,
+  },
+  {
+    name: "Type",
+    selector: (row: any) => row.transaction_type || "-",
+    sortable: true,
+  },
+  {
+    name: "Description",
+    selector: (row: any) => row.description || "-",
+    sortable: true,
+  },
+  {
+    name: "Amount",
+    selector: (row: any) => row.ew_credit || "0",
+    sortable: true,
+    format: (row: any) => `₹${parseFloat(row.ew_credit || 0).toFixed(2)}`,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+  },
 ];
 
 
 export const getAdminLevelBenifitsColumns = () => [
   {
     name: "Date",
-    selector: (row: any) => getFormattedDate(row.date || row.createdAt || row.transactionDate),
+    selector: (row: any) => getFormattedDate(row.transaction_date || row.createdAt),
     sortable: true,
   },
   {
-    name: "Payout Level",
-    selector: (row: any) => row.payoutLevel || row.level || row.description || "N/A",
+    name: "Member ID",
+    selector: (row: any) => row.member_id || "N/A",
     sortable: true,
   },
   {
-    name: "Sponser_id",
-    selector: (row: any) => row.member_id || row.memberName || row.userId || row.user?.name || "N/A",
+    name: "From Member",
+    selector: (row: any) => row.related_member_id || "N/A",
     sortable: true,
   },
-   {
-    name: "memberId",
-    selector: (row: any) => row.related_member_id || row.memberName || row.userId || row.user?.name || "N/A",
+  {
+    name: "Level",
+    selector: (row: any) => row.level ? `Level ${row.level}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Type",
+    selector: (row: any) => row.benefit_type || row.description || "-",
     sortable: true,
   },
   {
     name: "Amount",
-    selector: (row: any) => row.daily_earnings.gross_profit || row.amount || row.benefitAmount || "0",
+    selector: (row: any) => row.ew_credit || "0",
     sortable: true,
-    format: (row: any) => `$${parseFloat(row.amount || row.ew_credit || row.benefitAmount || 0).toFixed(2)}`,
+    format: (row: any) => `₹${parseFloat(row.ew_credit || 0).toFixed(2)}`,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
   },
 ];
 

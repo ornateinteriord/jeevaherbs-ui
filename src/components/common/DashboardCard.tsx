@@ -36,17 +36,29 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     return 'Available Saturday';
   };
 
+  const isBlurGray = background === 'blur_gray';
+  const cardBg = isBlurGray 
+    ? 'linear-gradient(135deg, rgba(240, 246, 255, 0.70) 0%, rgba(167, 185, 206, 0.70) 100%)'
+    : (background || 'linear-gradient(to right, #41a4baff, #5bcbc9ff)');
+  const cardColor = isBlurGray ? '#1e293b' : '#fff';
+  const cardBorder = isBlurGray ? '1px solid rgba(255, 255, 255, 0.6)' : 'none';
+  const cardBackdrop = isBlurGray ? 'blur(16px)' : 'none';
+  const iconColor = isBlurGray ? '#2c8786' : 'inherit';
+
   if (type === 'loan') {
     return (
       <Card
         sx={{
-          background: background || 'linear-gradient(to right, #2c8786, #3da1a0)',
-          color: '#fff',
+          background: cardBg,
+          color: cardColor,
+          backdropFilter: cardBackdrop,
+          WebkitBackdropFilter: cardBackdrop,
+          border: cardBorder,
           borderRadius: '10px',
           padding: { xs: '6px', sm: '8px' },
           display: 'flex',
           alignItems: 'center',
-          boxShadow: 3,
+          boxShadow: isBlurGray ? '0 8px 32px 0 rgba(31, 38, 135, 0.12)' : 3,
           height: '100%',
           minHeight: { xs: '120px', sm: '160px' },
           width: '100%',
@@ -85,7 +97,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                 sx={{ 
                   fontWeight: 'bold',
                   fontSize: { xs: '1.3rem', sm: '1.5rem' },
-                  textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                  textShadow: isBlurGray ? 'none' : '0 2px 4px rgba(0,0,0,0.2)'
                 }}
               >
                 ₹{amount}
@@ -109,7 +121,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                 sx={{ 
                   fontWeight: 'bold',
                   fontSize: { xs: '1rem', sm: '1.1rem' },
-                  textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                  textShadow: isBlurGray ? 'none' : '0 2px 4px rgba(0,0,0,0.2)'
                 }}
               >
                 ₹{dueAmount}
@@ -122,20 +134,22 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             onClick={onRepay}
             disabled={!isRepayEnabled}
             sx={{
-              backgroundColor: isRepayEnabled 
-                ? 'rgba(255, 255, 255, 0.2)' 
-                : 'rgba(255, 255, 255, 0.1)',
-              color: 'white',
+              backgroundColor: isBlurGray
+                ? (isRepayEnabled ? '#2c8786' : 'rgba(44, 135, 134, 0.15)')
+                : (isRepayEnabled ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)'),
+              color: isBlurGray
+                ? (isRepayEnabled ? '#fff' : '#475569')
+                : 'white',
               backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
+              border: isBlurGray ? '1px solid rgba(44, 135, 134, 0.3)' : '1px solid rgba(255, 255, 255, 0.3)',
               '&:hover': {
-                backgroundColor: isRepayEnabled 
-                  ? 'rgba(255, 255, 255, 0.3)' 
-                  : 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: isBlurGray
+                  ? (isRepayEnabled ? '#236d6c' : 'rgba(44, 135, 134, 0.2)')
+                  : (isRepayEnabled ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)'),
               },
               '&:disabled': {
-                color: 'rgba(255, 255, 255, 0.5)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: isBlurGray ? 'rgba(71, 85, 105, 0.6)' : 'rgba(255, 255, 255, 0.5)',
+                border: isBlurGray ? '1px solid rgba(44, 135, 134, 0.2)' : '1px solid rgba(255, 255, 255, 0.2)',
               },
               fontWeight: 'bold',
               textTransform: 'none',
@@ -143,7 +157,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               py: 0.8,
               fontSize: { xs: '0.8rem', sm: '0.85rem' },
               borderRadius: 2,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
               minWidth: '120px'
             }}
           >
@@ -158,13 +172,16 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     <Card
       onClick={onRepay || onClick}
       sx={{
-        background: background || 'linear-gradient(to right, #2c8786, #3da1a0)',
-        color: '#fff',
+        background: cardBg,
+        color: cardColor,
+        backdropFilter: cardBackdrop,
+        WebkitBackdropFilter: cardBackdrop,
+        border: cardBorder,
         borderRadius: '10px',
         padding: { xs: '12px', sm: '16px' },
         display: 'flex',
         alignItems: 'center',
-        boxShadow: 3,
+        boxShadow: isBlurGray ? '0 8px 32px 0 rgba(31, 38, 135, 0.12)' : 3,
         height: '100%',
         minHeight: { xs: '120px', sm: '160px' },
         width: '100%',
@@ -173,7 +190,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         transition: 'transform 0.2s, box-shadow 0.2s',
         '&:hover': (onRepay || onClick) ? {
           transform: 'translateY(-4px)',
-          boxShadow: 6,
+          boxShadow: isBlurGray ? '0 12px 36px 0 rgba(31, 38, 135, 0.18)' : 6,
         } : {},
       }}
     >
@@ -185,6 +202,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           alignItems: 'center',
           gap: 2,
           mb: { xs: 1, sm: 0 },
+          color: iconColor,
         }}
       >
         {IconComponent ? <IconComponent sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} /> : <CurrencyRupeeIcon sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} />}

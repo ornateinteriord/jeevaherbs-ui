@@ -1,17 +1,26 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, Grid, Typography, CircularProgress, TextField } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CircularProgress, Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { post } from "../../../api/Api";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
 import { DASHBOARD_CUTSOM_STYLE, getTransactionColumns } from "../../../utils/DataTableColumnsProvider";
+import { useGetTransactionsByType } from "../../../api/Admin";
 
 const DailyROI = () => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Empty data array for demonstration; connect to API as needed
-  const data: any[] = [];
+  const { data: roiTransactions, isLoading, refetch } = useGetTransactionsByType("Daily ROI");
+
+  const filteredData = (roiTransactions || []).filter((tx: any) =>
+    tx?.description !== "Initial ROI Setup" &&
+    Object.values(tx).some(
+      (value) =>
+        value &&
+        value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
 
   const handleTriggerROI = async () => {
     setLoading(true);
@@ -19,6 +28,7 @@ const DailyROI = () => {
       const response = await post("/user/trigger-roi", {});
       if (response && response.success) {
         toast.success(`Successfully processed! ${response.processedCount || 0} members received ROI.`);
+        refetch();
       } else {
         toast.info(response?.message || "Trigger completed with no new updates.");
       }
@@ -50,7 +60,7 @@ const DailyROI = () => {
         alignItems="center"
         sx={{ margin: "2rem", mt: 12 }}
       >
-        <Typography variant="h4" sx={{fontSize: {xs:"1.2rem", md:"2.5rem"}}}>Daily ROI Management</Typography>
+        <Typography variant="h4" sx={{ fontSize: { xs: "1.2rem", md: "2.5rem" } }}>Daily ROI Management</Typography>
         <Button
           variant="contained"
           onClick={handleTriggerROI}
@@ -58,15 +68,15 @@ const DailyROI = () => {
           sx={{
             backgroundColor: "#2c8786",
             padding: "4px 12px",
-            fontSize: {xs:"0.9rem", md:"1.3rem"},
+            fontSize: { xs: "0.9rem", md: "1.3rem" },
             "&:hover": { backgroundColor: "#206463" },
-            textTransform: "capitalize"
+            textTransform: "capitalize",
           }}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Trigger ROI "}
+          {loading ? <CircularProgress size={24} color="inherit" /> : "Trigger ROI"}
         </Button>
       </Grid>
-      
+
       <Card sx={{ margin: "2rem", mt: 2 }}>
         <CardContent>
           <Accordion defaultExpanded>
@@ -99,27 +109,14 @@ const DailyROI = () => {
               </Box>
               <DataTable
                 columns={getTransactionColumns()}
-                data={data}
+                data={filteredData}
+                progressPending={isLoading}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover
                 noDataComponent={noDataComponent}
-                subHeader
-                subHeaderComponent={
-                  <Box sx={{ 
-                    display: "flex", 
-                    justifyContent: "space-between", 
-                    alignItems: "center",
-                    width: "100%",
-                    p: 1
-                  }}>
-                    <Typography variant="body2" color="textSecondary">
-                      {data.length === 0 ? "No records found" : `Showing ${data.length} records`}
-                    </Typography>
-                  </Box>
-                }
               />
             </AccordionDetails>
           </Accordion>

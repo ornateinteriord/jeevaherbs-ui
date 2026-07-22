@@ -1,19 +1,29 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CircularProgress, Grid, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { MuiDatePicker } from "../../../components/common/DateFilterComponent";
 import './CashBack.scss'
 import DataTable from "react-data-table-component";
 import { DASHBOARD_CUTSOM_STYLE, getCashBackColumns } from "../../../utils/DataTableColumnsProvider";
 import { useState } from "react";
+import { useGetTransactionsByType } from "../../../api/Admin";
 
 const DirectIncome = () => {
   const [fromDate, setFromDate] = useState<string | null>(null);
   const [toDate, setToDate] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch Level Benefits transactions and filter for Direct Income (Level 1)
+  const { data: rawData, isLoading } = useGetTransactionsByType("Level Benefits");
+  const allData = (rawData || []).filter((tx: any) => tx.benefit_type === 'direct' || tx.level === 1);
   
-  // Empty data array for demonstration
-  const data: any[] = [];
-  
+  const filteredData = allData.filter((tx: any) =>
+    Object.values(tx).some(
+      (value) =>
+        value &&
+        value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
   const noDataComponent = (
     <Box sx={{ 
       padding: "40px", 
@@ -24,10 +34,18 @@ const DirectIncome = () => {
         No Data Found
       </Typography>
       <Typography variant="body2">
-        No daily benefits data available to display.
+        No direct income data available to display.
       </Typography>
     </Box>
   );
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -90,7 +108,7 @@ const DirectIncome = () => {
               </Box>
               <DataTable
                 columns={getCashBackColumns()}
-                data={data}
+                data={filteredData}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}
@@ -107,7 +125,7 @@ const DirectIncome = () => {
                     p: 1
                   }}>
                     <Typography variant="body2" color="textSecondary">
-                      {data.length === 0 ? "No records found" : `Showing ${data.length} records`}
+                      {filteredData.length === 0 ? "No records found" : `Showing ${filteredData.length} records`}
                     </Typography>
                   </Box>
                 }

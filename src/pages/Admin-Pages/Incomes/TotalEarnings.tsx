@@ -14,31 +14,34 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
 import {
   DASHBOARD_CUTSOM_STYLE,
-  getAdminDailyBenifitsColumns,
-
+  getTotalEarningsColumns,
 } from "../../../utils/DataTableColumnsProvider";
-import { useGetAllDailyPayouts } from '../../../api/Admin';
+import { useGetAllTransactionDetails } from '../../../api/Admin';
 
 
 const TotalEarnings = () => {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Properly destructure the useQuery return values
-  const { data: dailyBenefits, isLoading, isError } = useGetAllDailyPayouts();
-  console.log(dailyBenefits);
+  const { data: allTransactions, isLoading, isError } = useGetAllTransactionDetails();
 
-  // Handle the data structure from API
-  const filteredData = dailyBenefits?.filter((benefit: any) =>
+  const earningTransactions = (allTransactions || []).filter(
+    (tx: any) =>
+      parseFloat(tx.ew_credit || 0) > 0 &&
+      tx.description !== "Initial ROI Setup" &&
+      tx.transaction_type !== "Withdrawal"
+  );
+
+  const filteredData = earningTransactions.filter((benefit: any) =>
     Object.values(benefit).some(
       value => 
         value && 
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
-  ) || [];
+  );
 
   const noDataComponent = (
     <div style={{ padding: "24px" }}>
-      {isError ? "Error loading data" : "No data available in table"}
+      {isError ? "Error loading data" : "No earnings data available in table"}
     </div>
   );
 
@@ -66,7 +69,7 @@ const TotalEarnings = () => {
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
             >
-              List of Daily Benefits Payouts
+              List of All Earning Transactions
             </AccordionSummary>
             <AccordionDetails>
               <Box
@@ -86,7 +89,7 @@ const TotalEarnings = () => {
                 />
               </Box>
               <DataTable
-                columns={getAdminDailyBenifitsColumns()}
+                columns={getTotalEarningsColumns()}
                 data={filteredData}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}
