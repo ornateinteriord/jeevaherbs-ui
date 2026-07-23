@@ -7,6 +7,13 @@ import { MemberDetails } from "../store/store";
 
 
 
+export const formatMember = (row: any) => {
+  const id = row.Member_id || row.member_id || row.Member;
+  const name = row.Name || row.name || row.member_name || row.username;
+  if (!id) return "-";
+  return name ? `${id} (${name})` : id;
+};
+
 export const getUserDashboardTableColumns = () => [
   {
     selector: (row: any) => row.title,
@@ -298,7 +305,7 @@ export const getAdminDashboardTableColumns : any = () => [
   },
   {
     name: "Member",
-    selector: (row: any) => row.Name || row.Member || "-",
+    selector: (row: any) => formatMember(row),
     center: true,
     sortable: true,
   },
@@ -324,7 +331,7 @@ export const getMembersColumns = (
   },
   {
     name: "Member",
-    selector: (row: any) => row.Member_id,
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -408,7 +415,7 @@ export const getPendingMembersColumns = (
   },
   {
     name: "Member",
-    selector: (row: any) => row.Member_id,
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -657,7 +664,7 @@ export const getAdminPageTransactionColumns = () => [
   },
   {
     name: "Member",
-    selector: (row: any) => row.member_id,
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -786,7 +793,7 @@ export const getRequestColumns = (approveTrasaction: (id : any) => void) =>[
   },
   {
     name: "Member",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -840,7 +847,7 @@ export const getProccessedColumns = () =>[
   },
   {
     name: "Member",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -918,7 +925,7 @@ export const getCashBackColumns = () =>[
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -991,7 +998,7 @@ export const getAdminDailyBenifitsColumns = () => [
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "N/A",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -1025,7 +1032,7 @@ export const getRewardColumns = () => [
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "N/A",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -1054,7 +1061,7 @@ export const getTotalEarningsColumns = () => [
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "N/A",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -1089,7 +1096,7 @@ export const getAdminLevelBenifitsColumns = () => [
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "N/A",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -1155,7 +1162,7 @@ export const getPendingLoansColumns = (processLoan: (memberId: string, action: '
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -1220,7 +1227,7 @@ export const getWithdrawPendingColumns = (onRepay: (transaction: any) => void) =
   },
   {
     name: 'Member',
-    selector: (row: any) => row.member_id || '-',
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -1299,7 +1306,7 @@ export const getProcessedLoansColumns = () => [
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {
@@ -1341,7 +1348,7 @@ export const getLoansListColumns = (onRepayClick: (row: any) => void) => [
   },
   {
     name: "Member ID",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => formatMember(row),
     sortable: true,
   },
   {

@@ -430,8 +430,7 @@ const UserDashboard = () => {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: { xs: 'column', lg: 'row' },
-            justifyContent: 'space-between',
+            flexDirection: 'column',
             alignItems: 'center',
             width: '100%',
             px: { xs: 2, sm: 4, md: 6 },
@@ -440,62 +439,60 @@ const UserDashboard = () => {
             gap: { xs: 3, sm: 4 }
           }}
         >
-          <Box sx={{ textAlign: { xs: 'center', lg: 'left' } }}>
-            <Typography
-              variant="h4"
-              sx={{
-                color: 'white',
-                fontSize: { xs: '1.7rem', sm: '1.8rem', md: '2.5rem' }
-              }}
-            >
-              Welcome to Dashboard
-            </Typography>
-            {/* <Typography
-              variant="body1"
-              sx={{
-                mt: 2,
-                color: '#ffff',
-                fontSize: { xs: '0.875rem', md: '1rem' },
-                textAlign: 'center'
-              }}
-            >
-              Manage your network and track your success
-            </Typography> */}
+          <Typography
+            variant="h4"
+            sx={{
+              color: 'white',
+              fontSize: { xs: '1.7rem', sm: '1.8rem', md: '2.5rem' },
+              textAlign: 'center',
+              width: '100%'
+            }}
+          >
+            Welcome to Dashboard
+          </Typography>
 
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              gap: { xs: 3, sm: 4 }
+            }}
+          >
+            {/* Center Box: Avatar and Info (Always Top) */}
             <Box
               sx={{
                 display: 'flex',
-                flexWrap: 'wrap',
+                flexDirection: 'column',
                 alignItems: 'center',
-                gap: 2,
-                mt: 2,
-                justifyContent: { xs: 'center', lg: 'flex-start' }
+                gap: 1,
               }}
             >
               <Avatar
                 src={memberDetails?.profile_image}
                 alt={memberName}
                 sx={{
-                  width: { xs: 48, md: 54 },
-                  height: { xs: 48, md: 54 },
+                  width: { xs: 72, md: 84 },
+                  height: { xs: 72, md: 84 },
                   bgcolor: '#ffffff',
                   color: '#299592',
                   fontWeight: 'bold',
-                  fontSize: { xs: '1.3rem', md: '1.5rem' },
+                  fontSize: { xs: '1.8rem', md: '2.2rem' },
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  border: '2px solid rgba(255, 255, 255, 0.9)'
+                  border: '3px solid rgba(255, 255, 255, 0.9)'
                 }}
               >
                 {!memberDetails?.profile_image && firstLetter}
               </Avatar>
-              <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
+              <Box sx={{ textAlign: 'center' }}>
                 <Typography
                   variant="h6"
                   sx={{
                     color: 'white',
                     fontWeight: 'bold',
                     lineHeight: 1.2,
-                    fontSize: { xs: '1.1rem', md: '1.3rem' }
+                    fontSize: { xs: '1.2rem', md: '1.4rem' }
                   }}
                 >
                   {memberName}
@@ -504,129 +501,90 @@ const UserDashboard = () => {
                   variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.9)',
-                    fontSize: { xs: '0.85rem', md: '0.95rem' },
-                    mt: 0.3
+                    fontSize: { xs: '0.9rem', md: '1rem' },
+                    mt: 0.5
                   }}
                 >
                   ID: <span style={{ fontWeight: 'bold', color: 'white' }}>{memberDetails?.Member_id || memberId || '—'}</span>
                 </Typography>
               </Box>
             </Box>
-          </Box>
 
-          {/* Center Box: Total Earnings & Total Withdrawals */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              gap: { xs: 2, sm: 3, md: 4 },
-              justifyContent: 'center'
-            }}
-          >
+            {/* Row for Earnings & Withdrawals (Side by side on all screens) */}
             <Box
               sx={{
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(6, 95, 70, 0.35) 100%)',
-                border: '1px solid rgba(52, 211, 153, 0.55)',
-                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                px: { xs: 2, sm: 3 },
-                py: 1.5,
-                minWidth: { xs: '110px', sm: '130px' }
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                gap: { xs: 2, sm: 3 }
               }}
             >
-              <Typography
-                variant="h4"
+              {/* Left Corner Box: Total Earnings */}
+              <Box
                 sx={{
-                  fontSize: { xs: '1.25rem', md: '1.6rem' },
-                  fontWeight: 'bold',
-                  mb: 0.3,
-                  color: '#6ee7b7'
+                  flex: 1,
+                  textAlign: 'center',
+                  background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(6, 95, 70, 0.35) 100%)',
+                  border: '1px solid rgba(52, 211, 153, 0.55)',
+                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '16px',
+                  px: { xs: 1, sm: 3 },
+                  py: 1.5,
+                  minWidth: 0 // allow shrinking
                 }}
               >
-                {loading ? '₹0' : totalEarningsAmount}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography variant="caption" sx={{ color: '#d1fae5', fontWeight: 600, letterSpacing: 0.5 }}>
-                  Total Earnings
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontSize: { xs: '1.2rem', md: '1.6rem' },
+                    fontWeight: 'bold',
+                    mb: 0.3,
+                    color: '#6ee7b7'
+                  }}
+                >
+                  {loading ? '₹0' : totalEarningsAmount}
                 </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Typography variant="caption" sx={{ color: '#d1fae5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
+                    Total Earnings
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
 
-            <Box
-              sx={{
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.22) 0%, rgba(154, 52, 18, 0.35) 100%)',
-                border: '1px solid rgba(251, 146, 60, 0.55)',
-                boxShadow: '0 4px 15px rgba(249, 115, 22, 0.25)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                px: { xs: 2, sm: 3 },
-                py: 1.5,
-                minWidth: { xs: '110px', sm: '130px' }
-              }}
-            >
-              <Typography
-                variant="h4"
+              {/* Right Corner Box: Total Withdrawals */}
+              <Box
                 sx={{
-                  fontSize: { xs: '1.25rem', md: '1.6rem' },
-                  fontWeight: 'bold',
-                  mb: 0.3,
-                  color: '#fdba74'
+                  flex: 1,
+                  textAlign: 'center',
+                  background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.22) 0%, rgba(154, 52, 18, 0.35) 100%)',
+                  border: '1px solid rgba(251, 146, 60, 0.55)',
+                  boxShadow: '0 4px 15px rgba(249, 115, 22, 0.25)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '16px',
+                  px: { xs: 1, sm: 3 },
+                  py: 1.5,
+                  minWidth: 0 // allow shrinking
                 }}
               >
-                {loading ? '₹0' : totalWithdrawsAmount}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography variant="caption" sx={{ color: '#ffedd5', fontWeight: 600, letterSpacing: 0.5 }}>
-                  Total Withdraws
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontSize: { xs: '1.2rem', md: '1.6rem' },
+                    fontWeight: 'bold',
+                    mb: 0.3,
+                    color: '#fdba74'
+                  }}
+                >
+                  {loading ? '₹0' : totalWithdrawsAmount}
                 </Typography>
-              </Box>
-            </Box>
-          </Box>
-
-          {/* Right Corner Box: Direct & Total Team */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              gap: { xs: 6, md: 10 },
-              color: 'white',
-              justifyContent: 'center'
-            }}
-          >
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontSize: { xs: '1.25rem', md: '1.5rem' },
-                  fontWeight: 'bold',
-                  mb: 0.5
-                }}
-              >
-                {memberDetails ? (memberDetails.registration_stats?.direct ?? memberDetails.direct_referrals?.length ?? 0) : '—'}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <Typography variant="caption">Direct</Typography>
-              </Box>
-            </Box>
-
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontSize: { xs: '1.25rem', md: '1.5rem' },
-                  fontWeight: 'bold',
-                  mb: 0.5
-                }}
-              >
-                {memberDetails ? (memberDetails.registration_stats?.total ?? memberDetails.total_team ?? 0) : '—'}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                <Typography variant="caption">Total</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Typography variant="caption" sx={{ color: '#ffedd5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
+                    Total Withdrawals
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -653,6 +611,75 @@ const UserDashboard = () => {
               </Button>
             </Box>
           ) : null}
+        </Box>
+      </Box>
+
+      {/* My Team Section */}
+      <Box
+        sx={{
+          mx: { xs: 2, sm: 3, md: 4 },
+          mt: 3,
+          mb: 2,
+          p: 2,
+          backgroundColor: '#fff',
+          borderRadius: 2,
+          border: '1px solid #e2e8f0',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 2,
+            color: '#2c8786',
+            fontWeight: 'bold',
+            textAlign: 'center'
+          }}
+        >
+          My Team
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            gap: { xs: 2, md: 4 }
+          }}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: 'center',
+              p: { xs: 1.5, sm: 2 },
+              backgroundColor: '#f8fafc',
+              borderRadius: 2,
+              border: '1px solid #e2e8f0'
+            }}
+          >
+            <Typography variant="h4" sx={{ color: '#1e293b', fontWeight: 'bold', fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
+              {memberDetails ? (memberDetails.registration_stats?.direct ?? memberDetails.direct_referrals?.length ?? 0) : '—'}
+            </Typography>
+            <Typography variant="body1" sx={{ color: '#64748b', fontSize: { xs: '0.85rem', sm: '1rem' } }}>
+              Direct Team
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: 'center',
+              p: { xs: 1.5, sm: 2 },
+              backgroundColor: '#f8fafc',
+              borderRadius: 2,
+              border: '1px solid #e2e8f0'
+            }}
+          >
+            <Typography variant="h4" sx={{ color: '#1e293b', fontWeight: 'bold', fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
+              {memberDetails ? (memberDetails.registration_stats?.total ?? memberDetails.total_team ?? 0) : '—'}
+            </Typography>
+            <Typography variant="body1" sx={{ color: '#64748b', fontSize: { xs: '0.85rem', sm: '1rem' } }}>
+              Total Team
+            </Typography>
+          </Box>
         </Box>
       </Box>
 
