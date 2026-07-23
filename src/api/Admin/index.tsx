@@ -341,3 +341,23 @@ export const useApproveKYC = () => {
     },
   });
 };
+
+export const useLoginAsMemberMutation = () => {
+  return useMutation({
+    mutationFn: async (memberId: string) => {
+      return await post(`/admin/login-as-member/${memberId}`, {});
+    },
+    onSuccess: (response: any) => {
+      if (response.success && response.token) {
+        toast.success(response.message || "Opening user dashboard in new tab...");
+        window.open(`/user/dashboard?token=${response.token}`, "_blank");
+      } else {
+        toast.error(response.message || "Direct login failed");
+      }
+    },
+    onError: (error: any) => {
+      const errorMessage = error?.response?.data?.message || "Direct login failed";
+      toast.error(errorMessage);
+    },
+  });
+};

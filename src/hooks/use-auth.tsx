@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import TokenService from "../api/token/tokenService";
 
 const useAuth = () => {
+  const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const urlToken = urlParams?.get("token");
+  if (urlToken) {
+    TokenService.setToken(urlToken, true);
+  }
+
   const [userRole, setUserRole] = useState<string | null>(TokenService.getRole());
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!TokenService.getToken());
 

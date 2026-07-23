@@ -94,7 +94,7 @@ const RefundPolicy = () => {
                         <strong>Effective Date:</strong> January 1, 2025
                         <br /><br />
                         This Refund and Cancellation Policy outlines the terms for refunds and cancellations
-                        of services provided by <strong>Manipal Souharda Co-operative Society Ltd.</strong>
+                        of services provided by <strong>Jeeva Herbs</strong>
                         (Registration No: DRP | 6112 | 21-22). We are committed to ensuring fair and
                         transparent refund processes for all our members.
                     </Typography>
@@ -451,7 +451,7 @@ const RefundPolicy = () => {
                     </Typography>
                     <List>
                         {[
-                            "For online transactions: Email us at mscsociety100@gmail.com with Transaction ID, Date, Amount, and issue description",
+                            "For online transactions: Email us at support@jeevaherbs.com with Transaction ID, Date, Amount, and issue description",
                             "For deposit closures: Visit our branch with passbook and ID proof",
                             "For loan prepayment: Submit written application at the branch",
                             "For membership withdrawal: Submit Form as per bye-laws with required documents",
@@ -501,10 +501,10 @@ const RefundPolicy = () => {
                         Contact for Refund Queries
                     </Typography>
                     <Typography variant="body1" sx={{ color: "#4b5563", lineHeight: 1.8 }}>
-                        <strong>Manipal Souharda Co-operative Society Ltd.</strong><br />
+                        <strong>Jeeva Herbs</strong><br />
                         Shop No. G6, Door No. 6-2-83A1C, Asha Chandra Trade Centre<br />
                         Opposite Court Road, Udupi Taluk & Dist., Karnataka<br />
-                        Email: <strong>mscsociety100@gmail.com</strong><br />
+                        Email: <strong>support@jeevaherbs.com</strong><br />
                         Phone: <strong>+91 9004478100, 0820-7966887</strong><br /><br />
                         <em>Office Hours: Monday to Saturday, 10:00 AM to 5:00 PM</em>
                     </Typography>

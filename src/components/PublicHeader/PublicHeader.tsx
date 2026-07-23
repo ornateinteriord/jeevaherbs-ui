@@ -1,4 +1,4 @@
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -34,15 +34,15 @@ const PublicHeader = () => {
                             Back to Login
                         </Button>
                     </Link>
-                    <Box
+                    <Typography
                         sx={{
                             color: "white",
                             fontWeight: "bold",
                             fontSize: { xs: "0.9rem", md: "1.1rem" },
                         }}
                     >
-                        Manipal Souharda Co-operative Society Ltd.
-                    </Box>
+                        Jeeva Herbs
+                    </Typography>
                 </Box>
             </Container>
         </Box>

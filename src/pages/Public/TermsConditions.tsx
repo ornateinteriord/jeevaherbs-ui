@@ -25,7 +25,7 @@ const TermsConditions = () => {
         {
             title: "1. Definitions",
             items: [
-                '"Society" refers to Manipal Souharda Co-operative Society Ltd.',
+                '"Society" refers to Jeeva Herbs',
                 '"Member" refers to any person who holds membership in the Society',
                 '"Services" refers to all financial services offered including savings accounts, deposits, loans, and online transactions',
                 '"Platform" refers to our website, mobile applications, and online banking services',
@@ -202,7 +202,7 @@ const TermsConditions = () => {
                         <strong>Effective Date:</strong> January 1, 2025
                         <br /><br />
                         These Terms and Conditions ("Terms") govern your membership and use of services
-                        provided by <strong>Manipal Souharda Co-operative Society Ltd.</strong>
+                        provided by <strong>Jeeva Herbs</strong>
                         (Registration No: DRP | 6112 | 21-22). By becoming a member or using our services,
                         you agree to be bound by these Terms.
                     </Typography>
@@ -277,10 +277,10 @@ const TermsConditions = () => {
                     <Typography variant="body1" sx={{ color: "#4b5563", lineHeight: 1.8 }}>
                         For any questions regarding these Terms, please contact us:
                         <br /><br />
-                        <strong>Manipal Souharda Co-operative Society Ltd.</strong><br />
+                        <strong>Jeeva Herbs</strong><br />
                         Shop No. G6, Door No. 6-2-83A1C, Asha Chandra Trade Centre<br />
                         Opposite Court Road, Udupi Taluk & Dist., Karnataka<br />
-                        Email: <strong>mscsociety100@gmail.com</strong><br />
+                        Email: <strong>support@jeevaherbs.com</strong><br />
                         Phone: <strong>+91 9004478100, 0820-7966887</strong>
                     </Typography>
                 </Paper>

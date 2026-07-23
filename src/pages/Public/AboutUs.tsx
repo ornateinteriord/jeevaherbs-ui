@@ -82,7 +82,7 @@ const AboutUs = () => {
                                 fontSize: { xs: "1rem", md: "1.25rem" },
                             }}
                         >
-                            Manipal Souharda Co-operative Society Ltd.
+                            Jeeva Herbs
                         </Typography>
                     </Box>
                 </Container>
@@ -109,7 +109,7 @@ const AboutUs = () => {
                         Who We Are
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.8, color: "#4b5563" }}>
-                        <strong>Manipal Souharda Co-operative Society Ltd.</strong> is a registered cooperative
+                        <strong>Jeeva Herbs</strong> is a registered cooperative
                         society operating under the Karnataka State Co-operative Societies Act. We are committed
                         to providing comprehensive financial services to our members, including savings accounts,
                         fixed deposits, recurring deposits, and various loan products.

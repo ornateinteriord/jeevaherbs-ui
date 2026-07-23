@@ -117,7 +117,13 @@ const NewResgister: React.FC = () => {
             if (formData.paymentMode === 'online') {
               try {
                 const cashfree = await load({ mode: import.meta.env.PROD ? "production" : "sandbox" });
-                const orderResponse = await axios.post(`${import.meta.env.VITE_MLM_API_URL}/api/payment/create-order`, {
+                
+                // Fix: Remove the leading slash from the path or trim the trailing slash from VITE_MLM_API_URL
+                const apiUrl = import.meta.env.VITE_MLM_API_URL?.endsWith('/') 
+                  ? import.meta.env.VITE_MLM_API_URL.slice(0, -1) 
+                  : import.meta.env.VITE_MLM_API_URL;
+                  
+                const orderResponse = await axios.post(`${apiUrl}/api/payment/create-order`, {
                   amount: formData.package_value,
                   customer: {
                     customer_id: response.user.Member_id,
@@ -136,13 +142,17 @@ const NewResgister: React.FC = () => {
                   cashfree.checkout(checkoutOptions).then((result: any) => {
                     if (result.error) {
                       toast.error("Payment failed or cancelled. Please try again.");
+                      // Delete the user from the database since payment failed
+                      axios.delete(`${import.meta.env.VITE_MLM_API_URL}/api/auth/delete-member/${response.user.Member_id}`).catch(err => console.error("Failed to delete member:", err));
+                      setPaymentDialogOpen(false);
                     } else if (result.redirect) {
                       console.log("Payment will be redirected");
+                      setPaymentDialogOpen(false);
                     } else if (result.paymentDetails) {
                       toast.success("Payment successful! Your account is now active.");
+                      setPaymentDialogOpen(false);
+                      setSuccessDialogOpen(true);
                     }
-                    setPaymentDialogOpen(false);
-                    setSuccessDialogOpen(true);
                   });
                 }
               } catch (error) {
@@ -552,6 +562,7 @@ const NewResgister: React.FC = () => {
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
                   <MenuItem value="5000">5000 INR Package</MenuItem>
+                  <MenuItem value="1">1 INR Package (Testing)</MenuItem>
                 </TextField>
 
               </form>

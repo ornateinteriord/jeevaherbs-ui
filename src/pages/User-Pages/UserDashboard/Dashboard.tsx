@@ -51,6 +51,15 @@ const UserDashboard = () => {
   const [selectedRepayAmount, setSelectedRepayAmount] = useState(1);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
 
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      TokenService.setToken(token, true);
+      searchParams.delete("token");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   const memberId = TokenService.getMemberId();
 
   const { data: sponsorRewardData } = useCheckSponsorReward(memberId);

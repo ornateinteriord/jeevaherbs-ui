@@ -63,7 +63,7 @@ const ContactUs = () => {
         {
             icon: <Mail size={24} />,
             title: "Email Address",
-            details: ["mscsociety100@gmail.com"],
+            details: ["support@jeevaherbs.com"],
         },
         {
             icon: <Clock size={24} />,

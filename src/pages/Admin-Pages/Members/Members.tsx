@@ -6,7 +6,7 @@ import './Members.scss'
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import {  useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useGetAllMembersDetails, useUpdateMemberStatus } from '../../../api/Admin';
+import { useGetAllMembersDetails, useUpdateMemberStatus, useLoginAsMemberMutation } from '../../../api/Admin';
 import { useNavigate } from 'react-router-dom';
 import useSearch from '../../../hooks/SearchQuery';
 
@@ -16,6 +16,8 @@ interface MemberTableProps {
   data: any[];
   showEdit?: boolean;
   showActivate?: boolean;
+  showDashboardLogin?: boolean;
+  onDashboardLogin?: (memberId: string) => void;
   isLoading?: boolean;
   onActivate?: (memberId: string) => void;
   isActivating?: boolean;
@@ -27,6 +29,8 @@ const MemberTable = ({
   data, 
   showEdit = false, 
   showActivate = false, 
+  showDashboardLogin = false,
+  onDashboardLogin,
   isLoading = false,
   onActivate,
   isActivating = false 
@@ -61,7 +65,7 @@ const MemberTable = ({
     if (showActivate && onActivate) {
       return getPendingMembersColumns(handleActivateClick, isActivating);
     } else {
-      return getMembersColumns(showEdit, handleEditClick);
+      return getMembersColumns(showEdit, handleEditClick, showDashboardLogin, onDashboardLogin);
     }
   };
 
@@ -166,11 +170,14 @@ const useMembers = (status: status) => {
 
 export const Members = () => {
   const { memberdata, isLoading } = useMembers("All"); 
+  const { mutate: loginAsMember } = useLoginAsMemberMutation();
   return (
     <MemberTable
       title="Members"
       summaryTitle="List of All Members"
       showEdit
+      showDashboardLogin={true}
+      onDashboardLogin={(memberId) => loginAsMember(memberId)}
       data={memberdata}
       isLoading={isLoading}
     />
@@ -179,10 +186,13 @@ export const Members = () => {
 
 export const ActiveMembers = () => {
   const { memberdata, isLoading } = useMembers("active")
+  const { mutate: loginAsMember } = useLoginAsMemberMutation();
   return (
     <MemberTable
       title="Active Members"
       summaryTitle="List of Active Members"
+      showDashboardLogin={true}
+      onDashboardLogin={(memberId) => loginAsMember(memberId)}
       data={memberdata}
       isLoading={isLoading}
     />
@@ -191,10 +201,13 @@ export const ActiveMembers = () => {
 
 export const InActiveMembers = () => {
   const { memberdata, isLoading } = useMembers("Inactive")
+  const { mutate: loginAsMember } = useLoginAsMemberMutation();
   return (
     <MemberTable
       title="Inactive Members"
       summaryTitle="List of Inactive Members"
+      showDashboardLogin={true}
+      onDashboardLogin={(memberId) => loginAsMember(memberId)}
       data={memberdata}
       isLoading={isLoading}
     />

@@ -61,6 +61,7 @@ const ContactUs = lazy(() => import("./pages/Public/ContactUs"));
 const PrivacyPolicy = lazy(() => import("./pages/Public/PrivacyPolicy"));
 const RefundPolicy = lazy(() => import("./pages/Public/RefundPolicy"));
 const TermsConditions = lazy(() => import("./pages/Public/TermsConditions"));
+const ShippingPolicy = lazy(() => import("./pages/Public/ShippingPolicy"));
 
 // admin pages
 const UpdatePassword = lazy(() => import("./pages/Admin-Pages/admin-panel/UpdatePassword"));
@@ -170,7 +171,7 @@ export const LoadingComponent = () => {
 
 const ShouldHideSidebarComponent = () => {
   const location = useLocation();
-  const publicPaths = ["/", "/login", "/register", "/recover-password", "/reset-password", "/about-us", "/contact-us", "/privacy-policy", "/refund-policy", "/terms-conditions"];
+  const publicPaths = ["/", "/login", "/register", "/recover-password", "/reset-password", "/about-us", "/contact-us", "/privacy-policy", "/refund-policy", "/terms-conditions", "/shipping-policy"];
   return publicPaths.includes(location.pathname);
 };
 
@@ -253,6 +254,7 @@ const RoutesProvider = ({
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/refund-policy" element={<RefundPolicy />} />
               <Route path="/terms-conditions" element={<TermsConditions />} />
+              <Route path="/shipping-policy" element={<ShippingPolicy />} />
             </Route>
             {/* admin routes */}
 

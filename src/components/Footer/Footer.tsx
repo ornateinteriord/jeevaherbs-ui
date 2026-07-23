@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <Box sx={{ backgroundColor: "#1e1e1e", color: "#f5f5f5", pt: 8, pb: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={6}>
+        <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Typography variant="h5" fontWeight="bold" color="#4ade80" gutterBottom>
               JeevaHerbs
@@ -24,7 +24,7 @@ const Footer = () => {
             </Box>
           </Grid>
           
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={2}>
             <Typography variant="h6" fontWeight="bold" gutterBottom>
               Quick Links
             </Typography>
@@ -64,18 +64,57 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Legal
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              <Typography 
+                component={Link} 
+                to="/privacy-policy" 
+                sx={{ color: "white", textDecoration: "none", opacity: 0.8, "&:hover": { opacity: 1, color: "#4ade80" }, width: "fit-content" }}
+              >
+                Privacy Policy
+              </Typography>
+              <Typography 
+                component={Link} 
+                to="/terms-conditions" 
+                sx={{ color: "white", textDecoration: "none", opacity: 0.8, "&:hover": { opacity: 1, color: "#4ade80" }, width: "fit-content" }}
+              >
+                Terms & Conditions
+              </Typography>
+              <Typography 
+                component={Link} 
+                to="/refund-policy" 
+                sx={{ color: "white", textDecoration: "none", opacity: 0.8, "&:hover": { opacity: 1, color: "#4ade80" }, width: "fit-content" }}
+              >
+                Refund & Cancellation Policy
+              </Typography>
+              <Typography 
+                component={Link} 
+                to="/shipping-policy" 
+                sx={{ color: "white", textDecoration: "none", opacity: 0.8, "&:hover": { opacity: 1, color: "#4ade80" }, width: "fit-content" }}
+              >
+                Shipping & Delivery Policy
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
             <Typography variant="h6" fontWeight="bold" gutterBottom>
               Contact Info
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.8, mb: 1 }}>
-              123 Herbal Avenue, Wellness City, 45678
+              Shop No. G6, Door No. 6-2-83A1C
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.8, mb: 1 }}>
+              Asha Chandra Trade Centre, Udupi, KA
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.8, mb: 1 }}>
               Email: support@jeevaherbs.com
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.8 }}>
-              Phone: +1 (800) 123-4567
+              Phone: +91 9004478100
             </Typography>
           </Grid>
         </Grid>

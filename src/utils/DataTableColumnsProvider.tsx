@@ -1,6 +1,7 @@
-import { Button, IconButton } from "@mui/material";
-import  VisibilityIcon  from '@mui/icons-material/Visibility';
-import {  Edit } from "lucide-react";
+import { Button, IconButton, Tooltip } from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Edit } from "lucide-react";
 import { getFormattedDate } from './common';
 import { MemberDetails } from "../store/store";
 
@@ -310,7 +311,12 @@ export const getAdminDashboardTableColumns : any = () => [
 ];
 
 
-export const getMembersColumns = (showEdit : boolean , handleEditClick: (memberId: string) => void) => [
+export const getMembersColumns = (
+  showEdit: boolean,
+  handleEditClick: (memberId: string) => void,
+  showDashboardLogin?: boolean,
+  handleDashboardLogin?: (memberId: string) => void
+) => [
   {
     name: "SNo",
     selector: (row: any) => row.sNo,
@@ -366,14 +372,29 @@ export const getMembersColumns = (showEdit : boolean , handleEditClick: (memberI
   },
   {
     name: 'Modify',
-    omit : !showEdit,
-    cell: (row:any) => (
-      <IconButton onClick={()=> handleEditClick(row.Member_id)} style={{ color: '#000', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}>
-        <Edit />
-      </IconButton>
+    omit: !showEdit,
+    cell: (row: any) => (
+      <Tooltip title="Edit Member">
+        <IconButton onClick={() => handleEditClick(row.Member_id)} style={{ color: '#000', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}>
+          <Edit />
+        </IconButton>
+      </Tooltip>
     ),
-    
-  }
+  },
+  {
+    name: 'Dashboard',
+    omit: !showDashboardLogin,
+    cell: (row: any) => (
+      <Tooltip title="Direct Login to User Dashboard">
+        <IconButton
+          onClick={() => handleDashboardLogin?.(row.Member_id)}
+          style={{ color: '#2c8786', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          <DashboardIcon />
+        </IconButton>
+      </Tooltip>
+    ),
+  },
 ];
 
 export const getPendingMembersColumns = (

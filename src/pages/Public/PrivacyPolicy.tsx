@@ -176,7 +176,7 @@ const PrivacyPolicy = () => {
                         <br />
                         <strong>Last Updated:</strong> January 9, 2026
                         <br /><br />
-                        This Privacy Policy describes how <strong>Manipal Souharda Co-operative Society Ltd.</strong>
+                        This Privacy Policy describes how <strong>Jeeva Herbs</strong>
                         (Registration No: DRP | 6112 | 21-22) collects, uses, and protects the personal information
                         of our members and website visitors.
                     </Typography>
@@ -242,10 +242,10 @@ const PrivacyPolicy = () => {
                         If you have any questions about this Privacy Policy or wish to exercise your rights,
                         please contact us:
                         <br /><br />
-                        <strong>Manipal Souharda Co-operative Society Ltd.</strong><br />
+                        <strong>Jeeva Herbs</strong><br />
                         Shop No. G6, Door No. 6-2-83A1C, Asha Chandra Trade Centre<br />
                         Opposite Court Road, Udupi Taluk & Dist., Karnataka<br />
-                        Email: <strong>mscsociety100@gmail.com</strong><br />
+                        Email: <strong>support@jeevaherbs.com</strong><br />
                         Phone: <strong>+91 9004478100, 0820-7966887</strong>
                     </Typography>
                 </Paper>
