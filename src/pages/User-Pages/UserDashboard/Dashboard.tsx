@@ -48,6 +48,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { toast } from 'react-toastify';
 // @ts-ignore
 import { load } from '@cashfreepayments/cashfree-js';
+import QRPdf from '../../../assets/jee_sc.pdf';
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -1365,9 +1366,11 @@ const UserDashboard = () => {
             {topUpPaymentMode === 'qr' && (
               <Box sx={{ mt: 1, p: 2, border: '1px solid #e2e8f0', borderRadius: 2, textAlign: 'center', backgroundColor: '#f8fafc' }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1e293b', mb: 1 }}>Scan to Pay</Typography>
-                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=jeevaherbs@upi&pn=JeevaHerbs&am=${loadAmount || 0}&cu=INR`} alt="QR Code" style={{ borderRadius: '8px' }} />
+                <Box sx={{ mt: 2, mb: 2, height: '250px', width: '100%', overflow: 'hidden', borderRadius: '8px' }}>
+                  <iframe src={`${QRPdf}#toolbar=0&view=Fit`} width="100%" height="100%" style={{ border: 'none' }} title="QR Code" />
+                </Box>
                 <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold', color: '#2c8786' }}>
-                  UPI ID: jeevaherbs@upi
+                  UPI ID: jeeva_sc@upi
                 </Typography>
                 <Typography variant="caption" sx={{ display: 'block', mt: 1, color: '#64748b' }}>
                   After successful payment, please contact admin with your transaction screenshot.
