@@ -19,7 +19,6 @@ import {
   DialogContent,
   DialogActions,
   // Autocomplete,
-  MenuItem,
   Typography,
   Box
 } from '@mui/material';
@@ -27,7 +26,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 // @ts-ignore
 import { load } from '@cashfreepayments/cashfree-js';
 import axios from 'axios';
@@ -93,7 +91,7 @@ const NewResgister: React.FC = () => {
       return;
     }
     try {
-      setPaymentDialogOpen(true);
+      confirmRegistration();
     } catch (error) {
       console.error(error);
     }
@@ -437,7 +435,7 @@ const NewResgister: React.FC = () => {
                   }}
                 />
                 
-                <TextField
+                {/* <TextField
                   select
                   label="Select Package"
                   name="package_value"
@@ -468,10 +466,8 @@ const NewResgister: React.FC = () => {
                   }}
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
-                  {/* <MenuItem value="1000">1000 INR Package</MenuItem> */}
                   <MenuItem value="5000">5000 INR Package</MenuItem>
-                  {/* <MenuItem value="1">1 INR Package (Testing)</MenuItem> */}
-                </TextField>
+                </TextField> */}
 
               </form>
             </AccordionDetails>

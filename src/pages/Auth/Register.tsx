@@ -20,8 +20,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  MenuItem
+  DialogActions
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
@@ -32,7 +31,6 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 // import LocationCityIcon from "@mui/icons-material/LocationCity";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
-import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 // @ts-ignore
 import { load } from "@cashfreepayments/cashfree-js";
 import axios from "axios";
@@ -197,7 +195,7 @@ const Register = () => {
 
     try {
       // Create the final data object with the required structure
-      setPaymentDialogOpen(true);
+      confirmRegistration();
     } catch (error) {
       console.error("Registration validation failed:", error);
       setErrorMessage("Registration failed. Please try again.");
@@ -653,7 +651,7 @@ const Register = () => {
                   </FormHelperText>
                 )}
                 
-                <TextField
+                {/* <TextField
                   select
                   label="Select Package"
                   name="package_value"
@@ -682,7 +680,7 @@ const Register = () => {
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
                   <MenuItem value="5000">5000 INR Package</MenuItem>
-                </TextField>
+                </TextField> */}
                 
                 <FormControlLabel
                   control={
