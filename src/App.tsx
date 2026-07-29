@@ -97,6 +97,9 @@ const AdminPayout = lazy(() => import("./pages/Admin-Pages/Payout/Payout"));
 const AdminTransactions = lazy(
   () => import("./pages/Admin-Pages/Transactions/Transactions")
 );
+const AdminLoadRequests = lazy(
+  () => import("./pages/Admin-Pages/LoadRequests/LoadRequests")
+);
 const AdminSMSTransactions = lazy(
   () => import("./pages/Admin-Pages/Transactions/SMS-Transactions")
 );
@@ -130,7 +133,7 @@ const UserKYC = lazy(() => import("./pages/User-Pages/KYC/KYC"));
 const UserChangePassword = lazy(
   () => import("./pages/User-Pages/Change-Password/ChangePassword")
 );
-const UserActivate = lazy(() => import("./pages/User-Pages/Activate/Activate"));
+const UserActivation = lazy(() => import("./pages/User-Pages/Activation/Activation"));
 const UserNewResgister = lazy(
   () => import("./pages/User-Pages/Team/NewResgister")
 );
@@ -151,6 +154,8 @@ const UserDailyPayout = lazy(
   () => import("./pages/User-Pages/Earnings/DailyPayout")
 );
 const UserWallet = lazy(() => import("./pages/User-Pages/Wallet/Wallet"));
+const UserTopUpWallet = lazy(() => import("./pages/User-Pages/Wallet/TopUpWallet"));
+const UserWalletTransfer = lazy(() => import("./pages/User-Pages/Wallet/WalletTransfer"));
 
 
 
@@ -335,6 +340,10 @@ const RoutesProvider = ({
                 element={<AdminTransactions />}
               />
               <Route
+                path="/admin/load-requests"
+                element={<AdminLoadRequests />}
+              />
+              <Route
                 path="/admin/transactions/sms"
                 element={<AdminSMSTransactions />}
               />
@@ -375,7 +384,7 @@ const RoutesProvider = ({
                 path="/user/account/change-password"
                 element={<UserChangePassword />}
               />
-              <Route path="/user/activate" element={<UserActivate />} />
+              <Route path="/user/activation" element={<UserActivation />} />
               {/* package routes */}
               <Route path="/user/package/used" element={<UserUsedPackage />} />
               <Route
@@ -398,6 +407,9 @@ const RoutesProvider = ({
                 element={<UserNewResgister />}
               />
               <Route path="/user/team/direct" element={<UserDirect />} />
+              
+              {/* Top Up Wallet Route */}
+              <Route path="/user/topup-wallet" element={<UserTopUpWallet />} />
               {/* earnings routes */}
               <Route
                 path="/user/earnings/level-benefits"
@@ -411,6 +423,7 @@ const RoutesProvider = ({
               <Route path="/user/loantransactions" element={<UserLoanTransaction />} />
               <Route path="/user/mailbox" element={<UserMailBox />} />
               <Route path="/user/wallet" element={<UserWallet />} />
+              <Route path="/user/wallet-transfer" element={<UserWalletTransfer />} />
 
             </Route>
 

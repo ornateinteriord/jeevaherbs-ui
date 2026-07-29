@@ -156,7 +156,7 @@ export const useRevertLoanRepayment = () => {
     mutationFn: async ({ memberId, transactionId }: { memberId: string; transactionId: string }) => {
       console.log("🔄 Reverting loan repayment...", { memberId, transactionId });
 
-      const response = await post(`/payments/process-failed-payment`, {
+      const response = await post(`/api/payment/process-failed-payment`, {
         memberId,
         transactionId
       });
@@ -202,7 +202,7 @@ export const useCreatePaymentOrder = () => {
     mutationFn: async (paymentData: CreateOrderRequest): Promise<CreateOrderResponse> => {
       console.log("🔄 Creating payment order...", paymentData);
 
-      const response = await post(`/payments/create-order`, paymentData);
+      const response = await post(`/api/payment/create-order`, paymentData);
 
       if (!response) throw new Error("No response from server");
 
@@ -712,6 +712,56 @@ export const useSubmitKYC = () => {
     },
     onError: (error: any) => {
       toast.error(error.response.data.message);
+    },
+  });
+};
+
+export const useCreateManualTopUp = () => {
+  return useMutation({
+    mutationFn: async (data: { memberId: string; amount: number }) => {
+      const response = await post("/user/manual-topup-request", data);
+      return response.data;
+    },
+    onSuccess: (data: any) => {
+      if (data?.success || data?.message) {
+        toast.success(data.message || "Manual top-up request submitted to Admin.");
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to submit request.");
+    },
+  });
+};
+
+export const useBuyPackage = () => {
+  return useMutation({
+    mutationFn: async (data: { buyerMemberId: string; targetMemberId: string }) => {
+      const response = await post("/user/buy-package", data);
+      return response;
+    },
+    onSuccess: (response: any) => {
+      if (response?.success) {
+        toast.success(response.message || "Package activated successfully");
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to buy package.");
+    },
+  });
+};
+export const useTransferToTopup = () => {
+  return useMutation({
+    mutationFn: async (data: { memberId: string; amount: string }) => {
+      const response = await post("/user/transfer-to-topup", data);
+      return response;
+    },
+    onSuccess: (response: any) => {
+      if (response?.success || response?.data?.success) {
+        toast.success(response?.message || response?.data?.message || "Transferred successfully");
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to transfer to top-up wallet.");
     },
   });
 };

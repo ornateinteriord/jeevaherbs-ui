@@ -361,3 +361,37 @@ export const useLoginAsMemberMutation = () => {
     },
   });
 };
+
+export const useGetLoadRequests = (status = "Pending") => {
+  return useQuery({
+    queryKey: ["loadRequests", status],
+    queryFn: async () => {
+      const response = await get(`/admin/wallet/load-requests?status=${status}`);
+      if (response.success) {
+        return response.data;
+      }
+      throw new Error(response.message || "Failed to fetch load requests");
+    }
+  });
+};
+
+export const useProcessLoadRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { transactionId: string; action: 'approve' | 'reject' }) => {
+      const response = await post(`/admin/wallet/process-load-request`, data);
+      return response;
+    },
+    onSuccess: (data: any) => {
+      if (data.success) {
+        toast.success(data.message);
+        queryClient.invalidateQueries({ queryKey: ["loadRequests"] });
+      } else {
+        toast.error(data.message);
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to process load request");
+    }
+  });
+};

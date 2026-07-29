@@ -15,7 +15,7 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
-  Autocomplete,
+  // Autocomplete,
   FormHelperText,
   Dialog,
   DialogTitle,
@@ -27,9 +27,9 @@ import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import MapIcon from "@mui/icons-material/Map";
-import DomainIcon from "@mui/icons-material/Domain";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
+// import MapIcon from "@mui/icons-material/Map";
+// import DomainIcon from "@mui/icons-material/Domain";
+// import LocationCityIcon from "@mui/icons-material/LocationCity";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
@@ -39,7 +39,7 @@ import axios from "axios";
 
 import "./Register.scss";
 import { useGetSponserRef, useSignupMutation } from "../../api/Auth";
-import { useGetStates, useGetDistricts, useGetCitiesAndTaluks } from "../../api/Location";
+// import { useGetStates, useGetDistricts, useGetCitiesAndTaluks } from "../../api/Location";
 import { LoadingComponent } from "../../App";
 
 
@@ -84,13 +84,13 @@ const Register = () => {
     refetch 
   } = useGetSponserRef(formData.Sponsor_code);
 
-  const { data: states } = useGetStates();
-  const { data: districts } = useGetDistricts(formData.state);
-  const { data: citiesAndTaluks } = useGetCitiesAndTaluks(formData.state, formData.district);
+  // const { data: states } = useGetStates();
+  // const { data: districts } = useGetDistricts(formData.state);
+  // const { data: citiesAndTaluks } = useGetCitiesAndTaluks(formData.state, formData.district);
 
-  const stateOptions = states || [];
-  const districtOptions = districts || [];
-  const cityOptions = citiesAndTaluks?.cities || [];
+  // const stateOptions = states || [];
+  // const districtOptions = districts || [];
+  // const cityOptions = citiesAndTaluks?.cities || [];
   // const talukOptions = citiesAndTaluks?.taluks || [];
 
   // Auto-populate sponsor code from URL when component mounts
@@ -571,98 +571,6 @@ const Register = () => {
                   }}
                 />
 
-                <Autocomplete
-                  options={stateOptions}
-                  value={formData.state || null}
-                  onChange={(_, newValue) => {
-                    handleChange({ target: { name: 'state', value: newValue || '' } } as any);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="State"
-                      name="state"
-                      fullWidth
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <MapIcon sx={{ color: '#2c8786' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '&:hover fieldset': { borderColor: '#2c8786' },
-                          '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                        }
-                      }}
-                    />
-                  )}
-                />
-
-                <Autocomplete
-                  options={districtOptions}
-                  value={formData.district || null}
-                  onChange={(_, newValue) => {
-                    handleChange({ target: { name: 'district', value: newValue || '' } } as any);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="District"
-                      name="district"
-                      fullWidth
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <DomainIcon sx={{ color: '#2c8786' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '&:hover fieldset': { borderColor: '#2c8786' },
-                          '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                        }
-                      }}
-                    />
-                  )}
-                />
-
-                <Autocomplete
-                  options={cityOptions}
-                  value={formData.city || null}
-                  onChange={(_, newValue) => {
-                    handleChange({ target: { name: 'city', value: newValue || '' } } as any);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="City"
-                      name="city"
-                      fullWidth
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <LocationCityIcon sx={{ color: '#2c8786' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '&:hover fieldset': { borderColor: '#2c8786' },
-                          '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                        }
-                      }}
-                    />
-                  )}
-                />
 
                 {/* <Autocomplete
                   freeSolo
@@ -909,7 +817,7 @@ const Register = () => {
                     sx={{ flexGrow: 1, m: 0 }}
                   />
                 </Box>
-                <Box sx={{ 
+                {/* <Box sx={{ 
                   border: '1px solid', 
                   borderColor: formData.paymentMode === 'online' ? '#2c8786' : '#e2e8f0',
                   borderRadius: 1, 
@@ -930,7 +838,7 @@ const Register = () => {
                     }
                     sx={{ flexGrow: 1, m: 0 }}
                   />
-                </Box>
+                </Box> */}
               </RadioGroup>
             </FormControl>
           </DialogContent>

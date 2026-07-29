@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Autocomplete,
+  // Autocomplete,
   MenuItem,
   Typography,
   Box
@@ -34,12 +34,12 @@ import axios from 'axios';
 
 import WcIcon from '@mui/icons-material/Wc';
 import LockIcon from '@mui/icons-material/Lock';
-import MapIcon from "@mui/icons-material/Map";
-import DomainIcon from "@mui/icons-material/Domain";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
+// import MapIcon from "@mui/icons-material/Map";
+// import DomainIcon from "@mui/icons-material/Domain";
+// import LocationCityIcon from "@mui/icons-material/LocationCity";
 import UserContext from '../../../context/user/userContext';
 import { useSignupMutation } from '../../../api/Auth';
-import { useGetStates, useGetDistricts, useGetCitiesAndTaluks } from "../../../api/Location";
+// import { useGetStates, useGetDistricts, useGetCitiesAndTaluks } from "../../../api/Location";
 import { LoadingComponent } from '../../../App';
 import { toast } from 'react-toastify';
 
@@ -47,13 +47,13 @@ const NewResgister: React.FC = () => {
   const {user} = useContext(UserContext)
   const [formData, setFormData] = useState<Record<string, string>>({ paymentMode: 'offline', package_value: '' });
   
-  const { data: states } = useGetStates();
-  const { data: districts } = useGetDistricts(formData.state);
-  const { data: citiesAndTaluks } = useGetCitiesAndTaluks(formData.state, formData.district);
+  // const { data: states } = useGetStates();
+  // const { data: districts } = useGetDistricts(formData.state);
+  // const { data: citiesAndTaluks } = useGetCitiesAndTaluks(formData.state, formData.district);
 
-  const stateOptions = states || [];
-  const districtOptions = districts || [];
-  const cityOptions = citiesAndTaluks?.cities || [];
+  // const stateOptions = states || [];
+  // const districtOptions = districts || [];
+  // const cityOptions = citiesAndTaluks?.cities || [];
   // const talukOptions = citiesAndTaluks?.taluks || [];
 
   const [genderError, setGenderError] = useState(false);
@@ -317,99 +317,6 @@ const NewResgister: React.FC = () => {
                   }}
                 />
                 
-                <Autocomplete
-                  options={stateOptions}
-                  value={formData.state || null}
-                  onChange={(_, newValue) => {
-                    handleInputChange({ target: { name: 'state', value: newValue || '' } } as any);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="State"
-                      name="state"
-                      fullWidth
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <MapIcon sx={{ color: '#2c8786' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '&:hover fieldset': { borderColor: '#2c8786' },
-                          '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                        }
-                      }}
-                    />
-                  )}
-                />
-
-                <Autocomplete
-                  options={districtOptions}
-                  value={formData.district || null}
-                  onChange={(_, newValue) => {
-                    handleInputChange({ target: { name: 'district', value: newValue || '' } } as any);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="District"
-                      name="district"
-                      fullWidth
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <DomainIcon sx={{ color: '#2c8786' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '&:hover fieldset': { borderColor: '#2c8786' },
-                          '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                        }
-                      }}
-                    />
-                  )}
-                />
-
-                <Autocomplete
-                  options={cityOptions}
-                  value={formData.city || null}
-                  onChange={(_, newValue) => {
-                    handleInputChange({ target: { name: 'city', value: newValue || '' } } as any);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="City"
-                      name="city"
-                      fullWidth
-                      variant="outlined"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <LocationCityIcon sx={{ color: '#2c8786' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '&:hover fieldset': { borderColor: '#2c8786' },
-                          '&.Mui-focused fieldset': { borderColor: '#2c8786' }
-                        }
-                      }}
-                    />
-                  )}
-                />
-
 
 
                 <FormControl error={!!genderError}>
@@ -662,7 +569,7 @@ const NewResgister: React.FC = () => {
                   sx={{ flexGrow: 1, m: 0 }}
                 />
               </Box>
-              <Box sx={{ 
+              {/* <Box sx={{ 
                 border: '1px solid', 
                 borderColor: formData.paymentMode === 'online' ? '#2c8786' : '#e2e8f0',
                 borderRadius: 1, 
@@ -683,7 +590,7 @@ const NewResgister: React.FC = () => {
                   }
                   sx={{ flexGrow: 1, m: 0 }}
                 />
-              </Box>
+              </Box> */}
             </RadioGroup>
           </FormControl>
         </DialogContent>

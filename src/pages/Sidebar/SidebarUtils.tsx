@@ -120,6 +120,24 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
   {
+    name: "Top Up Wallet",
+    icon: <AccountBalance />,
+    path: "/user/topup-wallet",
+    isExpandable: false,
+  },
+  {
+    name: "Wallet Transfer",
+    icon: <CreditCardIcon />,
+    path: "/user/wallet-transfer",
+    isExpandable: false,
+  },
+  {
+    name: "Activation",
+    icon: <AccountBalance />, // Or any suitable icon
+    path: "/user/activation",
+    isExpandable: false,
+  },
+  {
     name: "My Messages",
     icon: <MailOutlineIcon />,
     path: "/user/mailbox",
@@ -275,6 +293,12 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     name: "Transaction Records",
     icon: <ShowChartIcon />,
     path: "/admin/transactions",
+    isExpandable: false,
+  },
+  {
+    name: "Load Requests",
+    icon: <CreditCardIcon />,
+    path: "/admin/load-requests",
     isExpandable: false,
   },
   {

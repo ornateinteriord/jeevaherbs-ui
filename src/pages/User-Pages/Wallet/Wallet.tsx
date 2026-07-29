@@ -5,11 +5,11 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  TextField,
+  // TextField,
   Typography,
   Grid,
   Box,
-  Button,
+  // Button,
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -25,8 +25,8 @@ import { useGetWalletOverview, useWalletWithdraw } from "../../../api/Memeber";
 const Wallet = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [amount, setAmount] = useState("");
-  const [deduction, setDeduction] = useState(0);
-  const [netAmount, setNetAmount] = useState(0);
+  // const [deduction, setDeduction] = useState(0);
+  // const [netAmount, setNetAmount] = useState(0);
   const [optimisticBalance, setOptimisticBalance] = useState<number | null>(null);
   const [isWithdrawalAllowed, setIsWithdrawalAllowed] = useState<boolean>(true);
   // const [ setLoanStatusMessage] = useState<string>("");
@@ -64,15 +64,15 @@ const Wallet = () => {
     setAmount(selectedAmount);
 
     if (selectedAmount && selectedAmount !== "0") {
-      const withdrawalAmount = parseFloat(selectedAmount);
-      const calculatedDeduction = withdrawalAmount * 0.10;
-      const calculatedNetAmount = withdrawalAmount - calculatedDeduction;
+      // const withdrawalAmount = parseFloat(selectedAmount);
+      // const calculatedDeduction = withdrawalAmount * 0.10;
+      // const calculatedNetAmount = withdrawalAmount - calculatedDeduction;
 
-      setDeduction(calculatedDeduction);
-      setNetAmount(calculatedNetAmount);
+      // setDeduction(calculatedDeduction);
+      // setNetAmount(calculatedNetAmount);
     } else {
-      setDeduction(0);
-      setNetAmount(0);
+      // setDeduction(0);
+      // setNetAmount(0);
     }
   };
 
@@ -108,8 +108,8 @@ const Wallet = () => {
       {
         onSuccess: () => {
           setAmount("");
-          setDeduction(0);
-          setNetAmount(0);
+          // setDeduction(0);
+          // setNetAmount(0);
           refetch();
         },
         onError: () => {
@@ -119,6 +119,9 @@ const Wallet = () => {
       }
     );
   };
+
+  // Prevent TS unused warning for handleAmountChange and handleWithdraw
+  console.log(handleAmountChange, handleWithdraw);
 
   const displayBalance = Math.max(0, optimisticBalance !== null ? optimisticBalance : parseFloat(walletData?.balance || 0));
 
@@ -269,7 +272,7 @@ const Wallet = () => {
         </Accordion>
 
         {/* Withdrawal Section */}
-        <Accordion
+        {/* <Accordion
           defaultExpanded
           sx={{
             mt: isMobile ? 2 : 4,
@@ -422,7 +425,7 @@ const Wallet = () => {
               </Box>
             </form>
           </AccordionDetails>
-        </Accordion>
+        </Accordion> */}
 
         {/* Transaction History */}
         <Accordion

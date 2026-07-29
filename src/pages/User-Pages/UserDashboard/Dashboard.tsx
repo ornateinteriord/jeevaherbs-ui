@@ -19,7 +19,10 @@ import {
   Select,
   MenuItem,
   CircularProgress,
-  Avatar
+  Avatar,
+  Radio,
+  RadioGroup,
+  FormControlLabel
 } from '@mui/material';
 import '../../Dashboard/dashboard.scss';
 import DashboardTable from '../../Dashboard/DashboardTable';
@@ -36,11 +39,15 @@ import {
   useGetTransactionDetails,
   useRepayLoan,
   useVerifyPayment,
-  parsePaymentRedirectParams
+  parsePaymentRedirectParams,
+  useCreatePaymentOrder,
+  useCreateManualTopUp
 } from '../../../api/Memeber';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
 import { toast } from 'react-toastify';
+// @ts-ignore
+import { load } from '@cashfreepayments/cashfree-js';
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,6 +57,9 @@ const UserDashboard = () => {
   const [repaymentDialogOpen, setRepaymentDialogOpen] = useState(false);
   const [selectedRepayAmount, setSelectedRepayAmount] = useState(1);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
+  const [topUpDialogOpen, setTopUpDialogOpen] = useState(false);
+  const [loadAmount, setLoadAmount] = useState("");
+  const [topUpPaymentMode, setTopUpPaymentMode] = useState<'online' | 'qr'>('online');
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -68,11 +78,27 @@ const UserDashboard = () => {
   const { data: memberDetails, isLoading: memberLoading } = useGetMemberDetails(memberId);
   const { mutate: climeLoan, isPending: isClaiming } = useClimeLoan();
 
-  // Use the enhanced repay loan hook
+  // Enhanced repay loan hook
   const { mutate: repayLoan, isPending: isRepaying } = useRepayLoan();
 
   // Payment verification hook
   const { mutate: verifyPayment, isPending: isVerifyingPayment } = useVerifyPayment();
+  const createPaymentOrder = useCreatePaymentOrder();
+  const createManualTopUp = useCreateManualTopUp();
+
+  const handleManualTopUpPaid = () => {
+    if (!loadAmount || parseFloat(loadAmount) <= 0) return;
+    createManualTopUp.mutate(
+      { memberId: memberId || '', amount: parseFloat(loadAmount) },
+      {
+        onSuccess: () => {
+          setTopUpDialogOpen(false);
+          setLoadAmount("");
+          setTopUpPaymentMode('online');
+        }
+      }
+    );
+  };
 
   const { data: transactionsResponse, isLoading: loanStatusLoading, refetch: refetchTransactions } = useGetTransactionDetails("all");
 
@@ -224,6 +250,62 @@ const UserDashboard = () => {
         toast.error("Failed to initialize payment. Please try again.");
       }
     });
+  };
+
+  const handleTopUpSubmit = async () => {
+    if (!loadAmount || parseFloat(loadAmount) <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+    
+    try {
+      const paymentData: any = {
+        amount: parseFloat(loadAmount),
+        currency: "INR",
+        customer: {
+          customer_id: memberId || "",
+          customer_email: memberDetails?.email || "",
+          customer_phone: memberDetails?.mobileno || "",
+          customer_name: memberDetails?.Name || ""
+        },
+        notes: {
+          isWalletTopUp: true
+        }
+      };
+      
+      const response = await createPaymentOrder.mutateAsync(paymentData);
+      
+      if (response && response.payment_session_id) {
+         try {
+           const cashfree = await load({ mode: import.meta.env.PROD ? "production" : "sandbox" });
+           
+           let checkoutOptions = {
+             paymentSessionId: response.payment_session_id,
+             redirectTarget: "_modal",
+           };
+
+           cashfree.checkout(checkoutOptions).then((result: any) => {
+             if (result.error) {
+               toast.error("Payment failed or cancelled. Please try again.");
+               setTopUpDialogOpen(false);
+             } else if (result.redirect) {
+               console.log("Payment will be redirected");
+               setTopUpDialogOpen(false);
+             } else if (result.paymentDetails) {
+               toast.success("Payment successful! Amount will reflect in Top Up Wallet soon.");
+               setTopUpDialogOpen(false);
+               setLoadAmount("");
+               // If there's an API to refresh top-up wallet, call it here
+             }
+           });
+         } catch (sdkError) {
+           console.error("Cashfree SDK Error:", sdkError);
+           toast.error("Failed to load payment gateway");
+         }
+      }
+    } catch (error) {
+       console.error("Top up error:", error);
+    }
   };
 
   const handleCopyReferralLink = () => {
@@ -851,14 +933,67 @@ const UserDashboard = () => {
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="blur_gray" />
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/earnings')} amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" background="blur_gray" />
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="blur_gray" />
         </Grid>
+
+        {/* Custom Top Up Wallet Card */}
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/withdrawals')} amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" background="blur_gray" />
-        </Grid> */}
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/transactions')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="blur_gray" />
+          <Card
+            onClick={() => navigate('/user/topup-wallet')}
+            sx={{
+              background: 'linear-gradient(135deg, rgba(230, 245, 245, 0.8) 0%, rgba(200, 235, 235, 0.8) 100%)',
+              color: '#1e293b',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(44, 135, 134, 0.3)',
+              borderRadius: '24px',
+              padding: { xs: '6px', sm: '8px' },
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
+              height: '100%',
+              minHeight: { xs: '120px', sm: '160px' },
+              width: '100%',
+              position: 'relative',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: '0 12px 40px 0 rgba(31, 38, 135, 0.2)',
+              }
+            }}
+          >
+            <CardContent sx={{ p: { xs: '12px', sm: '16px' } }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                Top Up Wallet
+              </Typography>
+              <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: { xs: '1.3rem', sm: '1.5rem' }, color: '#2c8786' }}>
+                ₹{memberDetails?.top_up_wallet_balance?.toFixed(2) || '0.00'}
+              </Typography>
+            </CardContent>
+            <Box sx={{ p: { xs: '12px', sm: '16px' }, display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
+              <Button
+                variant="contained"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setTopUpDialogOpen(true);
+                }}
+                sx={{
+                  backgroundColor: '#2c8786',
+                  color: '#fff',
+                  '&:hover': { backgroundColor: '#236d6c' },
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  borderRadius: 2,
+                  px: 3,
+                  py: 0.8
+                }}
+              >
+                Load
+              </Button>
+            </Box>
+          </Card>
         </Grid>
 
         {isLoanApproved && (
@@ -1151,6 +1286,136 @@ const UserDashboard = () => {
         </DialogActions>
       </Dialog>
 
+      {/* Top Up Wallet Dialog */}
+      <Dialog
+        open={topUpDialogOpen}
+        onClose={() => setTopUpDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            p: 2,
+            minWidth: { xs: '320px', sm: '400px' },
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
+          },
+        }}
+      >
+        <DialogTitle sx={{ textAlign: 'center', color: '#2c8786', fontWeight: 'bold', fontSize: '1.5rem', pb: 1 }}>
+          Top Up Wallet
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+            <FormControl fullWidth>
+              <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>User ID</Typography>
+              <input
+                type="text"
+                value={memberId || ''}
+                readOnly
+                style={{
+                  padding: '10px',
+                  borderRadius: '8px',
+                  border: '1px solid #e2e8f0',
+                  backgroundColor: '#f8fafc',
+                  outline: 'none'
+                }}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>Name</Typography>
+              <input
+                type="text"
+                value={memberName}
+                readOnly
+                style={{
+                  padding: '10px',
+                  borderRadius: '8px',
+                  border: '1px solid #e2e8f0',
+                  backgroundColor: '#f8fafc',
+                  outline: 'none'
+                }}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>Amount (₹)</Typography>
+              <input
+                type="number"
+                value={loadAmount}
+                onChange={(e) => setLoadAmount(e.target.value)}
+                placeholder="Enter amount to load"
+                disabled={createPaymentOrder.isPending}
+                style={{
+                  padding: '10px',
+                  borderRadius: '8px',
+                  border: '1px solid #e2e8f0',
+                  outline: 'none',
+                  fontSize: '1rem'
+                }}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>Payment Mode</Typography>
+              <RadioGroup
+                row
+                value={topUpPaymentMode}
+                onChange={(e) => setTopUpPaymentMode(e.target.value as 'online' | 'qr')}
+              >
+                <FormControlLabel value="online" control={<Radio sx={{color: '#2c8786', '&.Mui-checked': {color: '#2c8786'}}} />} label="Online Pay (Cashfree)" />
+                <FormControlLabel value="qr" control={<Radio sx={{color: '#2c8786', '&.Mui-checked': {color: '#2c8786'}}} />} label="QR Pay (UPI)" />
+              </RadioGroup>
+            </FormControl>
+            {topUpPaymentMode === 'qr' && (
+              <Box sx={{ mt: 1, p: 2, border: '1px solid #e2e8f0', borderRadius: 2, textAlign: 'center', backgroundColor: '#f8fafc' }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1e293b', mb: 1 }}>Scan to Pay</Typography>
+                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=jeevaherbs@upi&pn=JeevaHerbs&am=${loadAmount || 0}&cu=INR`} alt="QR Code" style={{ borderRadius: '8px' }} />
+                <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold', color: '#2c8786' }}>
+                  UPI ID: jeevaherbs@upi
+                </Typography>
+                <Typography variant="caption" sx={{ display: 'block', mt: 1, color: '#64748b' }}>
+                  After successful payment, please contact admin with your transaction screenshot.
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', gap: 2, pb: 2 }}>
+          <Button
+            onClick={() => setTopUpDialogOpen(false)}
+            variant="outlined"
+            disabled={createPaymentOrder.isPending || createManualTopUp.isPending}
+            sx={{
+              borderColor: '#6b7280', color: '#6b7280', textTransform: 'capitalize', fontWeight: 'bold', px: 3,
+              '&:hover': { borderColor: '#4b5563', backgroundColor: '#f3f4f6' }
+            }}
+          >
+            {topUpPaymentMode === 'qr' ? 'Cancel' : 'Cancel'}
+          </Button>
+          {topUpPaymentMode === 'online' && (
+            <Button
+              onClick={handleTopUpSubmit}
+              variant="contained"
+              disabled={createPaymentOrder.isPending || !loadAmount || parseFloat(loadAmount) <= 0}
+              sx={{
+                backgroundColor: '#2c8786', textTransform: 'capitalize', fontWeight: 'bold', px: 3,
+                '&:hover': { backgroundColor: '#236d6c' }
+              }}
+            >
+              {createPaymentOrder.isPending ? 'Processing...' : 'Submit'}
+            </Button>
+          )}
+          {topUpPaymentMode === 'qr' && (
+            <Button
+              onClick={handleManualTopUpPaid}
+              variant="contained"
+              disabled={createManualTopUp.isPending || !loadAmount || parseFloat(loadAmount) <= 0}
+              sx={{
+                backgroundColor: '#10b981', textTransform: 'capitalize', fontWeight: 'bold', px: 3,
+                '&:hover': { backgroundColor: '#059669' }
+              }}
+            >
+              {createManualTopUp.isPending ? 'Sending...' : 'Paid'}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
 
       {/* Member Statistics */}
       <Box sx={{ mt: 10, p: 4, borderRadius: 2, boxShadow: 2 }}>
