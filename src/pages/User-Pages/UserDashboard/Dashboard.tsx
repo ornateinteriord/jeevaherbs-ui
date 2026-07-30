@@ -48,11 +48,11 @@ import { toast } from 'react-toastify';
 // @ts-ignore
 import { load } from '@cashfreepayments/cashfree-js';
 import QRPdf from '../../../assets/jee_sc.pdf';
-// import { useQuery } from '@tanstack/react-query';
-// import api from '../../../api/Api';
-// import { io } from 'socket.io-client';
+import { useQuery } from '@tanstack/react-query';
+import api from '../../../api/Api';
+import { io } from 'socket.io-client';
 
-// const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5051";
+const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5051";
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -147,7 +147,6 @@ const UserDashboard = () => {
   // Find the last completed repayment
 
   // Fetch Announcement
-  /* 
   const { data: announcementData } = useQuery({
     queryKey: ['announcement'],
     queryFn: async () => {
@@ -172,7 +171,6 @@ const UserDashboard = () => {
       socket.disconnect();
     };
   }, []);
-  */
   const lastCompletedRepayment = Array.isArray(allTransactions)
     ? allTransactions
       .filter((t: any) => t.is_loan_repayment && t.repayment_status === "Completed")
@@ -475,9 +473,9 @@ const UserDashboard = () => {
           justifyContent: 'center',
           mt: { xs: 8, sm: 8, md: 8 },
           py: { xs: 4, sm: 4, md: 5 },
-          backgroundColor: "#299592",
+          background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)',
           position: 'relative',
-          boxShadow: '0 4px 12px rgba(41, 149, 146, 0.2)'
+          boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)'
         }}
       >
         <Box
@@ -504,13 +502,13 @@ const UserDashboard = () => {
             gap: { xs: 3, sm: 4 }
           }}
         >
-          {/* liveAnnouncement && (
+          {liveAnnouncement && (
             <Box sx={{ width: '100%', overflow: 'hidden', bgcolor: 'rgba(0,0,0,0.5)', py: 1, px: 2, borderRadius: 2, borderLeft: '4px solid #f59e0b' }}>
               <Box component={"marquee" as any} style={{ color: '#fbbf24', fontSize: '1.1rem', fontWeight: 'bold' }}>
                 {liveAnnouncement}
               </Box>
             </Box>
-          ) */}
+          )}
 
           <Typography
             variant="h4"
@@ -539,7 +537,7 @@ const UserDashboard = () => {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 width: '100%',
               }}
             >
@@ -547,7 +545,7 @@ const UserDashboard = () => {
                 sx={{
                   display: 'flex',
                   flexDirection: 'row',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   gap: 2,
                 }}
               >
@@ -556,12 +554,12 @@ const UserDashboard = () => {
                   src={memberDetails?.profile_image}
                   alt={memberName}
                   sx={{
-                    width: { xs: 64, md: 72 },
-                    height: { xs: 64, md: 72 },
+                    width: { xs: 94, md: 114 },
+                    height: { xs: 114, md: 114 },
                     bgcolor: '#ffffff',
                     color: '#299592',
                     fontWeight: 'bold',
-                    fontSize: { xs: '1.6rem', md: '2rem' },
+                    fontSize: { xs: '2rem', md: '2.5rem' },
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                     border: '3px solid rgba(255, 255, 255, 0.9)',
                     borderRadius: '12px'
@@ -576,7 +574,7 @@ const UserDashboard = () => {
                       color: 'white',
                       fontWeight: 'bold',
                       lineHeight: 1.2,
-                      fontSize: { xs: '1.2rem', md: '1.4rem' }
+                      fontSize: { xs: '1.6rem', md: '1.8rem' }
                     }}
                   >
                     {memberName}
@@ -585,7 +583,7 @@ const UserDashboard = () => {
                     variant="body2"
                     sx={{
                       color: 'rgba(255, 255, 255, 0.9)',
-                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      fontSize: { xs: '1.1rem', md: '1.15rem' },
                       mt: 0.5
                     }}
                   >
@@ -595,7 +593,7 @@ const UserDashboard = () => {
                     variant="body2"
                     sx={{
                       color: memberDetails?.status?.toLowerCase() === 'active' ? '#4ade80' : '#f87171',
-                      fontSize: { xs: '0.85rem', md: '0.95rem' },
+                      fontSize: { xs: '1rem', md: '1.1rem' },
                       fontWeight: 'bold',
                       mt: 0.5,
                       textTransform: 'capitalize'
@@ -608,7 +606,7 @@ const UserDashboard = () => {
 
               <Box>
                 <Button
-                  disabled
+                  onClick={() => navigate('/user/chat')}
                   sx={{
                     minWidth: 'auto',
                     p: 2,
@@ -617,10 +615,9 @@ const UserDashboard = () => {
                     color: 'white',
                     boxShadow: '0 8px 20px rgba(15, 118, 110, 0.4)',
                     transition: 'all 0.3s ease',
-                    opacity: 0.7,
-                    '&.Mui-disabled': {
-                      background: 'linear-gradient(135deg, #da5c3dff 0%, #e1b67eff 100%)',
-                      color: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': {
+                      opacity: 0.9,
+                      transform: 'scale(1.05)'
                     }
                   }}
                 >
@@ -634,7 +631,7 @@ const UserDashboard = () => {
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'flex-end',
                 alignItems: 'center',
                 width: '100%',
                 gap: { xs: 2, sm: 3 }
@@ -643,16 +640,15 @@ const UserDashboard = () => {
               {/* Left Corner Box: Total Earnings */}
               <Box
                 sx={{
-                  flex: 1,
                   textAlign: 'center',
                   background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(6, 95, 70, 0.35) 100%)',
                   border: '1px solid rgba(52, 211, 153, 0.55)',
                   boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)',
                   backdropFilter: 'blur(10px)',
                   borderRadius: '16px',
-                  px: { xs: 1, sm: 3 },
+                  px: { xs: 2, sm: 3 },
                   py: 1.5,
-                  minWidth: 0 // allow shrinking
+                  minWidth: { xs: '120px', sm: '140px' }
                 }}
               >
                 <Typography
@@ -667,8 +663,8 @@ const UserDashboard = () => {
                   {loading ? '₹0' : totalEarningsAmount}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Typography variant="caption" sx={{ color: '#d1fae5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                    Total Earnings
+                  <Typography variant="caption" sx={{ color: '#d1fae5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
+                    Earnings
                   </Typography>
                 </Box>
               </Box>
@@ -676,16 +672,15 @@ const UserDashboard = () => {
               {/* Right Corner Box: Total Withdrawals */}
               <Box
                 sx={{
-                  flex: 1,
                   textAlign: 'center',
                   background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.22) 0%, rgba(154, 52, 18, 0.35) 100%)',
                   border: '1px solid rgba(251, 146, 60, 0.55)',
                   boxShadow: '0 4px 15px rgba(249, 115, 22, 0.25)',
                   backdropFilter: 'blur(10px)',
                   borderRadius: '16px',
-                  px: { xs: 1, sm: 3 },
+                  px: { xs: 2, sm: 3 },
                   py: 1.5,
-                  minWidth: 0 // allow shrinking
+                  minWidth: { xs: '120px', sm: '140px' }
                 }}
               >
                 <Typography
@@ -700,8 +695,8 @@ const UserDashboard = () => {
                   {loading ? '₹0' : totalWithdrawsAmount}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Typography variant="caption" sx={{ color: '#ffedd5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                    Total Withdrawals
+                  <Typography variant="caption" sx={{ color: '#ffedd5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
+                    Withdrawals
                   </Typography>
                 </Box>
               </Box>
@@ -710,7 +705,7 @@ const UserDashboard = () => {
             
             {/* Next Payment Cycle Premium Banner */}
             <Box sx={{ 
-              mt: 3, 
+              mt: {xs: 1, md: 3}, 
               width: '100%',
               background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.15) 50%, rgba(16, 185, 129, 0.05) 100%)',
               border: '1px solid rgba(52, 211, 153, 0.3)',
@@ -738,10 +733,10 @@ const UserDashboard = () => {
               }}>
                 Your next payment cycle on <span style={{ color: '#ffffff', fontWeight: '800', marginLeft: '4px' }}>
                 {(() => {
-                  let nextDate: Date | null = null;
-                  const baseDateStr = memberDetails?.activationDate || memberDetails?.createdAt || memberDetails?.created_at;
+                  const baseDateStr = memberDetails?.activationDate || memberDetails?.activation_date || memberDetails?.createdAt || memberDetails?.created_at;
                   
-                  if (baseDateStr) {
+                  if (baseDateStr && memberDetails?.status?.toLowerCase() === 'active') {
+                    let nextDate: Date | null = null;
                     const actDate = new Date(baseDateStr);
                     const txList = Array.isArray(transactionsResponse) 
                       ? transactionsResponse 
@@ -764,10 +759,10 @@ const UserDashboard = () => {
                     } else {
                       nextDate = new Date(actDate.getTime() + 15 * 24 * 60 * 60 * 1000);
                     }
+                    return nextDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                   } else {
-                    nextDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+                    return 'N/A';
                   }
-                  return nextDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                 })()}
                 </span>
               </Typography>
