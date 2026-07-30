@@ -1060,7 +1060,7 @@ const UserDashboard = () => {
                 variant="outlined"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate('/user/transfer');
+                  navigate('/user/wallet-transfer');
                 }}
                 sx={{
                   borderColor: '#2c8786',
