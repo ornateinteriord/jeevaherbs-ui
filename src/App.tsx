@@ -31,6 +31,9 @@ import DailyROI from "./pages/User-Pages/Income/DailyROI";
 import DailyIncentive from "./pages/User-Pages/Income/DailyIncentive";
 import GlobalIncome from "./pages/User-Pages/Income/GlobalIncome";
 import TotalEarnings from "./pages/User-Pages/Income/TotalEarnings";
+// import { UserWithdraw } from "./pages/User-Pages/UserWithdrawals/UserWithdraw";
+// import { PaymentResponse } from "./pages/User-Pages/UserPayments/PaymentResponse";
+import Chat from "./pages/User-Pages/Chat/Chat";
 import TotalWithdrawals from "./pages/User-Pages/Income/TotalWithdrawals";
 import Tree from "./pages/User-Pages/Team/Tree";
 import Team from "./pages/User-Pages/Team/Team";
@@ -107,6 +110,7 @@ const AdminSupportTickets = lazy(
   () => import("./pages/Admin-Pages/SupportTicket/SupportTickets")
 );
 const AdminNews = lazy(() => import("./pages/Admin-Pages/News/News"));
+const AdminGroupMessage = lazy(() => import("./pages/Admin-Pages/GroupMessage/GroupMessage"));
 const AdminHolidays = lazy(
   () => import("./pages/Admin-Pages/Holidays/Holidays")
 );
@@ -352,6 +356,7 @@ const RoutesProvider = ({
                 element={<AdminSupportTickets />}
               />
               <Route path="/admin/news" element={<AdminNews />} />
+              <Route path="/admin/group-message" element={<AdminGroupMessage />} />
               <Route path="/admin/holidays" element={<AdminHolidays />} />
               <Route path="/admin/members/:memberId" element={<MembersUpdateForm />} />
               <Route path="/admin/kyc-approval" element={<KYCApproval />} />
@@ -369,6 +374,7 @@ const RoutesProvider = ({
 
             <Route element={<ProtectedRoute allowedRoles={["USER"]} />}>
               <Route path="/user/dashboard" element={<UserDashboard />} />
+              <Route path="/user/chat" element={<Chat />} />
               <Route path="/user/income/direct" element={<DirectIncome />} />
               <Route path="/user/income/level" element={<LevelIncome />} />
               <Route path="/user/income/daily-roi" element={<DailyROI />} />

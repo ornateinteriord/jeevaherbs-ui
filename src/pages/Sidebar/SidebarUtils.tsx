@@ -319,4 +319,10 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <EventIcon />,
     isExpandable: false,
   },
+  {
+    name: "Group Message",
+    path: "/admin/group-message",
+    icon: <MailOutlineIcon />,
+    isExpandable: false,
+  },
 ];

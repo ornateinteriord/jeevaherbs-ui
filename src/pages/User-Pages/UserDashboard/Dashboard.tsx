@@ -25,10 +25,8 @@ import {
   FormControlLabel
 } from '@mui/material';
 import '../../Dashboard/dashboard.scss';
-import DashboardTable from '../../Dashboard/DashboardTable';
-import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
+
 import DashboardCard from '../../../components/common/DashboardCard';
-import { getUserDashboardTableColumns } from '../../../utils/DataTableColumnsProvider';
 import TokenService from '../../../api/token/tokenService';
 import {
   useCheckSponsorReward,
@@ -45,15 +43,20 @@ import {
 } from '../../../api/Memeber';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
+import ChatIcon from '@mui/icons-material/Chat';
 import { toast } from 'react-toastify';
 // @ts-ignore
 import { load } from '@cashfreepayments/cashfree-js';
 import QRPdf from '../../../assets/jee_sc.pdf';
+// import { useQuery } from '@tanstack/react-query';
+// import api from '../../../api/Api';
+// import { io } from 'socket.io-client';
+
+// const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5051";
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [claimDialogOpen, setClaimDialogOpen] = useState(false);
   const [repaymentDialogOpen, setRepaymentDialogOpen] = useState(false);
   const [selectedRepayAmount, setSelectedRepayAmount] = useState(1);
@@ -75,7 +78,7 @@ const UserDashboard = () => {
 
   const { data: sponsorRewardData } = useCheckSponsorReward(memberId);
   const { data: walletOverview, isLoading: walletLoading } = useGetWalletOverview(memberId);
-  const { data: sponsersData, isLoading: sponsersLoading } = useGetSponsers(memberId);
+  const { isLoading: sponsersLoading } = useGetSponsers(memberId);
   const { data: memberDetails, isLoading: memberLoading } = useGetMemberDetails(memberId);
   const { mutate: climeLoan, isPending: isClaiming } = useClimeLoan();
 
@@ -142,6 +145,34 @@ const UserDashboard = () => {
 
   const initialLoanAmount = approvedLoan?.ew_credit ? parseFloat(approvedLoan.ew_credit) : 0;
   // Find the last completed repayment
+
+  // Fetch Announcement
+  /* 
+  const { data: announcementData } = useQuery({
+    queryKey: ['announcement'],
+    queryFn: async () => {
+      const res = await api.get('/admin/announcement');
+      return res.data;
+    }
+  });
+  const [liveAnnouncement, setLiveAnnouncement] = useState("");
+
+  useEffect(() => {
+    if (announcementData && announcementData.success) {
+      setLiveAnnouncement(announcementData.data || "");
+    }
+  }, [announcementData]);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+    socket.on("new_announcement", (msg: string) => {
+      setLiveAnnouncement(msg);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+  */
   const lastCompletedRepayment = Array.isArray(allTransactions)
     ? allTransactions
       .filter((t: any) => t.is_loan_repayment && t.repayment_status === "Completed")
@@ -176,10 +207,6 @@ const UserDashboard = () => {
   const hasProcessingOrApprovedStatus = !!statusButtonText;
 
   const loading = walletLoading || sponsersLoading || memberLoading || loanStatusLoading;
-
-  const handleDateChange = (date: string) => {
-    setSelectedDate(date);
-  };
 
   const handleClaimReward = () => {
     setClaimDialogOpen(true);
@@ -350,52 +377,7 @@ const UserDashboard = () => {
   const dailyIncentiveAmount = walletOverview?.dailyIncentive || 0;
   const globalIncomeAmount = walletOverview?.globalIncome || 0;
 
-  const tableData = [
-    {
-      title: "Today's Registration",
-      direct: sponsersData?.sponsoredUsers?.filter((user: any) => user.status === 'active')?.length || 0,
-      indirect: 0,
-      total: sponsersData?.sponsoredUsers?.filter((user: any) => user.status === 'active')?.length || 0,
-    },
-    {
-      title: "Today's Activation",
-      direct: sponsersData?.sponsoredUsers?.filter((user: any) =>
-        user.status === 'active' &&
-        user.activationDate?.toDateString() === new Date().toDateString()
-      )?.length || 0,
-      indirect: 0,
-      total: sponsersData?.sponsoredUsers?.filter((user: any) =>
-        user.status === 'active' &&
-        user.activationDate?.toDateString() === new Date().toDateString()
-      )?.length || 0,
-    },
-    {
-      title: 'Total Registration',
-      direct: memberDetails?.registration_stats?.direct ?? memberDetails?.direct_referrals?.length ?? 0,
-      indirect: memberDetails?.registration_stats?.indirect ?? ((memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.length || 0)),
-      total: memberDetails?.registration_stats?.total ?? memberDetails?.total_team ?? 0,
-    },
-    {
-      title: 'Total Activation',
-      direct: memberDetails?.registration_stats?.direct ?? memberDetails?.direct_referrals?.length ?? 0,
-      indirect: memberDetails?.registration_stats?.indirect ?? ((memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.length || 0)),
-      total: memberDetails?.registration_stats?.total ?? memberDetails?.total_team ?? 0,
-    },
-    {
-      title: 'Current Month Activation',
-      direct: memberDetails?.direct_referrals?.filter((ref: any) =>
-        ref.status === 'active' &&
-        new Date(ref.activationDate).getMonth() === new Date().getMonth() &&
-        new Date(ref.activationDate).getFullYear() === new Date().getFullYear()
-      )?.length || 0,
-      indirect: 0,
-      total: memberDetails?.direct_referrals?.filter((ref: any) =>
-        ref.status === 'active' &&
-        new Date(ref.activationDate).getMonth() === new Date().getMonth() &&
-        new Date(ref.activationDate).getFullYear() === new Date().getFullYear()
-      )?.length || 0,
-    },
-  ];
+
 
   const handleRepayClick = () => {
     if (isRepayEnabled) {
@@ -522,6 +504,14 @@ const UserDashboard = () => {
             gap: { xs: 3, sm: 4 }
           }}
         >
+          {/* liveAnnouncement && (
+            <Box sx={{ width: '100%', overflow: 'hidden', bgcolor: 'rgba(0,0,0,0.5)', py: 1, px: 2, borderRadius: 2, borderLeft: '4px solid #f59e0b' }}>
+              <Box component={"marquee" as any} style={{ color: '#fbbf24', fontSize: '1.1rem', fontWeight: 'bold' }}>
+                {liveAnnouncement}
+              </Box>
+            </Box>
+          ) */}
+
           <Typography
             variant="h4"
             sx={{
@@ -531,7 +521,7 @@ const UserDashboard = () => {
               width: '100%'
             }}
           >
-            Welcome to Dashboard
+            Welcome to Jeeva Herbs
           </Typography>
 
           <Box
@@ -543,53 +533,99 @@ const UserDashboard = () => {
               gap: { xs: 3, sm: 4 }
             }}
           >
-            {/* Center Box: Avatar and Info (Always Top) */}
+            {/* Top Box: Avatar and Info (Left) and Chat Icon (Right) */}
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 alignItems: 'center',
-                gap: 1,
+                width: '100%',
               }}
             >
-              <Avatar
-                src={memberDetails?.profile_image}
-                alt={memberName}
+              <Box
                 sx={{
-                  width: { xs: 72, md: 84 },
-                  height: { xs: 72, md: 84 },
-                  bgcolor: '#ffffff',
-                  color: '#299592',
-                  fontWeight: 'bold',
-                  fontSize: { xs: '1.8rem', md: '2.2rem' },
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  border: '3px solid rgba(255, 255, 255, 0.9)'
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 2,
                 }}
               >
-                {!memberDetails?.profile_image && firstLetter}
-              </Avatar>
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography
-                  variant="h6"
+                <Avatar
+                  variant="rounded"
+                  src={memberDetails?.profile_image}
+                  alt={memberName}
                   sx={{
-                    color: 'white',
+                    width: { xs: 64, md: 72 },
+                    height: { xs: 64, md: 72 },
+                    bgcolor: '#ffffff',
+                    color: '#299592',
                     fontWeight: 'bold',
-                    lineHeight: 1.2,
-                    fontSize: { xs: '1.2rem', md: '1.4rem' }
+                    fontSize: { xs: '1.6rem', md: '2rem' },
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    border: '3px solid rgba(255, 255, 255, 0.9)',
+                    borderRadius: '12px'
                   }}
                 >
-                  {memberName}
-                </Typography>
-                <Typography
-                  variant="body2"
+                  {!memberDetails?.profile_image && firstLetter}
+                </Avatar>
+                <Box sx={{ textAlign: 'left' }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      lineHeight: 1.2,
+                      fontSize: { xs: '1.2rem', md: '1.4rem' }
+                    }}
+                  >
+                    {memberName}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      mt: 0.5
+                    }}
+                  >
+                    ID: <span style={{ fontWeight: 'bold', color: 'white' }}>{memberDetails?.Member_id || memberId || '—'}</span>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: memberDetails?.status?.toLowerCase() === 'active' ? '#4ade80' : '#f87171',
+                      fontSize: { xs: '0.85rem', md: '0.95rem' },
+                      fontWeight: 'bold',
+                      mt: 0.5,
+                      textTransform: 'capitalize'
+                    }}
+                  >
+                    Status: {memberDetails?.status || 'Unknown'}
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Box>
+                <Button
+                  disabled
                   sx={{
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    fontSize: { xs: '0.9rem', md: '1rem' },
-                    mt: 0.5
+                    minWidth: 'auto',
+                    p: 2,
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #da5c3dff 0%, #e1b67eff 100%)',
+                    color: 'white',
+                    boxShadow: '0 8px 20px rgba(15, 118, 110, 0.4)',
+                    transition: 'all 0.3s ease',
+                    opacity: 0.7,
+                    '&.Mui-disabled': {
+                      background: 'linear-gradient(135deg, #da5c3dff 0%, #e1b67eff 100%)',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                    }
                   }}
                 >
-                  ID: <span style={{ fontWeight: 'bold', color: 'white' }}>{memberDetails?.Member_id || memberId || '—'}</span>
-                </Typography>
+                  <ChatIcon sx={{ fontSize: 32 }} />
+                </Button>
               </Box>
             </Box>
 
@@ -670,8 +706,73 @@ const UserDashboard = () => {
                 </Box>
               </Box>
             </Box>
-          </Box>
 
+            
+            {/* Next Payment Cycle Premium Banner */}
+            <Box sx={{ 
+              mt: 3, 
+              width: '100%',
+              background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.15) 50%, rgba(16, 185, 129, 0.05) 100%)',
+              border: '1px solid rgba(52, 211, 153, 0.3)',
+              borderRadius: '12px',
+              p: 1.5,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1.5,
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+            }}>
+              {/* Pulsing indicator dot */}
+              <Box sx={{ 
+                width: 10, 
+                height: 10, 
+                borderRadius: '50%', 
+                bgcolor: '#34d399', 
+                boxShadow: '0 0 10px #34d399'
+              }} />
+              <Typography variant="body1" sx={{ 
+                color: '#a7f3d0', 
+                fontWeight: '500',
+                letterSpacing: 0.5,
+                fontSize: { xs: '0.9rem', md: '1rem' }
+              }}>
+                Your next payment cycle on <span style={{ color: '#ffffff', fontWeight: '800', marginLeft: '4px' }}>
+                {(() => {
+                  let nextDate: Date | null = null;
+                  const baseDateStr = memberDetails?.activationDate || memberDetails?.createdAt || memberDetails?.created_at;
+                  
+                  if (baseDateStr) {
+                    const actDate = new Date(baseDateStr);
+                    const txList = Array.isArray(transactionsResponse) 
+                      ? transactionsResponse 
+                      : (Array.isArray(transactionsResponse?.data) ? transactionsResponse.data : []);
+                      
+                    const withdrawals = txList.filter((t: any) => 
+                      t?.transaction_type?.toLowerCase() === 'withdrawal' || 
+                      t?.type?.toLowerCase() === 'withdrawal' ||
+                      t?.description?.toLowerCase()?.includes('withdrawal')
+                    );
+                
+                    if (withdrawals.length > 0) {
+                      const latest = withdrawals.sort((a: any, b: any) => {
+                        const dateA = new Date(a.date || a.createdAt || a.transaction_date || 0).getTime();
+                        const dateB = new Date(b.date || b.createdAt || b.transaction_date || 0).getTime();
+                        return dateB - dateA;
+                      })[0];
+                      const lastWDate = new Date(latest.date || latest.createdAt || latest.transaction_date);
+                      nextDate = new Date(lastWDate.getTime() + 15 * 24 * 60 * 60 * 1000);
+                    } else {
+                      nextDate = new Date(actDate.getTime() + 15 * 24 * 60 * 60 * 1000);
+                    }
+                  } else {
+                    nextDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+                  }
+                  return nextDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                })()}
+                </span>
+              </Typography>
+            </Box>
+          </Box>
           {/* Show status button when Processing or Approved, otherwise show Claim Reward if eligible */}
           {hasProcessingOrApprovedStatus ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -919,26 +1020,7 @@ const UserDashboard = () => {
           }
         }}
       >
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="blur_gray" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="blur_gray" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="blur_gray" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="blur_gray" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="blur_gray" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="blur_gray" />
-        </Grid>
-
-        {/* Custom Top Up Wallet Card */}
+        {/* Custom Top Up Wallet Card Moved to First Position */}
         <Grid item xs={12} sm={6} md={4}>
           <Card
             onClick={() => navigate('/user/topup-wallet')}
@@ -973,7 +1055,26 @@ const UserDashboard = () => {
                 ₹{memberDetails?.top_up_wallet_balance?.toFixed(2) || '0.00'}
               </Typography>
             </CardContent>
-            <Box sx={{ p: { xs: '12px', sm: '16px' }, display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
+            <Box sx={{ p: { xs: '12px', sm: '16px' }, display: 'flex', justifyContent: 'space-between', mt: 'auto' }}>
+              <Button
+                variant="outlined"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/user/transfer');
+                }}
+                sx={{
+                  borderColor: '#2c8786',
+                  color: '#2c8786',
+                  '&:hover': { backgroundColor: 'rgba(44, 135, 134, 0.1)', borderColor: '#236d6c' },
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  borderRadius: 2,
+                  px: 3,
+                  py: 0.8
+                }}
+              >
+                Transfer
+              </Button>
               <Button
                 variant="contained"
                 onClick={(e) => {
@@ -995,6 +1096,25 @@ const UserDashboard = () => {
               </Button>
             </Box>
           </Card>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="blur_gray" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="blur_gray" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="blur_gray" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="blur_gray" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="blur_gray" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="blur_gray" />
         </Grid>
 
         {isLoanApproved && (
@@ -1421,7 +1541,7 @@ const UserDashboard = () => {
       </Dialog>
 
       {/* Member Statistics */}
-      <Box sx={{ mt: 10, p: 4, borderRadius: 2, boxShadow: 2 }}>
+      {/* <Box sx={{ mt: 10, p: 4, borderRadius: 2, boxShadow: 2 }}>
         <Card sx={{ backgroundColor: '#f5f5f5' }}>
           <CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
@@ -1436,7 +1556,7 @@ const UserDashboard = () => {
             <DashboardTable data={tableData} columns={getUserDashboardTableColumns()} />
           </CardContent>
         </Card>
-      </Box>
+      </Box> */}
     </>
   );
 }

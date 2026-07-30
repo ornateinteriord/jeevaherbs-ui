@@ -58,3 +58,13 @@ export const put = async (path: string, data ?: any) => {
     throw error;
   }
 };
+export const patch = async (path: string, data ?: any) => {
+  try {
+    const response = await api.patch(path, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export default api;
