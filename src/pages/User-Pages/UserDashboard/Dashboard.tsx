@@ -606,7 +606,7 @@ const UserDashboard = () => {
 
               <Box>
                 <Button
-                  onClick={() => navigate('/user/chat')}
+                  disabled
                   sx={{
                     minWidth: 'auto',
                     p: 2,
@@ -615,9 +615,10 @@ const UserDashboard = () => {
                     color: 'white',
                     boxShadow: '0 8px 20px rgba(15, 118, 110, 0.4)',
                     transition: 'all 0.3s ease',
-                    '&:hover': {
-                      opacity: 0.9,
-                      transform: 'scale(1.05)'
+                    opacity: 0.7,
+                    '&.Mui-disabled': {
+                      background: 'linear-gradient(135deg, #da5c3dff 0%, #e1b67eff 100%)',
+                      color: 'rgba(255, 255, 255, 0.8)',
                     }
                   }}
                 >
