@@ -16,12 +16,21 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel
+  InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useGetLoadRequests, useProcessLoadRequest } from '../../../api/Admin';
 
 const LoadRequests = () => {
   const [filterStatus, setFilterStatus] = useState("Pending");
+  const [screenshotModalOpen, setScreenshotModalOpen] = useState(false);
+  const [currentScreenshot, setCurrentScreenshot] = useState<string | null>(null);
+
   const { data: loadRequests = [], isLoading, error } = useGetLoadRequests(filterStatus);
   const processLoadRequest = useProcessLoadRequest();
 
@@ -29,6 +38,16 @@ const LoadRequests = () => {
     if (window.confirm(`Are you sure you want to ${action} this request?`)) {
       processLoadRequest.mutate({ transactionId, action });
     }
+  };
+
+  const handleOpenScreenshot = (screenshot: string) => {
+    setCurrentScreenshot(screenshot);
+    setScreenshotModalOpen(true);
+  };
+
+  const handleCloseScreenshot = () => {
+    setScreenshotModalOpen(false);
+    setCurrentScreenshot(null);
   };
 
   if (isLoading) return <Typography>Loading...</Typography>;
@@ -67,6 +86,7 @@ const LoadRequests = () => {
                   <TableCell sx={{ fontWeight: 'bold' }}>Amount (₹)</TableCell>
                   <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
                   <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', textAlign: 'center' }}>Screenshot</TableCell>
                   <TableCell sx={{ fontWeight: 'bold', textAlign: 'center' }}>Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -94,6 +114,20 @@ const LoadRequests = () => {
                           } 
                           size="small" 
                         />
+                      </TableCell>
+                      <TableCell sx={{ textAlign: 'center' }}>
+                        {req.screenshot ? (
+                          <Button 
+                            variant="outlined" 
+                            size="small" 
+                            color="info"
+                            onClick={() => handleOpenScreenshot(req.screenshot)}
+                          >
+                            View
+                          </Button>
+                        ) : (
+                          <Typography variant="body2" color="text.secondary">N/A</Typography>
+                        )}
                       </TableCell>
                       <TableCell sx={{ textAlign: 'center' }}>
                         {req.status === 'Pending' ? (
@@ -129,6 +163,37 @@ const LoadRequests = () => {
           </TableContainer>
         </CardContent>
       </Card>
+
+      {/* Screenshot Modal */}
+      <Dialog 
+        open={screenshotModalOpen} 
+        onClose={handleCloseScreenshot}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          Payment Screenshot
+          <IconButton onClick={handleCloseScreenshot}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', justifyContent: 'center', backgroundColor: '#f8fafc' }}>
+          {currentScreenshot ? (
+            <img 
+              src={currentScreenshot} 
+              alt="Payment Screenshot" 
+              style={{ maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain' }} 
+            />
+          ) : (
+            <Typography>No screenshot available.</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseScreenshot} variant="contained" color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

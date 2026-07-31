@@ -52,7 +52,8 @@ const KYC: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     submitKYC.mutate({
       ref_no: user.Member_id,
       bankAccount: formData.account_number,
@@ -91,13 +92,14 @@ const KYC: React.FC = () => {
             Update Bank Account Details
           </AccordionSummary>
           <AccordionDetails sx={{ padding: '2rem' }}>
-            <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <TextField
                 label="Account Name"
                 name="accountName"
                 value={formData.accountName}
                 onChange={handleInputChange}
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="Enter account holder name"
                 InputProps={{
@@ -124,6 +126,7 @@ const KYC: React.FC = () => {
                 value={formData.account_number}
                 onChange={handleInputChange}
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="Enter account number"
                 InputProps={{
@@ -150,6 +153,7 @@ const KYC: React.FC = () => {
                 value={formData.ifsc_code}
                 onChange={handleInputChange}
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="Enter IFSC code"
                 InputProps={{
@@ -176,6 +180,7 @@ const KYC: React.FC = () => {
                 value={formData.bank_name}
                 onChange={handleInputChange}
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="Enter bank name"
                 InputProps={{
@@ -202,6 +207,7 @@ const KYC: React.FC = () => {
                 value={formData.Pan_no}
                 onChange={handleInputChange}
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="Enter PAN number"
                 InputProps={{
@@ -223,8 +229,8 @@ const KYC: React.FC = () => {
                 }}
               />
               <Button
+                type="submit"
                 variant="contained"
-                onClick={handleSubmit}
                 disabled={submitKYC.isPending}
                 sx={{
                   backgroundColor: '#2c8786',

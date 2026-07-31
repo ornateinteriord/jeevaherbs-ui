@@ -47,10 +47,17 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { toast } from 'react-toastify';
 // @ts-ignore
 import { load } from '@cashfreepayments/cashfree-js';
-import QRPdf from '../../../assets/jee_sc.pdf';
+import QRImage from '../../../assets/jee_sc.png';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../../api/Api';
 import { io } from 'socket.io-client';
+
+const slideImages = [
+  "https://picsum.photos/seed/herb1/800/400",
+  "https://picsum.photos/seed/herb2/800/400",
+  "https://picsum.photos/seed/herb3/800/400",
+  "https://picsum.photos/seed/herb4/800/400"
+];
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5051";
 
@@ -62,8 +69,17 @@ const UserDashboard = () => {
   const [selectedRepayAmount, setSelectedRepayAmount] = useState(1);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
   const [topUpDialogOpen, setTopUpDialogOpen] = useState(false);
-  const [loadAmount, setLoadAmount] = useState("");
+  const [loadAmount, setLoadAmount] = useState<string>('');
   const [topUpPaymentMode, setTopUpPaymentMode] = useState<'online' | 'qr'>('online');
+  const [screenshotBase64, setScreenshotBase64] = useState<string>('');
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slideImages.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -92,16 +108,36 @@ const UserDashboard = () => {
 
   const handleManualTopUpPaid = () => {
     if (!loadAmount || parseFloat(loadAmount) <= 0) return;
+    if (topUpPaymentMode === 'qr' && !screenshotBase64) {
+      toast.error('Please upload a screenshot of your payment');
+      return;
+    }
     createManualTopUp.mutate(
-      { memberId: memberId || '', amount: parseFloat(loadAmount) },
+      { memberId: memberId || '', amount: parseFloat(loadAmount), screenshot: screenshotBase64 },
       {
         onSuccess: () => {
           setTopUpDialogOpen(false);
           setLoadAmount("");
+          setScreenshotBase64("");
           setTopUpPaymentMode('online');
         }
       }
     );
+  };
+
+  const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size should be less than 5MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setScreenshotBase64(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const { data: transactionsResponse, isLoading: loanStatusLoading, refetch: refetchTransactions } = useGetTransactionDetails("all");
@@ -464,15 +500,15 @@ const UserDashboard = () => {
 
       <Box
         sx={{
-          minHeight: { xs: 'auto', md: '160px' },
+          minHeight: { xs: 'auto', md: '140px' },
           width: '100%',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          mt: { xs: 8, sm: 8, md: 8 },
-          py: { xs: 4, sm: 4, md: 5 },
+          mt: { xs: 4.5, sm: 3.5, md: 3.5 },
+          py: { xs: 4, sm: 3.5, md: 5 },
           background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)',
           position: 'relative',
           boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)'
@@ -486,7 +522,7 @@ const UserDashboard = () => {
             height: '100%',
             zIndex: 20,
             pointerEvents: 'none',
-            maskImage: 'radial-gradient(transparent,black)'
+            maskImage: 'radial-gradient(transparent)'
           }}
         />
 
@@ -499,19 +535,18 @@ const UserDashboard = () => {
             px: { xs: 2, sm: 4, md: 6 },
             position: 'relative',
             zIndex: 20,
-            gap: { xs: 3, sm: 4 }
+            gap: { xs: 1, sm: 2 }
           }}
         >
           {liveAnnouncement && (
-            <Box sx={{ width: '100%', overflow: 'hidden', bgcolor: 'rgba(0,0,0,0.5)', py: 1, px: 2, borderRadius: 2, borderLeft: '4px solid #f59e0b' }}>
-              <Box component={"marquee" as any} style={{ color: '#fbbf24', fontSize: '1.1rem', fontWeight: 'bold' }}>
+            <Box sx={{ width: '100%', overflow: 'hidden', bgcolor: 'transparent', py: 0, px: 0, borderRadius: 2 }}>
+              <Box component={"marquee" as any} style={{ color: 'gold', fontSize: '1.1rem', fontWeight: 'bold' }}>
                 {liveAnnouncement}
               </Box>
             </Box>
           )}
 
           <Typography
-            variant="h4"
             sx={{
               color: 'white',
               fontSize: { xs: '1.7rem', sm: '1.8rem', md: '2.5rem' },
@@ -601,12 +636,37 @@ const UserDashboard = () => {
                   >
                     Status: {memberDetails?.status || 'Unknown'}
                   </Typography>
+                  {memberDetails?.upgrade_status !== 'active' && memberDetails?.upgrade_status !== 'Approved' && (
+                    <Box 
+                      onClick={() => navigate('/user/account/kyc')}
+                      sx={{
+                        mt: 1,
+                        display: 'inline-block',
+                        bgcolor: 'rgba(239, 68, 68, 0.2)',
+                        border: '1px solid #ef4444',
+                        color: '#fca5a5',
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: '12px',
+                        fontSize: '0.85rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          bgcolor: 'rgba(239, 68, 68, 0.3)',
+                          transform: 'scale(1.05)'
+                        }
+                      }}
+                    >
+                      ⚠️ Complete KYC
+                    </Box>
+                  )}
                 </Box>
               </Box>
 
               <Box>
                 <Button
-                  disabled
+                  onClick={() => navigate('/user/chat')}
                   sx={{
                     minWidth: 'auto',
                     p: 2,
@@ -615,10 +675,10 @@ const UserDashboard = () => {
                     color: 'white',
                     boxShadow: '0 8px 20px rgba(15, 118, 110, 0.4)',
                     transition: 'all 0.3s ease',
-                    opacity: 0.7,
-                    '&.Mui-disabled': {
-                      background: 'linear-gradient(135deg, #da5c3dff 0%, #e1b67eff 100%)',
-                      color: 'rgba(255, 255, 255, 0.8)',
+                    opacity: 1,
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      boxShadow: '0 10px 25px rgba(15, 118, 110, 0.5)',
                     }
                   }}
                 >
@@ -791,6 +851,57 @@ const UserDashboard = () => {
               </Button>
             </Box>
           ) : null}
+        </Box>
+      </Box>
+
+      {/* Image Slider */}
+      <Box sx={{ width: '100%', mt: 2, px: { xs: 2, sm: 3, md: 4 } }}>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            height: { xs: '150px', sm: '200px', md: '250px' }, 
+            position: 'relative', 
+            overflow: 'hidden',
+            borderRadius: 3,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+        >
+          {slideImages.map((img, index) => (
+            <Box
+              key={index}
+              component="img"
+              src={img}
+              alt={`Slide ${index}`}
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                opacity: index === currentSlide ? 1 : 0,
+                transition: 'opacity 1s ease-in-out',
+                zIndex: index === currentSlide ? 1 : 0
+              }}
+            />
+          ))}
+          {/* Slider indicators */}
+          <Box sx={{ position: 'absolute', bottom: 16, width: '100%', display: 'flex', justifyContent: 'center', gap: 1, zIndex: 10 }}>
+            {slideImages.map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: index === currentSlide ? '#fff' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s ease'
+                }}
+                onClick={() => setCurrentSlide(index)}
+              />
+            ))}
+          </Box>
         </Box>
       </Box>
 
@@ -1095,22 +1206,22 @@ const UserDashboard = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="blur_gray" />
+          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="blur_gray" />
+          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="blur_gray" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="blur_gray" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="blur_gray" />
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="blur_gray" />
+          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
 
         {isLoanApproved && (
@@ -1120,7 +1231,7 @@ const UserDashboard = () => {
               dueAmount={dueAmount}
               title="Loan Amount"
               type="loan"
-              background="blur_gray"
+              background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)"
               onRepay={handleRepayClick}
               isRepayEnabled={isRepayEnabled}
               alreadyRepaidToday={alreadyRepaidToday}
@@ -1482,14 +1593,32 @@ const UserDashboard = () => {
             {topUpPaymentMode === 'qr' && (
               <Box sx={{ mt: 1, p: 2, border: '1px solid #e2e8f0', borderRadius: 2, textAlign: 'center', backgroundColor: '#f8fafc' }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1e293b', mb: 1 }}>Scan to Pay</Typography>
-                <Box sx={{ mt: 2, mb: 2, height: '250px', width: '100%', overflow: 'hidden', borderRadius: '8px' }}>
-                  <iframe src={`${QRPdf}#toolbar=0&view=Fit`} width="100%" height="100%" style={{ border: 'none' }} title="QR Code" />
+                <Box sx={{ mt: 2, mb: 2, height: '250px', width: '100%', overflow: 'hidden', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <img src={QRImage} alt="QR Code Scanner" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                 </Box>
                 <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold', color: '#2c8786' }}>
                   UPI ID: jeeva_sc@upi
                 </Typography>
-                <Typography variant="caption" sx={{ display: 'block', mt: 1, color: '#64748b' }}>
-                  After successful payment, please contact admin with your transaction screenshot.
+                
+                <Box sx={{ mt: 3, p: 2, backgroundColor: '#fff', borderRadius: 2, border: '1px dashed #cbd5e1' }}>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 'bold', color: '#334155' }}>
+                    Upload Payment Screenshot <span style={{color: 'red'}}>*</span>
+                  </Typography>
+                  <input
+                    accept="image/*"
+                    type="file"
+                    onChange={handleScreenshotChange}
+                    style={{ display: 'block', margin: '0 auto', fontSize: '0.875rem' }}
+                  />
+                  {screenshotBase64 && (
+                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                      <img src={screenshotBase64} alt="Screenshot preview" style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '8px', border: '1px solid #e2e8f0' }} />
+                    </Box>
+                  )}
+                </Box>
+
+                <Typography variant="caption" sx={{ display: 'block', mt: 2, color: '#64748b' }}>
+                  After successful payment, please upload your transaction screenshot above and click Paid.
                 </Typography>
               </Box>
             )}
@@ -1524,7 +1653,7 @@ const UserDashboard = () => {
             <Button
               onClick={handleManualTopUpPaid}
               variant="contained"
-              disabled={createManualTopUp.isPending || !loadAmount || parseFloat(loadAmount) <= 0}
+              disabled={createManualTopUp.isPending || !loadAmount || parseFloat(loadAmount) <= 0 || !screenshotBase64}
               sx={{
                 backgroundColor: '#10b981', textTransform: 'capitalize', fontWeight: 'bold', px: 3,
                 '&:hover': { backgroundColor: '#059669' }

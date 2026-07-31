@@ -36,14 +36,19 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     return 'Available Saturday';
   };
 
+  const isDashboardTheme = background === 'dashboard_theme';
   const isBlurGray = background === 'blur_gray';
-  const cardBg = isBlurGray 
+  
+  const cardBg = isDashboardTheme 
+    ? 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)'
+    : isBlurGray 
     ? 'linear-gradient(135deg, rgba(240, 246, 255, 0.70) 0%, rgba(167, 185, 206, 0.70) 100%)'
     : (background || 'linear-gradient(to right, #41a4baff, #5bcbc9ff)');
-  const cardColor = isBlurGray ? '#1e293b' : '#fff';
-  const cardBorder = isBlurGray ? '1px solid rgba(255, 255, 255, 0.6)' : 'none';
-  const cardBackdrop = isBlurGray ? 'blur(16px)' : 'none';
-  const iconColor = isBlurGray ? '#2c8786' : 'inherit';
+    
+  const cardColor = isDashboardTheme ? '#fff' : isBlurGray ? '#1e293b' : '#fff';
+  const cardBorder = isBlurGray ? '1px solid rgba(255, 255, 255, 0.6)' : isDashboardTheme ? '1px solid rgba(255,255,255,0.2)' : 'none';
+  const cardBackdrop = (isBlurGray || isDashboardTheme) ? 'blur(16px)' : 'none';
+  const iconColor = isDashboardTheme ? '#fff' : isBlurGray ? '#2c8786' : 'inherit';
 
   if (type === 'loan') {
     return (
@@ -58,7 +63,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           padding: { xs: '6px', sm: '8px' },
           display: 'flex',
           alignItems: 'center',
-          boxShadow: isBlurGray ? '0 8px 32px 0 rgba(31, 38, 135, 0.12)' : 3,
+          boxShadow: isBlurGray ? '0 8px 32px 0 rgba(31, 38, 135, 0.12)' : isDashboardTheme ? '0 8px 32px rgba(99, 102, 241, 0.4)' : 3,
           height: '100%',
           minHeight: { xs: '120px', sm: '160px' },
           width: '100%',
@@ -97,7 +102,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                 sx={{ 
                   fontWeight: 'bold',
                   fontSize: { xs: '1.3rem', sm: '1.5rem' },
-                  textShadow: isBlurGray ? 'none' : '0 2px 4px rgba(0,0,0,0.2)'
+                  textShadow: (isBlurGray || isDashboardTheme) ? 'none' : '0 2px 4px rgba(0,0,0,0.2)'
                 }}
               >
                 ₹{amount}
@@ -121,7 +126,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                 sx={{ 
                   fontWeight: 'bold',
                   fontSize: { xs: '1rem', sm: '1.1rem' },
-                  textShadow: isBlurGray ? 'none' : '0 2px 4px rgba(0,0,0,0.2)'
+                  textShadow: (isBlurGray || isDashboardTheme) ? 'none' : '0 2px 4px rgba(0,0,0,0.2)'
                 }}
               >
                 ₹{dueAmount}
@@ -136,6 +141,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             sx={{
               backgroundColor: isBlurGray
                 ? (isRepayEnabled ? '#2c8786' : 'rgba(44, 135, 134, 0.15)')
+                : isDashboardTheme
+                ? (isRepayEnabled ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)')
                 : (isRepayEnabled ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)'),
               color: isBlurGray
                 ? (isRepayEnabled ? '#fff' : '#475569')
@@ -145,6 +152,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               '&:hover': {
                 backgroundColor: isBlurGray
                   ? (isRepayEnabled ? '#236d6c' : 'rgba(44, 135, 134, 0.2)')
+                  : isDashboardTheme
+                  ? (isRepayEnabled ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.15)')
                   : (isRepayEnabled ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)'),
               },
               '&:disabled': {
@@ -181,7 +190,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         padding: { xs: '12px', sm: '16px' },
         display: 'flex',
         alignItems: 'center',
-        boxShadow: isBlurGray ? '0 8px 32px 0 rgba(31, 38, 135, 0.12)' : 3,
+        boxShadow: isBlurGray ? '0 8px 32px 0 rgba(31, 38, 135, 0.12)' : isDashboardTheme ? '0 8px 32px rgba(99, 102, 241, 0.4)' : 3,
         height: '100%',
         minHeight: { xs: '120px', sm: '160px' },
         width: '100%',
@@ -190,7 +199,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         transition: 'transform 0.2s, box-shadow 0.2s',
         '&:hover': (onRepay || onClick) ? {
           transform: 'translateY(-4px)',
-          boxShadow: isBlurGray ? '0 12px 36px 0 rgba(31, 38, 135, 0.18)' : 6,
+          boxShadow: isBlurGray ? '0 12px 36px 0 rgba(31, 38, 135, 0.18)' : isDashboardTheme ? '0 12px 40px rgba(99, 102, 241, 0.6)' : 6,
         } : {},
       }}
     >

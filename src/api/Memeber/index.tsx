@@ -718,7 +718,7 @@ export const useSubmitKYC = () => {
 
 export const useCreateManualTopUp = () => {
   return useMutation({
-    mutationFn: async (data: { memberId: string; amount: number }) => {
+    mutationFn: async (data: { memberId: string; amount: number; screenshot?: string }) => {
       const response = await post("/user/manual-topup-request", data);
       return response.data;
     },
