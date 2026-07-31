@@ -9,13 +9,22 @@ import {
   Tabs,
   TextField,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  CircularProgress,
+  Button
 } from "@mui/material";
 import { useState } from "react";
 import "./Payout.scss";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
-import { DASHBOARD_CUTSOM_STYLE, getProccessedColumns, getRequestColumns } from "../../../utils/DataTableColumnsProvider";
-import { useApproveWithdrawal, useGetApprovedWithdrawals, useGetPendingWithdrawals } from "../../../api/Memeber";
+import { DASHBOARD_CUTSOM_STYLE, getProccessedColumns, getRequestColumns, getPayablesColumns } from "../../../utils/DataTableColumnsProvider";
+import { useApproveWithdrawal, useGetApprovedWithdrawals, useGetPendingWithdrawals, useGetPayables, useProcessAdminPayout } from "../../../api/Memeber";
 
 interface PayoutTableProps {
   data: any[];
@@ -34,8 +43,10 @@ const Payout = () => {
   const renderContent = () => {
     switch (value) {
       case 0:
-        return <Requests tabTitle={"Withdrawal Requests"} />;
+        return <Payables tabTitle={"Payables"} />;
       case 1:
+        return <Requests tabTitle={"Withdrawal Requests"} />;
+      case 2:
         return <Proccessed tabTitle={"Processed Withdrawals"} />;
     }
   };
@@ -55,8 +66,9 @@ const Payout = () => {
               scrollButtons="auto"
               className="tabs"
             >
-              <Tab className="tab-list-1" label="Withdrawal Requests" />
-              <Tab className="tab-list-2" label="Processed Withdrawals" />
+              <Tab className="tab-list-1" label="Payables" />
+              <Tab className="tab-list-2" label="Withdrawal Requests" />
+              <Tab className="tab-list-3" label="Processed Withdrawals" />
             </Tabs>
             <Box className="tab-content">{renderContent()}</Box>
           </Box>
@@ -175,5 +187,116 @@ export const Proccessed = ({ tabTitle }: { tabTitle: any }) => {
       tabTitle={tabTitle}
       loading={isFetching}
     />
+  );
+};
+
+export const Payables = ({ tabTitle }: { tabTitle: any }) => {
+  const { data: payablesList, isFetching } = useGetPayables();
+  const { mutate: processPayout, isPending } = useProcessAdminPayout();
+
+  const [payModalOpen, setPayModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [payType, setPayType] = useState('full');
+  const [customAmount, setCustomAmount] = useState('');
+
+  const handlePayNow = (member: any) => {
+    setSelectedMember(member);
+    setPayType('full');
+    setCustomAmount(member.availableBalance?.toString() || '');
+    setPayModalOpen(true);
+  };
+
+  const handleClose = () => {
+    if (!isPending) {
+      setPayModalOpen(false);
+      setSelectedMember(null);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!selectedMember) return;
+    const amount = payType === 'full' ? selectedMember.availableBalance : Number(customAmount);
+    
+    if (!amount || amount <= 0 || amount > selectedMember.availableBalance) {
+      alert("Invalid payment amount");
+      return;
+    }
+
+    processPayout(
+      { member_id: selectedMember.member_id, amount, payment_mode: "Manual" },
+      {
+        onSuccess: () => {
+          handleClose();
+        }
+      }
+    );
+  };
+
+  return (
+    <>
+      <PayoutTable
+        data={payablesList || []}
+        columns={getPayablesColumns(handlePayNow)}
+        tabTitle={tabTitle}
+        loading={isFetching}
+      />
+
+      <Dialog open={payModalOpen} onClose={handleClose} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ color: '#2c8786', fontWeight: 'bold' }}>Process Manual Payout</DialogTitle>
+        <DialogContent dividers>
+          {selectedMember && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Typography>
+                <strong>Member:</strong> {selectedMember.Name} ({selectedMember.member_id})
+              </Typography>
+              <Typography>
+                <strong>Available Balance:</strong> ₹{selectedMember.availableBalance?.toLocaleString()}
+              </Typography>
+
+              <RadioGroup
+                value={payType}
+                onChange={(e) => {
+                  setPayType(e.target.value);
+                  if (e.target.value === 'full') {
+                    setCustomAmount(selectedMember.availableBalance.toString());
+                  } else {
+                    setCustomAmount('');
+                  }
+                }}
+              >
+                <FormControlLabel value="full" control={<Radio />} label="Pay Full Amount" />
+                <FormControlLabel value="partial" control={<Radio />} label="Pay Partial Amount" />
+              </RadioGroup>
+
+              {payType === 'partial' && (
+                <TextField
+                  fullWidth
+                  label="Enter Amount (₹)"
+                  type="number"
+                  value={customAmount}
+                  onChange={(e) => setCustomAmount(e.target.value)}
+                  disabled={isPending}
+                  size="small"
+                  inputProps={{ max: selectedMember.availableBalance, min: 1 }}
+                />
+              )}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} disabled={isPending} color="inherit">
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isPending || (payType === 'partial' && (!customAmount || Number(customAmount) <= 0 || Number(customAmount) > selectedMember?.availableBalance))}
+            variant="contained"
+            sx={{ backgroundColor: '#2c8786', '&:hover': { backgroundColor: '#236d6c' } }}
+          >
+            {isPending ? <CircularProgress size={24} color="inherit" /> : 'Confirm Payment'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };

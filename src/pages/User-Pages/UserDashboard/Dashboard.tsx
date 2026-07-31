@@ -52,11 +52,18 @@ import { useQuery } from '@tanstack/react-query';
 import api from '../../../api/Api';
 import { io } from 'socket.io-client';
 
+import slide1 from '../../../assets/jee_S1.jpeg';
+import slide2 from '../../../assets/jee_S2.jpeg';
+import slide3 from '../../../assets/jee_S3.jpeg';
+import slide4 from '../../../assets/jee_S4.jpeg';
+import slide5 from '../../../assets/jee_S5.jpeg';
+
 const slideImages = [
-  "https://picsum.photos/seed/herb1/800/400",
-  "https://picsum.photos/seed/herb2/800/400",
-  "https://picsum.photos/seed/herb3/800/400",
-  "https://picsum.photos/seed/herb4/800/400"
+  slide1,
+  slide2,
+  slide3,
+  slide4,
+  slide5
 ];
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5051";
@@ -863,7 +870,8 @@ const UserDashboard = () => {
             position: 'relative', 
             overflow: 'hidden',
             borderRadius: 3,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            backgroundColor: '#ffffff'
           }}
         >
           {slideImages.map((img, index) => (
@@ -1205,27 +1213,27 @@ const UserDashboard = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={6} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={6} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={6} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={6} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={6} sm={6} md={4}>
           <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
+        <Grid item xs={6} sm={6} md={4}>
+          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="linear-gradient(135deg, #fb923c 0%, #f97316 100%)" />
         </Grid>
 
         {isLoanApproved && (
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={6} sm={6} md={4}>
             <DashboardCard
               amount={initialLoanAmount}
               dueAmount={dueAmount}
@@ -1597,7 +1605,7 @@ const UserDashboard = () => {
                   <img src={QRImage} alt="QR Code Scanner" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                 </Box>
                 <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold', color: '#2c8786' }}>
-                  UPI ID: jeeva_sc@upi
+                  UPI ID: blusky01qr@fbl
                 </Typography>
                 
                 <Box sx={{ mt: 3, p: 2, backgroundColor: '#fff', borderRadius: 2, border: '1px dashed #cbd5e1' }}>

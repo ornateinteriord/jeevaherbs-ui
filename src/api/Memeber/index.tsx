@@ -744,8 +744,10 @@ export const useBuyPackage = () => {
         toast.success(response.message || "Package activated successfully");
       }
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to buy package.");
+    onError: (err: any) => {
+      const errorMessage = err.response?.data?.message || err.message || "An unexpected error occurred";
+      console.error("Activation error:", errorMessage, err);
+      toast.error(errorMessage);
     },
   });
 };
@@ -762,6 +764,68 @@ export const useTransferToTopup = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to transfer to top-up wallet.");
+    },
+  });
+};
+
+export const useLookupMember = (memberId: string | null) => {
+  return useQuery({
+    queryKey: ["lookupMember", memberId],
+    queryFn: async () => {
+      if (!memberId) throw new Error("No member ID provided");
+      const response = await get(`/user/member-lookup/${memberId}`);
+      return response?.data || response;
+    },
+    enabled: !!memberId,
+    retry: false,
+  });
+};
+
+export const useP2PTopupTransfer = () => {
+  return useMutation({
+    mutationFn: async (data: { senderId: string; receiverId: string; amount: string }) => {
+      const response = await post("/user/p2p-topup-transfer", data);
+      return response;
+    },
+    onSuccess: (response: any) => {
+      if (response?.success || response?.data?.success) {
+        toast.success(response?.message || response?.data?.message || "Transferred successfully");
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to transfer to top-up wallet.");
+    },
+  });
+};
+
+export const useGetPayables = () => {
+  return useQuery({
+    queryKey: ["adminPayables"],
+    queryFn: async () => {
+      const response = await get("/admin/payables");
+      if (response?.success) {
+        return response.data || [];
+      }
+      return [];
+    },
+  });
+};
+
+export const useProcessAdminPayout = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { member_id: string; amount: number | string; payment_mode: string; reference_number?: string }) => {
+      const response = await post("/admin/process-payout", data);
+      return response;
+    },
+    onSuccess: (response: any) => {
+      if (response?.success || response?.data?.success) {
+        toast.success(response?.message || response?.data?.message || "Payout processed successfully");
+        queryClient.invalidateQueries({ queryKey: ["adminPayables"] });
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to process payout.");
     },
   });
 };

@@ -14,6 +14,46 @@ export const formatMember = (row: any) => {
   return name ? `${id} (${name})` : id;
 };
 
+export const getPayablesColumns = (onPayNow: (row: any) => void) => [
+  {
+    name: "Member",
+    selector: (row: any) => formatMember(row),
+    sortable: true,
+  },
+  {
+    name: "Mobile",
+    selector: (row: any) => row.mobileno || "-",
+  },
+  {
+    name: "Available Balance",
+    selector: (row: any) => `₹${row.availableBalance?.toLocaleString()}`,
+    sortable: true,
+  },
+  {
+    name: "Bank Details",
+    selector: (row: any) => {
+      if (row.bank_details === 'Updated') {
+        return `${row.bank_name || ''} - A/C: ${row.account_number || ''}`;
+      }
+      return row.google_pay || row.phonepe || "Not Updated";
+    },
+    wrap: true,
+  },
+  {
+    name: "Action",
+    cell: (row: any) => (
+      <Button
+        variant="contained"
+        size="small"
+        sx={{ backgroundColor: "#2c8786", "&:hover": { backgroundColor: "#236d6c" }, minWidth: '90px' }}
+        onClick={() => onPayNow(row)}
+      >
+        Pay Now
+      </Button>
+    ),
+  },
+];
+
 export const getUserDashboardTableColumns = () => [
   {
     selector: (row: any) => row.title,

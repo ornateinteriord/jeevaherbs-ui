@@ -190,11 +190,12 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         padding: { xs: '12px', sm: '16px' },
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         boxShadow: isBlurGray ? '0 8px 32px 0 rgba(31, 38, 135, 0.12)' : isDashboardTheme ? '0 8px 32px rgba(99, 102, 241, 0.4)' : 3,
         height: '100%',
         minHeight: { xs: '120px', sm: '160px' },
         width: '100%',
-        flexDirection: { xs: 'row', sm: 'row' },
+        flexDirection: { xs: 'column', sm: 'row' },
         cursor: (onRepay || onClick) ? 'pointer' : 'default',
         transition: 'transform 0.2s, box-shadow 0.2s',
         '&:hover': (onRepay || onClick) ? {
@@ -210,17 +211,17 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           justifyContent: 'center',
           alignItems: 'center',
           gap: 2,
-          mb: { xs: 1, sm: 0 },
+          mb: { xs: 0, sm: 0 },
           color: iconColor,
         }}
       >
-        {IconComponent ? <IconComponent sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} /> : <CurrencyRupeeIcon sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} />}
+        {IconComponent ? <IconComponent sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem' } }} /> : <CurrencyRupeeIcon sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem' } }} />}
       </Box>
       <CardContent 
         sx={{ 
-          padding: { xs: '8px', sm: '16px' },
+          padding: { xs: '4px', sm: '16px' },
           width: '100%',
-          '&:last-child': { paddingBottom: { xs: '8px', sm: '16px' } }
+          '&:last-child': { paddingBottom: { xs: '4px', sm: '16px' } }
         }}
       >
         <Typography 
@@ -228,8 +229,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           sx={{ 
             fontWeight: 'bold', 
             textAlign: 'center',
-            marginBottom: '5px',
-            fontSize: { xs: '1.5rem', sm: '2rem' }
+            marginBottom: '2px',
+            fontSize: { xs: '1.2rem', sm: '2rem' }
           }}
         >
           {amount}
@@ -239,7 +240,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           sx={{ 
             textAlign: 'center', 
             fontWeight: '500',
-            fontSize: { xs: '0.875rem', sm: '1rem' }
+            fontSize: { xs: '0.75rem', sm: '1rem' },
+            lineHeight: 1.2
           }}
         >
           {title}
