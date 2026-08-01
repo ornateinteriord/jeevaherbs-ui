@@ -68,3 +68,43 @@ export const useGetSupportChat = () => {
     },
   });
 };
+
+import axios from "axios";
+
+// Delete a message
+export const useDeleteMessage = () => {
+  return useMutation({
+    mutationFn: async (messageId: string) => {
+      const response = await api.delete(`/api/chat/message/${messageId}`);
+      return response.data;
+    },
+    // We don't invalidate queries here aggressively because socket handles the real-time removal
+    // but it's safe to invalidate if needed.
+  });
+};
+
+// Upload file via ImageKit
+export const useImageKitUpload = () => {
+  return useMutation<{ url: string, name: string, size: number }, Error, File>({
+    mutationFn: async (file: File) => {
+      const authRes = await api.get("/image-kit-auth");
+      const { signature, expire, token } = authRes.data || authRes;
+
+      const data = new FormData();
+      data.append("file", file);
+      data.append("fileName", file.name);
+      data.append("publicKey", import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
+      data.append("signature", signature);
+      data.append("expire", expire);
+      data.append("token", token);
+      data.append("folder", "/chat-uploads");
+
+      const uploadRes = await axios.post(
+        "https://upload.imagekit.io/api/v1/files/upload",
+        data
+      );
+
+      return uploadRes.data;
+    },
+  });
+};

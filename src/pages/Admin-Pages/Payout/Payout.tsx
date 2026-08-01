@@ -252,6 +252,9 @@ export const Payables = ({ tabTitle }: { tabTitle: any }) => {
               <Typography>
                 <strong>Available Balance:</strong> ₹{selectedMember.availableBalance?.toLocaleString()}
               </Typography>
+              <Typography>
+                <strong>UPI ID:</strong> {selectedMember.upiId || 'Not provided'}
+              </Typography>
 
               <RadioGroup
                 value={payType}

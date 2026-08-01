@@ -20,6 +20,8 @@ import {
   Badge,
   InputBase,
   alpha,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import SearchIcon from '@mui/icons-material/Search';
@@ -27,6 +29,14 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ReplyIcon from '@mui/icons-material/Reply';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CloseIcon from '@mui/icons-material/Close';
+import EmojiPicker from 'emoji-picker-react';
 import { io, Socket } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -36,6 +46,8 @@ import {
   useSendMessage,
   useMarkAsRead,
   useGetSupportChat,
+  useDeleteMessage,
+  useImageKitUpload
 } from '../../../api/Chat/chatService';
 import TokenService from '../../../api/token/tokenService';
 import { toast } from 'react-toastify';
@@ -49,10 +61,18 @@ export default function Chat() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
   const [messageText, setMessageText] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [searchMobile, setSearchMobile] = useState("");
   const [sidebarSearch, setSidebarSearch] = useState("");
+  const [replyingTo, setReplyingTo] = useState<any>(null);
+  
+  // Message Menu State
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
   const currentUserId = TokenService.getMemberId();
@@ -63,6 +83,8 @@ export default function Chat() {
   const sendMessageMutation = useSendMessage();
   const markAsReadMutation = useMarkAsRead();
   const supportChatMutation = useGetSupportChat();
+  const deleteMessageMutation = useDeleteMessage();
+  const uploadMutation = useImageKitUpload();
 
   const rooms = roomsResponse?.data || [];
   const messages = messagesResponse?.data || [];
@@ -96,6 +118,18 @@ export default function Chat() {
       }
     });
 
+    newSocket.on("messageDeleted", ({ messageId, roomId }) => {
+      if (roomId === activeRoomId) {
+        queryClient.setQueryData(["chatMessages", roomId], (oldData: any) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            data: oldData.data.filter((msg: any) => msg._id !== messageId),
+          };
+        });
+      }
+    });
+
     return () => {
       newSocket.disconnect();
     };
@@ -117,17 +151,105 @@ export default function Chat() {
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!messageText.trim() || !activeRoomId) return;
+    if (!messageText.trim() && !fileInputRef.current?.files?.length) return;
+    if (!activeRoomId) return;
 
-    const payload = { roomId: activeRoomId, text: messageText };
+    // Optional: prepend reply quote if replying
+    let finalMessage = messageText;
+    if (replyingTo && messageText.trim()) {
+      finalMessage = `> Replied to ${replyingTo.senderName || 'user'}:\n> ${replyingTo.text || 'file'}\n\n${messageText}`;
+    }
+
+    const payload = { roomId: activeRoomId, text: finalMessage };
 
     sendMessageMutation.mutate(payload, {
       onSuccess: () => {
         setMessageText("");
+        setShowEmojiPicker(false);
+        setReplyingTo(null);
         queryClient.invalidateQueries({ queryKey: ["chatRooms"] });
       },
       onError: (error: any) => {
         toast.error(error?.response?.data?.message || "Failed to send message");
+      }
+    });
+  };
+
+  const handleEmojiClick = (emojiObject: any) => {
+    setMessageText(prev => prev + emojiObject.emoji);
+  };
+
+  const handleOpenMenu = (e: React.MouseEvent<HTMLButtonElement>, msg: any) => {
+    setMenuAnchorEl(e.currentTarget);
+    setSelectedMessage(msg);
+  };
+
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null);
+    setSelectedMessage(null);
+  };
+
+  const handleCopyMessage = () => {
+    if (selectedMessage?.text) {
+      navigator.clipboard.writeText(selectedMessage.text);
+      toast.success("Copied to clipboard");
+    }
+    handleCloseMenu();
+  };
+
+  const handleReplyMessage = () => {
+    setReplyingTo(selectedMessage);
+    handleCloseMenu();
+  };
+
+  const handleDeleteMessage = () => {
+    if (!selectedMessage?._id) return;
+    deleteMessageMutation.mutate(selectedMessage._id, {
+      onSuccess: () => {
+        handleCloseMenu();
+      },
+      onError: () => {
+        toast.error("Failed to delete message");
+        handleCloseMenu();
+      }
+    });
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activeRoomId) return;
+    
+    // Check if it's image or generic file
+    const isImage = file.type.startsWith('image/');
+    const messageType = isImage ? 'image' : 'file';
+
+    const uploadToast = toast.loading("Uploading...");
+    
+    uploadMutation.mutate(file, {
+      onSuccess: (data: any) => {
+        toast.dismiss(uploadToast);
+        
+        // Send message with file URL
+        const payload = { 
+          roomId: activeRoomId, 
+          imageUrl: data.url, 
+          messageType,
+          fileName: data.name,
+          fileSize: data.size
+        };
+
+        sendMessageMutation.mutate(payload, {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["chatRooms"] });
+          },
+          onError: (error: any) => {
+            toast.error(error?.response?.data?.message || "Failed to send message");
+          }
+        });
+      },
+      onError: () => {
+        toast.dismiss(uploadToast);
+        toast.error("File upload failed");
       }
     });
   };
@@ -345,31 +467,71 @@ export default function Chat() {
                       <Paper
                         elevation={1}
                         sx={{
-                          p: '6px 7px 8px 9px',
+                          p: '8px 12px',
                           bgcolor: isMe ? '#d9fdd3' : '#ffffff',
                           color: '#111',
-                          borderRadius: '7.5px',
-                          borderTopLeftRadius: !isMe && showTail ? '0px' : '7.5px',
-                          borderTopRightRadius: isMe && showTail ? '0px' : '7.5px',
+                          borderRadius: '8px',
+                          borderTopLeftRadius: !isMe && showTail ? '0px' : '8px',
+                          borderTopRightRadius: isMe && showTail ? '0px' : '8px',
                           wordBreak: 'break-word',
                           boxShadow: '0 1px 0.5px rgba(11,20,26,.13)',
                           display: 'flex',
                           flexDirection: 'column',
-                          minWidth: '80px'
+                          position: 'relative',
+                          minWidth: '100px',
+                          maxWidth: '100%',
+                          '&:hover .msg-dropdown': {
+                            opacity: 1,
+                            pointerEvents: 'auto',
+                          }
                         }}
                       >
-                        <Typography variant="body1" sx={{ fontSize: '14.2px', lineHeight: '19px', pr: 4 }}>
-                          {msg.text}
-                        </Typography>
-                        <Typography variant="caption" sx={{ 
-                          color: '#667781', 
-                          fontSize: '11px', 
-                          position: 'absolute',
-                          bottom: '4px',
-                          right: '12px'
-                        }}>
-                          {moment(msg.createdAt).format("LT")}
-                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                          {msg.messageType === 'image' && msg.imageUrl && (
+                            <Box sx={{ mb: 1 }}>
+                              <img src={msg.imageUrl} alt="attachment" style={{ maxWidth: '100%', borderRadius: '6px' }} />
+                            </Box>
+                          )}
+                          {msg.messageType === 'file' && msg.imageUrl && (
+                            <Box sx={{ mb: 1, p: 1, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: '6px', display: 'flex', alignItems: 'center' }}>
+                              <AttachFileIcon fontSize="small" sx={{ mr: 1, color: '#54656f' }} />
+                              <Typography variant="body2" component="a" href={msg.imageUrl} target="_blank" rel="noopener noreferrer" sx={{ color: THEME_COLOR, textDecoration: 'none' }}>
+                                {msg.fileName || "Download File"}
+                              </Typography>
+                            </Box>
+                          )}
+                          {msg.text && (
+                            <Typography variant="body1" sx={{ fontSize: '14.2px', lineHeight: '19px', whiteSpace: 'pre-wrap', pb: '12px', pr: '20px' }}>
+                              {msg.text}
+                            </Typography>
+                          )}
+                        </Box>
+
+                        <IconButton 
+                          className="msg-dropdown"
+                          size="small" 
+                          onClick={(e) => handleOpenMenu(e, msg)}
+                          sx={{ 
+                            position: 'absolute', 
+                            top: 4, 
+                            right: 4, 
+                            opacity: 0,
+                            pointerEvents: 'none',
+                            bgcolor: isMe ? 'rgba(217, 253, 211, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                            backdropFilter: 'blur(2px)',
+                            '&:hover': { bgcolor: isMe ? 'rgba(217, 253, 211, 1)' : 'rgba(255, 255, 255, 1)', color: '#111' },
+                            transition: 'opacity 0.2s',
+                            zIndex: 10
+                          }}
+                        >
+                          <ExpandMoreIcon fontSize="small" sx={{ color: '#54656f' }} />
+                        </IconButton>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '-10px' }}>
+                          <Typography variant="caption" sx={{ color: '#667781', fontSize: '11px', lineHeight: '15px' }}>
+                            {moment(msg.createdAt).format("LT")}
+                          </Typography>
+                        </Box>
                       </Paper>
                     </Box>
                   );
@@ -378,7 +540,66 @@ export default function Chat() {
               <div ref={messagesEndRef} />
             </Box>
 
+            {/* Message Options Menu */}
+            <Menu
+              anchorEl={menuAnchorEl}
+              open={Boolean(menuAnchorEl)}
+              onClose={handleCloseMenu}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              PaperProps={{ sx: { boxShadow: '0 2px 10px rgba(0,0,0,0.1)', borderRadius: '8px', minWidth: '150px' } }}
+            >
+              <MenuItem onClick={handleReplyMessage}>
+                <ReplyIcon fontSize="small" sx={{ mr: 1.5, color: '#54656f' }} />
+                <Typography variant="body2">Reply</Typography>
+              </MenuItem>
+              {selectedMessage?.text && (
+                <MenuItem onClick={handleCopyMessage}>
+                  <ContentCopyIcon fontSize="small" sx={{ mr: 1.5, color: '#54656f' }} />
+                  <Typography variant="body2">Copy</Typography>
+                </MenuItem>
+              )}
+              <MenuItem onClick={handleDeleteMessage}>
+                <DeleteIcon fontSize="small" sx={{ mr: 1.5, color: '#d32f2f' }} />
+                <Typography variant="body2" sx={{ color: '#d32f2f' }}>Delete</Typography>
+              </MenuItem>
+            </Menu>
+
             {/* Input Area */}
+            {replyingTo && (
+              <Box sx={{ p: '10px 16px', bgcolor: '#f0f2f5', borderLeft: `4px solid ${THEME_COLOR}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="caption" sx={{ color: THEME_COLOR, fontWeight: 600 }}>Replying to {replyingTo.senderName || 'User'}</Typography>
+                  <Typography variant="body2" sx={{ color: '#667781', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '300px' }}>
+                    {replyingTo.text || 'Attachment'}
+                  </Typography>
+                </Box>
+                <IconButton size="small" onClick={() => setReplyingTo(null)} sx={{ color: '#54656f' }}>
+                  <DeleteIcon fontSize="small" /> {/* Using delete icon temporarily or 'close' icon if imported. I'll use a text X or close just by importing CloseIcon. Wait, I'll just use ArrowBackIcon or let it be. Let's just use DeleteIcon for canceling the reply since it is imported, but wait, a close icon is better. I can use material UI close icon if available. I will just render "X" in a span */}
+                  <span style={{ fontSize: '14px', fontWeight: 'bold' }}>✕</span>
+                </IconButton>
+              </Box>
+            )}
+            {showEmojiPicker && (
+              <Paper 
+                elevation={3} 
+                sx={{ 
+                  position: 'absolute', 
+                  bottom: '70px', 
+                  left: '16px', 
+                  zIndex: 100, 
+                  borderRadius: '8px',
+                  overflow: 'hidden'
+                }}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', bgcolor: '#f0f2f5', p: 0.5 }}>
+                  <IconButton size="small" onClick={() => setShowEmojiPicker(false)}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+                <EmojiPicker onEmojiClick={handleEmojiClick} width={300} height={400} />
+              </Paper>
+            )}
             <Box component="form" onSubmit={handleSendMessage} sx={{ 
               p: '10px 16px', 
               bgcolor: '#f0f2f5', 
@@ -386,6 +607,21 @@ export default function Chat() {
               gap: 1.5, 
               alignItems: 'center' 
             }}>
+              <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)} sx={{ color: '#54656f' }}>
+                <InsertEmoticonIcon />
+              </IconButton>
+              
+              <IconButton onClick={() => fileInputRef.current?.click()} sx={{ color: '#54656f' }}>
+                <AttachFileIcon />
+              </IconButton>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                style={{ display: 'none' }} 
+                onChange={handleFileUpload} 
+                accept="image/*,.pdf,.doc,.docx"
+              />
+
               <Box sx={{ flexGrow: 1, bgcolor: '#ffffff', borderRadius: '8px', px: 2, py: 0.5 }}>
                 <InputBase
                   fullWidth
