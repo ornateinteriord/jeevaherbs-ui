@@ -111,6 +111,7 @@ const AdminSupportTickets = lazy(
 );
 const AdminNews = lazy(() => import("./pages/Admin-Pages/News/News"));
 const AdminGroupMessage = lazy(() => import("./pages/Admin-Pages/GroupMessage/GroupMessage"));
+const AdminChatAllUsers = lazy(() => import("./pages/Admin-Pages/ChatAllUsers/ChatAllUsers"));
 const AdminHolidays = lazy(
   () => import("./pages/Admin-Pages/Holidays/Holidays")
 );
@@ -357,6 +358,7 @@ const RoutesProvider = ({
               />
               <Route path="/admin/news" element={<AdminNews />} />
               <Route path="/admin/group-message" element={<AdminGroupMessage />} />
+              <Route path="/admin/chat-all-users" element={<AdminChatAllUsers />} />
               <Route path="/admin/holidays" element={<AdminHolidays />} />
               <Route path="/admin/members/:memberId" element={<MembersUpdateForm />} />
               <Route path="/admin/kyc-approval" element={<KYCApproval />} />

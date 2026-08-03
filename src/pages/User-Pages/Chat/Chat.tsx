@@ -36,6 +36,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ReplyIcon from '@mui/icons-material/Reply';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloseIcon from '@mui/icons-material/Close';
+import MicIcon from '@mui/icons-material/Mic';
+import StopIcon from '@mui/icons-material/Stop';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import EmojiPicker from 'emoji-picker-react';
 import { io, Socket } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
@@ -70,6 +73,11 @@ export default function Chat() {
   // Message Menu State
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
+
+  // Audio Recording State
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<BlobPart[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -254,6 +262,71 @@ export default function Chat() {
     });
   };
 
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioFile = new File([audioBlob], `voice-message-${Date.now()}.webm`, { type: 'audio/webm' });
+        
+        // Stop all tracks to release microphone
+        stream.getTracks().forEach(track => track.stop());
+
+        // Upload the audio file
+        const uploadToast = toast.loading("Uploading voice message...");
+        uploadMutation.mutate(audioFile, {
+          onSuccess: (data: any) => {
+            toast.dismiss(uploadToast);
+            
+            const payload = { 
+              roomId: activeRoomId as string, 
+              imageUrl: data.url, 
+              messageType: 'audio',
+              fileName: 'Voice Message',
+              fileSize: data.size
+            };
+
+            sendMessageMutation.mutate(payload, {
+              onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ["chatRooms"] });
+              },
+              onError: (error: any) => {
+                toast.error(error?.response?.data?.message || "Failed to send voice message");
+              }
+            });
+          },
+          onError: () => {
+            toast.dismiss(uploadToast);
+            toast.error("Failed to upload voice message");
+          }
+        });
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+      toast.error("Microphone access denied or not available");
+    }
+  };
+
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
   const handleSearch = () => {
     if (!searchMobile.trim()) {
       toast.error("Please enter a mobile number");
@@ -370,7 +443,7 @@ export default function Chat() {
                       primary={
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Typography fontWeight={room.unreadCount > 0 ? 600 : 400} sx={{ color: '#111', fontSize: '16px' }} noWrap>
-                            {recipient.name} {recipient.role === 'ADMIN' && '(Support)'}
+                            {recipient.name}
                           </Typography>
                           {room.lastMessageTime && (
                             <Typography variant="caption" sx={{ color: room.unreadCount > 0 ? '#25d366' : '#667781', fontWeight: room.unreadCount > 0 ? 600 : 400 }}>
@@ -424,7 +497,7 @@ export default function Chat() {
                   {getRecipientDetails(activeRoom).name}
                 </Typography>
                 <Typography variant="caption" color="textSecondary">
-                  {getRecipientDetails(activeRoom).role === 'ADMIN' ? 'Support Team' : 'Online'}
+                  {getRecipientDetails(activeRoom).role === 'ADMIN' ? 'Admin Team' : 'Online'}
                 </Typography>
               </Box>
               <IconButton sx={{ color: '#54656f' }}><SearchIcon /></IconButton>
@@ -498,6 +571,11 @@ export default function Chat() {
                               <Typography variant="body2" component="a" href={msg.imageUrl} target="_blank" rel="noopener noreferrer" sx={{ color: THEME_COLOR, textDecoration: 'none' }}>
                                 {msg.fileName || "Download File"}
                               </Typography>
+                            </Box>
+                          )}
+                          {msg.messageType === 'audio' && msg.imageUrl && (
+                            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                              <audio controls src={msg.imageUrl} style={{ height: '40px', outline: 'none' }} />
                             </Box>
                           )}
                           {msg.text && (
@@ -622,27 +700,56 @@ export default function Chat() {
                 accept="image/*,.pdf,.doc,.docx"
               />
 
-              <Box sx={{ flexGrow: 1, bgcolor: '#ffffff', borderRadius: '8px', px: 2, py: 0.5 }}>
-                <InputBase
-                  fullWidth
-                  placeholder="Type a message"
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  sx={{ py: 1, fontSize: '15px' }}
-                />
+              <Box sx={{ flexGrow: 1, bgcolor: '#ffffff', borderRadius: '8px', px: 2, py: 0.5, display: 'flex', alignItems: 'center' }}>
+                {isRecording ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', py: 1 }}>
+                    <GraphicEqIcon sx={{ color: '#d32f2f', animation: 'pulse 1s infinite alternate', mr: 2 }} />
+                    <Typography variant="body2" sx={{ color: '#d32f2f', fontWeight: 600 }}>Recording...</Typography>
+                    <style>{`
+                      @keyframes pulse {
+                        0% { opacity: 1; transform: scale(1); }
+                        100% { opacity: 0.5; transform: scale(1.1); }
+                      }
+                    `}</style>
+                  </Box>
+                ) : (
+                  <InputBase
+                    fullWidth
+                    placeholder="Type a message"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                    sx={{ py: 1, fontSize: '15px' }}
+                  />
+                )}
               </Box>
-              <IconButton 
-                type="submit" 
-                disabled={!messageText.trim() || sendMessageMutation.isPending} 
-                sx={{ 
-                  bgcolor: messageText.trim() ? THEME_COLOR : 'transparent', 
-                  color: messageText.trim() ? 'white' : '#54656f',
-                  '&:hover': { bgcolor: messageText.trim() ? '#236d6c' : 'rgba(0,0,0,0.05)' }, 
-                  transition: 'background-color 0.2s',
-                }}
-              >
-                <SendIcon fontSize="small" />
-              </IconButton>
+
+              {messageText.trim() ? (
+                <IconButton 
+                  type="submit" 
+                  disabled={sendMessageMutation.isPending} 
+                  sx={{ 
+                    bgcolor: THEME_COLOR, 
+                    color: 'white',
+                    '&:hover': { bgcolor: '#236d6c' }, 
+                    transition: 'background-color 0.2s',
+                  }}
+                >
+                  <SendIcon fontSize="small" />
+                </IconButton>
+              ) : (
+                <IconButton 
+                  onClick={isRecording ? handleStopRecording : handleStartRecording}
+                  disabled={sendMessageMutation.isPending}
+                  sx={{ 
+                    bgcolor: isRecording ? '#d32f2f' : THEME_COLOR, 
+                    color: 'white',
+                    '&:hover': { bgcolor: isRecording ? '#b71c1c' : '#236d6c' }, 
+                    transition: 'background-color 0.2s',
+                  }}
+                >
+                  {isRecording ? <StopIcon fontSize="small" /> : <MicIcon fontSize="small" />}
+                </IconButton>
+              )}
             </Box>
           </>
         ) : (

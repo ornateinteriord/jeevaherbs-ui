@@ -43,7 +43,7 @@ import {
 } from '../../../api/Memeber';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
-import ChatIcon from '@mui/icons-material/Chat';
+
 import { toast } from 'react-toastify';
 // @ts-ignore
 import { load } from '@cashfreepayments/cashfree-js';
@@ -66,6 +66,13 @@ const slideImages = [
   slide5
 ];
 
+const videoIds = [
+  'nSyHtmvom84',
+  'cEyVUMUNsf8',
+  'WR-00hQczeE',
+  'lUA-QohyFK8'
+];
+
 const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5051";
 
 const UserDashboard = () => {
@@ -80,12 +87,24 @@ const UserDashboard = () => {
   const [topUpPaymentMode, setTopUpPaymentMode] = useState<'online' | 'qr'>('online');
   const [screenshotBase64, setScreenshotBase64] = useState<string>('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // Video Modal State
+  const [openVideoModal, setOpenVideoModal] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState('');
+  const [currentVideoSlide, setCurrentVideoSlide] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slideImages.length);
     }, 3000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const videoTimer = setInterval(() => {
+      setCurrentVideoSlide((prev) => (prev + 1) % videoIds.length);
+    }, 4000);
+    return () => clearInterval(videoTimer);
   }, []);
 
   useEffect(() => {
@@ -505,6 +524,161 @@ const UserDashboard = () => {
         </Box>
       )}
 
+          {liveAnnouncement && (
+            <Box sx={{ width: '100%', overflow: 'hidden', bgcolor: 'transparent', py: 0, px: 0, borderRadius: 2,mt:{xs:8.5,sm:10,md:10} }}>
+              <Box component={"marquee" as any} style={{ color: '#d97706', fontSize: '1.1rem', fontWeight: 'bold' }}>
+                {liveAnnouncement}
+              </Box>
+            </Box>
+          )}
+
+      {/* Image Slider */}
+      <Box sx={{ width: '100%', mt: 2, px: { xs: 2, sm: 3, md: 4 } }}>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            height: { xs: '150px', sm: '200px', md: '250px' }, 
+            position: 'relative', 
+            overflow: 'hidden',
+            borderRadius: 3,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            backgroundColor: '#ffffff'
+          }}
+        >
+          {slideImages.map((img, index) => (
+            <Box
+              key={index}
+              component="img"
+              src={img}
+              alt={`Slide ${index}`}
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                opacity: index === currentSlide ? 1 : 0,
+                transition: 'opacity 1s ease-in-out',
+                zIndex: index === currentSlide ? 1 : 0
+              }}
+            />
+          ))}
+          {/* Slider indicators */}
+          <Box sx={{ position: 'absolute', bottom: 16, width: '100%', display: 'flex', justifyContent: 'center', gap: 1, zIndex: 10 }}>
+            {slideImages.map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: index === currentSlide ? '#fff' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s ease'
+                }}
+                onClick={() => setCurrentSlide(index)}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Video Slider */}
+      <Box sx={{ width: '100%', mt: 3, px: { xs: 2, sm: 3, md: 4 } }}>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            height: { xs: '180px', sm: '220px', md: '280px' }, 
+            position: 'relative', 
+            overflow: 'hidden',
+            borderRadius: 3,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            backgroundColor: '#000',
+            cursor: 'pointer'
+          }}
+        >
+          {videoIds.map((id, index) => (
+            <Box
+              key={id}
+              sx={{
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                opacity: index === currentVideoSlide ? 1 : 0,
+                transition: 'opacity 1s ease-in-out',
+                zIndex: index === currentVideoSlide ? 1 : 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onClick={() => {
+                setSelectedVideo(id);
+                setOpenVideoModal(true);
+              }}
+            >
+              <Box
+                component="img"
+                src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                alt={`Video Thumbnail ${index}`}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: 0.8
+                }}
+              />
+              <Box 
+                sx={{ 
+                  position: 'absolute', 
+                  width: '60px', 
+                  height: '60px', 
+                  bgcolor: 'rgba(255,0,0,0.8)', 
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'scale(1.1)' }
+                }}
+              >
+                <Box sx={{
+                  width: 0,
+                  height: 0,
+                  borderTop: '12px solid transparent',
+                  borderBottom: '12px solid transparent',
+                  borderLeft: '20px solid white',
+                  ml: 0.5
+                }} />
+              </Box>
+            </Box>
+          ))}
+          {/* Video Slider indicators */}
+          <Box sx={{ position: 'absolute', bottom: 16, width: '100%', display: 'flex', justifyContent: 'center', gap: 1, zIndex: 10 }}>
+            {videoIds.map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: index === currentVideoSlide ? '#fff' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s ease'
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentVideoSlide(index);
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Box>
+
       <Box
         sx={{
           minHeight: { xs: 'auto', md: '140px' },
@@ -545,24 +719,6 @@ const UserDashboard = () => {
             gap: { xs: 1, sm: 2 }
           }}
         >
-          {liveAnnouncement && (
-            <Box sx={{ width: '100%', overflow: 'hidden', bgcolor: 'transparent', py: 0, px: 0, borderRadius: 2 }}>
-              <Box component={"marquee" as any} style={{ color: 'gold', fontSize: '1.1rem', fontWeight: 'bold' }}>
-                {liveAnnouncement}
-              </Box>
-            </Box>
-          )}
-
-          <Typography
-            sx={{
-              color: 'white',
-              fontSize: { xs: '1.7rem', sm: '1.8rem', md: '2.5rem' },
-              textAlign: 'center',
-              width: '100%'
-            }}
-          >
-            Welcome to Jeeva Herbs
-          </Typography>
 
           <Box
             sx={{
@@ -671,35 +827,93 @@ const UserDashboard = () => {
                 </Box>
               </Box>
 
-              <Box>
-                <Button
-                  onClick={() => navigate('/user/chat')}
-                  sx={{
-                    minWidth: 'auto',
-                    p: 2,
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #da5c3dff 0%, #e1b67eff 100%)',
-                    color: 'white',
-                    boxShadow: '0 8px 20px rgba(15, 118, 110, 0.4)',
-                    transition: 'all 0.3s ease',
-                    opacity: 1,
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      boxShadow: '0 10px 25px rgba(15, 118, 110, 0.5)',
-                    }
-                  }}
-                >
-                  <ChatIcon sx={{ fontSize: 32 }} />
-                </Button>
               </Box>
-            </Box>
 
+          {/* Show status button when Processing or Approved, otherwise show Claim Reward if eligible */}
+          {hasProcessingOrApprovedStatus ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <Button
+                variant="contained"
+                sx={getButtonStyle(statusButtonText, true)}
+                disabled
+              >
+                {statusButtonText}
+              </Button>
+            </Box>
+          ) : sponsorRewardData?.isEligibleForReward ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <Button
+                variant="contained"
+                onClick={handleClaimReward}
+                sx={getButtonStyle('claim', false)}
+              >
+                Claim Reward
+              </Button>
+            </Box>
+          ) : null}
+        </Box>
+      </Box>
+
+      {/* Video Modal */}
+      <Dialog 
+        open={openVideoModal} 
+        onClose={() => {
+          setOpenVideoModal(false);
+          setSelectedVideo('');
+        }}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          style: { backgroundColor: 'transparent', boxShadow: 'none' }
+        }}
+      >
+        <DialogContent sx={{ p: 0, overflow: 'hidden', position: 'relative', paddingTop: '56.25%' /* 16:9 aspect ratio */ }}>
+          {selectedVideo && (
+            <iframe
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
+              src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* My Transactions Section */}
+      
+      </Box>
+
+      <Box
+        sx={{
+          mx: { xs: 2, sm: 3, md: 4 },
+          mt: 3,
+          p: 3,
+          background: 'linear-gradient(135deg, #2c8786 0%, #1d5958 100%)',
+          borderRadius: 4,
+          border: '1px solid #1f5e5d',
+          boxShadow: '0 8px 25px rgba(44, 135, 134, 0.3)',
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 3,
+            color: '#ffffff',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            letterSpacing: '0.5px'
+          }}
+        >
+          My Transactions
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Row for Earnings & Withdrawals (Side by side on all screens) */}
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 width: '100%',
                 gap: { xs: 2, sm: 3 }
@@ -710,9 +924,9 @@ const UserDashboard = () => {
                 onClick={() => navigate('/user/earnings')}
                 sx={{
                   textAlign: 'center',
-                  background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(6, 95, 70, 0.35) 100%)',
-                  border: '1px solid rgba(52, 211, 153, 0.55)',
-                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)',
+                  background: 'linear-gradient(135deg, #e6fcf5 0%, #b2f5ea 100%)',
+                  border: '1px solid #38b2ac',
+                  boxShadow: '0 4px 15px rgba(56, 178, 172, 0.15)',
                   backdropFilter: 'blur(10px)',
                   borderRadius: '16px',
                   px: { xs: 2, sm: 3 },
@@ -732,13 +946,13 @@ const UserDashboard = () => {
                     fontSize: { xs: '1.2rem', md: '1.6rem' },
                     fontWeight: 'bold',
                     mb: 0.3,
-                    color: '#6ee7b7'
+                    color: '#2c7a7b'
                   }}
                 >
                   {loading ? '₹0' : totalEarningsAmount}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Typography variant="caption" sx={{ color: '#d1fae5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
+                  <Typography variant="caption" sx={{ color: '#285e61', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
                     Earnings
                   </Typography>
                 </Box>
@@ -749,9 +963,9 @@ const UserDashboard = () => {
                 onClick={() => navigate('/user/withdrawals')}
                 sx={{
                   textAlign: 'center',
-                  background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.22) 0%, rgba(154, 52, 18, 0.35) 100%)',
-                  border: '1px solid rgba(251, 146, 60, 0.55)',
-                  boxShadow: '0 4px 15px rgba(249, 115, 22, 0.25)',
+                  background: 'linear-gradient(135deg, #fffaf0 0%, #feebc8 100%)',
+                  border: '1px solid #ed8936',
+                  boxShadow: '0 4px 15px rgba(237, 137, 54, 0.15)',
                   backdropFilter: 'blur(10px)',
                   borderRadius: '16px',
                   px: { xs: 2, sm: 3 },
@@ -771,13 +985,13 @@ const UserDashboard = () => {
                     fontSize: { xs: '1.2rem', md: '1.6rem' },
                     fontWeight: 'bold',
                     mb: 0.3,
-                    color: '#fdba74'
+                    color: '#c05621'
                   }}
                 >
                   {loading ? '₹0' : totalWithdrawsAmount}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Typography variant="caption" sx={{ color: '#ffedd5', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
+                  <Typography variant="caption" sx={{ color: '#9c4221', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
                     Withdrawals
                   </Typography>
                 </Box>
@@ -789,8 +1003,8 @@ const UserDashboard = () => {
             <Box sx={{ 
               mt: {xs: 1, md: 3}, 
               width: '100%',
-              background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.15) 50%, rgba(16, 185, 129, 0.05) 100%)',
-              border: '1px solid rgba(52, 211, 153, 0.3)',
+              background: 'linear-gradient(90deg, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%)',
+              border: '1px solid #86efac',
               borderRadius: '12px',
               p: 1.5,
               display: 'flex',
@@ -808,12 +1022,12 @@ const UserDashboard = () => {
                 boxShadow: '0 0 10px #34d399'
               }} />
               <Typography variant="body1" sx={{ 
-                color: '#a7f3d0', 
+                color: '#166534', 
                 fontWeight: '500',
                 letterSpacing: 0.5,
                 fontSize: { xs: '0.9rem', md: '1rem' }
               }}>
-                Your next payment cycle on <span style={{ color: '#ffffff', fontWeight: '800', marginLeft: '4px' }}>
+                Your next payment cycle on <span style={{ color: '#14532d', fontWeight: '800', marginLeft: '4px' }}>
                 {(() => {
                   const baseDateStr = memberDetails?.activationDate || memberDetails?.activation_date || memberDetails?.createdAt || memberDetails?.created_at;
                   
@@ -850,83 +1064,7 @@ const UserDashboard = () => {
               </Typography>
             </Box>
           </Box>
-          {/* Show status button when Processing or Approved, otherwise show Claim Reward if eligible */}
-          {hasProcessingOrApprovedStatus ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-              <Button
-                variant="contained"
-                sx={getButtonStyle(statusButtonText, true)}
-                disabled
-              >
-                {statusButtonText}
-              </Button>
-            </Box>
-          ) : sponsorRewardData?.isEligibleForReward ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-              <Button
-                variant="contained"
-                onClick={handleClaimReward}
-                sx={getButtonStyle('claim', false)}
-              >
-                Claim Reward
-              </Button>
-            </Box>
-          ) : null}
         </Box>
-      </Box>
-
-      {/* Image Slider */}
-      <Box sx={{ width: '100%', mt: 2, px: { xs: 2, sm: 3, md: 4 } }}>
-        <Box 
-          sx={{ 
-            width: '100%', 
-            height: { xs: '150px', sm: '200px', md: '250px' }, 
-            position: 'relative', 
-            overflow: 'hidden',
-            borderRadius: 3,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            backgroundColor: '#ffffff'
-          }}
-        >
-          {slideImages.map((img, index) => (
-            <Box
-              key={index}
-              component="img"
-              src={img}
-              alt={`Slide ${index}`}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                opacity: index === currentSlide ? 1 : 0,
-                transition: 'opacity 1s ease-in-out',
-                zIndex: index === currentSlide ? 1 : 0
-              }}
-            />
-          ))}
-          {/* Slider indicators */}
-          <Box sx={{ position: 'absolute', bottom: 16, width: '100%', display: 'flex', justifyContent: 'center', gap: 1, zIndex: 10 }}>
-            {slideImages.map((_, index) => (
-              <Box
-                key={index}
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  bgcolor: index === currentSlide ? '#fff' : 'rgba(255,255,255,0.5)',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.3s ease'
-                }}
-                onClick={() => setCurrentSlide(index)}
-              />
-            ))}
-          </Box>
-        </Box>
-      </Box>
-
       {/* My Team Section */}
       <Box
         sx={{

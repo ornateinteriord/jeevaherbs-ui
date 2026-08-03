@@ -25,10 +25,10 @@ export default function GroupMessage() {
     setLoading(true);
     try {
       await api.post('/admin/announcement', { message });
-      toast.success('Group message sent successfully');
+      toast.success('Dashboard announcement sent successfully');
       setMessage('');
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || 'Failed to send group message');
+      toast.error(error?.response?.data?.message || 'Failed to send broadcast');
     } finally {
       setLoading(false);
     }
@@ -88,9 +88,11 @@ export default function GroupMessage() {
             <Typography variant="h5" fontWeight="700" color="#333" mb={1}>
               Compose Message
             </Typography>
-            <Typography variant="body2" color="textSecondary" mb={4}>
+            <Typography variant="body2" color="textSecondary" mb={2}>
               Type the announcement you want to broadcast below.
             </Typography>
+
+
 
             <TextField
               fullWidth

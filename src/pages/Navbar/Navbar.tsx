@@ -20,6 +20,7 @@ import { deepOrange } from "@mui/material/colors";
 import {  useState } from "react";
 import { useGetMemberDetails } from "../../api/Memeber";
 import logoImg from "../../assets/jeeva_herbs.png";
+import ChatIcon from '@mui/icons-material/Chat';
 //ok
 
 const Navbar = ({
@@ -149,14 +150,35 @@ const Navbar = ({
                 )}
 
                 {!isHomePage && !isAdmin && (
-                  <Button
-                    className="logout-btn"
-                    variant="ghost"
-                    style={{ marginRight: "8px", fontSize: "50px",cursor:'pointer',borderRadius:'6px' }}
-                    onClick={handleLogout}
-                  >
-                    <LogOut />
-                  </Button>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <MuiButton
+                      onClick={() => navigate('/user/chat')}
+                      sx={{
+                        minWidth: 'auto',
+                        p: 1,
+                        mr: 1.5,
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #da5c3dff 0%, #e1b67eff 100%)',
+                        color: 'white',
+                        boxShadow: '0 4px 10px rgba(218, 92, 61, 0.4)',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'scale(1.05)',
+                          boxShadow: '0 6px 15px rgba(218, 92, 61, 0.5)',
+                        }
+                      }}
+                    >
+                      <ChatIcon sx={{ fontSize: 28 }} />
+                    </MuiButton>
+                    <Button
+                      className="logout-btn"
+                      variant="ghost"
+                      style={{ marginRight: "8px", fontSize: "50px",cursor:'pointer',borderRadius:'6px' }}
+                      onClick={handleLogout}
+                    >
+                      <LogOut />
+                    </Button>
+                  </div>
                 )}
               </div>
             ) : (

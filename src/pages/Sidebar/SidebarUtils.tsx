@@ -20,7 +20,7 @@ import {
   MonetizationOnIcon,
   TrendingUpIcon,
 } from "../Icons";
-import { AccountBalance, CurrencyRupee, EmojiEvents, Savings, Output } from "@mui/icons-material";
+import { AccountBalance, CurrencyRupee, EmojiEvents, Savings, Output, Chat as ChatIcon } from "@mui/icons-material";
 
 export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -323,6 +323,12 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     name: "Group Message",
     path: "/admin/group-message",
     icon: <MailOutlineIcon />,
+    isExpandable: false,
+  },
+  {
+    name: "Chat All Users",
+    path: "/admin/chat-all-users",
+    icon: <ChatIcon />,
     isExpandable: false,
   },
 ];
