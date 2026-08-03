@@ -707,6 +707,7 @@ const UserDashboard = () => {
             >
               {/* Left Corner Box: Total Earnings */}
               <Box
+                onClick={() => navigate('/user/earnings')}
                 sx={{
                   textAlign: 'center',
                   background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(6, 95, 70, 0.35) 100%)',
@@ -716,7 +717,13 @@ const UserDashboard = () => {
                   borderRadius: '16px',
                   px: { xs: 2, sm: 3 },
                   py: 1.5,
-                  minWidth: { xs: '120px', sm: '140px' }
+                  minWidth: { xs: '120px', sm: '140px' },
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
+                  }
                 }}
               >
                 <Typography
@@ -739,6 +746,7 @@ const UserDashboard = () => {
 
               {/* Right Corner Box: Total Withdrawals */}
               <Box
+                onClick={() => navigate('/user/withdrawals')}
                 sx={{
                   textAlign: 'center',
                   background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.22) 0%, rgba(154, 52, 18, 0.35) 100%)',
@@ -748,7 +756,13 @@ const UserDashboard = () => {
                   borderRadius: '16px',
                   px: { xs: 2, sm: 3 },
                   py: 1.5,
-                  minWidth: { xs: '120px', sm: '140px' }
+                  minWidth: { xs: '120px', sm: '140px' },
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 20px rgba(249, 115, 22, 0.4)',
+                  }
                 }}
               >
                 <Typography

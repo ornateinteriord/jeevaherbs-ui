@@ -6,7 +6,7 @@ import TokenService from '../../../api/token/tokenService';
 const TotalWithdrawals = () => {
   const memberId = TokenService.getMemberId();
   const { data: walletOverview } = useGetWalletOverview(memberId);
-  const totalWithdrawsAmount = walletOverview?.totalWithdraws || 0;
+  const totalWithdrawsAmount = walletOverview?.totalWithdrawal || 0;
 
   return (
     <IncomePageLayout 
