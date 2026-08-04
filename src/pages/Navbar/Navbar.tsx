@@ -75,7 +75,7 @@ const Navbar = ({
           {!shouldHide && (
             <IconButton 
               onClick={() => toggelSideBar()}
-              sx={{ display: { xs: 'flex', md: 'none' } }}
+              sx={{ display: 'flex' }}
             >
               <Menu color="#333333" />
             </IconButton>
