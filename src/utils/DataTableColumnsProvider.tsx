@@ -251,6 +251,11 @@ export const getDailyPayoutColumns = () => [
 
 export const getTransactionColumns = () => [
   {
+    name: "Transaction ID",
+    selector: (row: any) => row.transaction_id || row.payout_id || "-",
+    sortable: true,
+  },
+  {
     name: "Date",
     selector: (row: any) => getFormattedDate(row.transaction_date),
     sortable: true,

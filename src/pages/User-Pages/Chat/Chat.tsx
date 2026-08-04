@@ -114,7 +114,8 @@ export default function Chat() {
     });
 
     newSocket.on("receiveMessage", (message: any) => {
-      if (message.roomId === activeRoomId) {
+      const isGlobalForAdminRoom = message.roomId === "GLOBAL_BROADCAST" && activeRoomId?.includes("ADMIN_");
+      if (message.roomId === activeRoomId || isGlobalForAdminRoom) {
         queryClient.setQueryData(["chatMessages", activeRoomId], (oldData: any) => {
           if (!oldData) return { data: [message] };
           return { ...oldData, data: [...oldData.data, message] };
@@ -559,7 +560,13 @@ export default function Chat() {
                           }
                         }}
                       >
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      {isMe ? (
+                        <Box sx={{ position: 'absolute', top: 0, right: -8, width: 0, height: 0, borderTop: '10px solid #dcf8c6', borderRight: '10px solid transparent' }} />
+                      ) : (
+                        <Box sx={{ position: 'absolute', top: 0, left: -8, width: 0, height: 0, borderTop: '10px solid #fff', borderLeft: '10px solid transparent' }} />
+                      )}
+                      
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                           {msg.messageType === 'image' && msg.imageUrl && (
                             <Box sx={{ mb: 1 }}>
                               <img src={msg.imageUrl} alt="attachment" style={{ maxWidth: '100%', borderRadius: '6px' }} />
@@ -627,10 +634,12 @@ export default function Chat() {
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               PaperProps={{ sx: { boxShadow: '0 2px 10px rgba(0,0,0,0.1)', borderRadius: '8px', minWidth: '150px' } }}
             >
-              <MenuItem onClick={handleReplyMessage}>
-                <ReplyIcon fontSize="small" sx={{ mr: 1.5, color: '#54656f' }} />
-                <Typography variant="body2">Reply</Typography>
-              </MenuItem>
+              {!activeRoomId?.includes('ADMIN_') && (
+                <MenuItem onClick={handleReplyMessage}>
+                  <ReplyIcon fontSize="small" sx={{ mr: 1.5, color: '#54656f' }} />
+                  <Typography variant="body2">Reply</Typography>
+                </MenuItem>
+              )}
               {selectedMessage?.text && (
                 <MenuItem onClick={handleCopyMessage}>
                   <ContentCopyIcon fontSize="small" sx={{ mr: 1.5, color: '#54656f' }} />
@@ -678,13 +687,14 @@ export default function Chat() {
                 <EmojiPicker onEmojiClick={handleEmojiClick} width={300} height={400} />
               </Paper>
             )}
-            <Box component="form" onSubmit={handleSendMessage} sx={{ 
-              p: '10px 16px', 
-              bgcolor: '#f0f2f5', 
-              display: 'flex', 
-              gap: 1.5, 
-              alignItems: 'center' 
-            }}>
+            {!activeRoomId?.includes('ADMIN_') ? (
+              <Box component="form" onSubmit={handleSendMessage} sx={{ 
+                p: '10px 16px', 
+                bgcolor: '#f0f2f5', 
+                display: 'flex', 
+                gap: 1.5, 
+                alignItems: 'center' 
+              }}>
               <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)} sx={{ color: '#54656f' }}>
                 <InsertEmoticonIcon />
               </IconButton>
@@ -749,8 +759,15 @@ export default function Chat() {
                 >
                   {isRecording ? <StopIcon fontSize="small" /> : <MicIcon fontSize="small" />}
                 </IconButton>
-              )}
-            </Box>
+                )}
+              </Box>
+            ) : (
+              <Box sx={{ p: '15px 16px', bgcolor: '#f0f2f5', textAlign: 'center' }}>
+                <Typography variant="body2" sx={{ color: '#54656f' }}>
+                  This is a read-only broadcast channel. Only Admins can send messages here.
+                </Typography>
+              </Box>
+            )}
           </>
         ) : (
           <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#f0f2f5' }}>
