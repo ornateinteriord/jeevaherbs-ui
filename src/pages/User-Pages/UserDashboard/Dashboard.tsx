@@ -799,7 +799,7 @@ const UserDashboard = () => {
                   >
                     Status: {memberDetails?.status || 'Unknown'}
                   </Typography>
-                  {memberDetails?.upgrade_status !== 'active' && memberDetails?.upgrade_status !== 'Approved' && (
+                  {memberDetails?.kycStatus !== 'APPROVED' && (
                     <Box 
                       onClick={() => navigate('/user/account/kyc')}
                       sx={{
@@ -821,7 +821,7 @@ const UserDashboard = () => {
                         }
                       }}
                     >
-                      ⚠️ Complete KYC
+                      ⚠️ KYC: {memberDetails?.kycStatus?.toUpperCase() || 'PENDING'}
                     </Box>
                   )}
                 </Box>
