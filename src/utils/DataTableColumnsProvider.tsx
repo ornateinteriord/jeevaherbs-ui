@@ -256,11 +256,13 @@ export const getTransactionColumns = () => [
     sortable: true,
     cell: (row: any) => {
       const id = row.transaction_id || row.payout_id;
-      return id ? (
+      if (!id) return "-";
+      const displayId = id.toString().replace(/^(TXN-|PAY-)/i, '');
+      return (
         <Tooltip title={id}>
-          <span>...{id.toString().slice(-7)}</span>
+          <span>{displayId}</span>
         </Tooltip>
-      ) : "-";
+      );
     }
   },
   {
