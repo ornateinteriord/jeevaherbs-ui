@@ -283,6 +283,27 @@ export const Payables = ({ tabTitle }: { tabTitle: any }) => {
                   inputProps={{ max: selectedMember.availableBalance, min: 1 }}
                 />
               )}
+
+              {/* Dynamic TDS & Net Payout Display */}
+              {customAmount && Number(customAmount) > 0 && (
+                <Box sx={{ p: 2, bgcolor: '#f5f5f5', borderRadius: 2, border: '1px solid #ddd' }}>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    Payout Breakdown
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2">Requested Amount:</Typography>
+                    <Typography variant="body2" fontWeight="bold">₹{Number(customAmount).toLocaleString()}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2" color="error">TDS Deduction (10%):</Typography>
+                    <Typography variant="body2" color="error" fontWeight="bold">-₹{(Number(customAmount) * 0.10).toLocaleString()}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 1, borderTop: '1px solid #ccc' }}>
+                    <Typography variant="body1" fontWeight="bold" color="#2c8786">Final Amount to Transfer:</Typography>
+                    <Typography variant="body1" fontWeight="bold" color="#2c8786">₹{(Number(customAmount) * 0.90).toLocaleString()}</Typography>
+                  </Box>
+                </Box>
+              )}
             </Box>
           )}
         </DialogContent>

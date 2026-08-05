@@ -286,7 +286,12 @@ export const getTransactionColumns = () => [
     sortable: true,
   },
   {
-    name: "Due Amount",
+    name: "TDS (10%)",
+    selector: (row: any) => row.deduction ? `₹ ${parseFloat(row.deduction).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Actual Payout",
     selector: (row: any) => row.net_amount ? `₹ ${parseFloat(row.net_amount).toLocaleString()}` : "-",
     sortable: true,
   },
@@ -740,6 +745,16 @@ export const getAdminPageTransactionColumns = () => [
   {
     name: "EW Debit",
     selector: (row: any) => row.ew_debit,
+    sortable: true,
+  },
+  {
+    name: "TDS (10%)",
+    selector: (row: any) => row.deduction ? `₹ ${parseFloat(row.deduction).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Actual Payout",
+    selector: (row: any) => row.net_amount ? `₹ ${parseFloat(row.net_amount).toLocaleString()}` : "-",
     sortable: true,
   },
 ];
