@@ -57,13 +57,21 @@ const IncomePageLayout: React.FC<IncomePageLayoutProps> = ({ title, balanceLabel
       if (filterTypes.length > 0) {
         specificTransactions = transactions.filter((tx: any) => {
           if (tx?.description === "Initial ROI Setup") return false;
+          
           const type = tx.transaction_type?.toLowerCase().trim() || '';
           const desc = tx.description?.toLowerCase().trim() || '';
           
-          return filterTypes.some(filter => {
+          const isMatch = filterTypes.some(filter => {
             const f = filter.toLowerCase().trim();
             return type === f || desc === f;
           });
+
+          // For rewards/global income, hide Queued transactions from the UI
+          if (isMatch && filterTypes.includes("reward") && tx.status === "Queued") {
+            return false;
+          }
+
+          return isMatch;
         });
       }
 
