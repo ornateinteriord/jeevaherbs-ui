@@ -254,6 +254,14 @@ export const getTransactionColumns = () => [
     name: "Transaction ID",
     selector: (row: any) => row.transaction_id || row.payout_id || "-",
     sortable: true,
+    cell: (row: any) => {
+      const id = row.transaction_id || row.payout_id;
+      return id ? (
+        <Tooltip title={id}>
+          <span>...{id.toString().slice(-7)}</span>
+        </Tooltip>
+      ) : "-";
+    }
   },
   {
     name: "Date",
