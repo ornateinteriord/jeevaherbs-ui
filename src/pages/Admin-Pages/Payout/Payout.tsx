@@ -17,7 +17,8 @@ import {
   Radio,
   RadioGroup,
   CircularProgress,
-  Button
+  Button,
+  Divider
 } from "@mui/material";
 import { useState } from "react";
 import "./Payout.scss";
@@ -245,18 +246,38 @@ export const Payables = ({ tabTitle }: { tabTitle: any }) => {
         <DialogTitle sx={{ color: '#2c8786', fontWeight: 'bold' }}>Process Manual Payout</DialogTitle>
         <DialogContent dividers>
           {selectedMember && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Typography>
-                <strong>Member:</strong> {selectedMember.Name} ({selectedMember.member_id})
-              </Typography>
-              <Typography>
-                <strong>Available Balance:</strong> ₹{selectedMember.availableBalance?.toLocaleString()}
-              </Typography>
-              <Typography>
-                <strong>UPI ID:</strong> {selectedMember.upiId || 'Not provided'}
-              </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="textSecondary">Member:</Typography>
+                <Typography variant="body2" fontWeight="500">{selectedMember.Name} ({selectedMember.member_id})</Typography>
+              </Box>
+              <Divider />
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="textSecondary">Available Balance:</Typography>
+                <Typography variant="body2" fontWeight="bold" color="primary">₹{selectedMember.availableBalance?.toLocaleString()}</Typography>
+              </Box>
+              <Divider />
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="textSecondary">Total Paid Amount:</Typography>
+                <Typography variant="body2" fontWeight="500">₹{selectedMember.totalPaid?.toLocaleString() || 0}</Typography>
+              </Box>
+              <Divider />
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="textSecondary">Direct Referrals:</Typography>
+                <Typography variant="body2" fontWeight="500">{selectedMember.directsCount || 0}</Typography>
+              </Box>
+              <Divider />
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="textSecondary">UPI ID:</Typography>
+                <Typography variant="body2" fontWeight="500">{selectedMember.upiId || 'Not provided'}</Typography>
+              </Box>
 
-              <RadioGroup
+              <Box sx={{ mt: 2 }}>
+                <RadioGroup
                 value={payType}
                 onChange={(e) => {
                   setPayType(e.target.value);
@@ -270,6 +291,7 @@ export const Payables = ({ tabTitle }: { tabTitle: any }) => {
                 <FormControlLabel value="full" control={<Radio />} label="Pay Full Amount" />
                 <FormControlLabel value="partial" control={<Radio />} label="Pay Partial Amount" />
               </RadioGroup>
+            </Box>
 
               {payType === 'partial' && (
                 <TextField
