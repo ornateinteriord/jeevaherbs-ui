@@ -15,6 +15,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import BadgeIcon from '@mui/icons-material/Badge';
+import QrCodeIcon from '@mui/icons-material/QrCode'; // new icon for UPI
 import UserContext from '../../../context/user/userContext';
 // import { useUpdateMember } from '../../../api/Memeber';
 import { LoadingComponent } from '../../../App';
@@ -30,17 +31,19 @@ const KYC: React.FC = () => {
     bank_name: '',
     Pan_no: '',
     address: '',
+    upiId: '', // new field
   });
 
   useEffect(() => {
     if (user) {
       setFormData({
-        accountName: user?.Name ,
-        account_number: user?.account_number ,
-        ifsc_code: user?.ifsc_code ,
-        bank_name: user?.bank_name ,
-        Pan_no: user?.Pan_no ,
-        address: user?.address ,
+        accountName: user?.Name || '',
+        account_number: user?.account_number || '',
+        ifsc_code: user?.ifsc_code || '',
+        bank_name: user?.bank_name || '',
+        Pan_no: user?.Pan_no || '',
+        address: user?.address || '',
+        upiId: user?.upiId || '', // new field
       });
     }
   }, [user]);
@@ -61,9 +64,9 @@ const KYC: React.FC = () => {
       pan: formData.Pan_no,
       address: formData.address,
       bankName: formData.bank_name,
+      upiId: formData.upiId, // include UPI ID in payload
     });
   };
-
 
   return (
     <Card sx={{ margin: '2rem', mt: 10, boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}>
@@ -214,6 +217,33 @@ const KYC: React.FC = () => {
                   startAdornment: (
                     <InputAdornment position="start">
                       <BadgeIcon sx={{ color: '#2c8786' }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&:hover fieldset': {
+                      borderColor: '#2c8786',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#2c8786',
+                    }
+                  }
+                }}
+              />
+              {/* New UPI ID field */}
+              <TextField
+                label="UPI ID"
+                name="upiId"
+                value={formData.upiId}
+                onChange={handleInputChange}
+                fullWidth
+                variant="outlined"
+                placeholder="Enter UPI ID (e.g., example@upi)"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <QrCodeIcon sx={{ color: '#2c8786' }} />
                     </InputAdornment>
                   ),
                 }}
