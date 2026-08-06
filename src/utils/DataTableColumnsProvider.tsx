@@ -286,7 +286,7 @@ export const getTransactionColumns = () => [
     sortable: true,
   },
   {
-    name: "TDS (10%)",
+    name: "Admin(Service)charges (10%)",
     selector: (row: any) => row.deduction ? `₹ ${parseFloat(row.deduction).toLocaleString()}` : "-",
     sortable: true,
   },
@@ -748,7 +748,7 @@ export const getAdminPageTransactionColumns = () => [
     sortable: true,
   },
   {
-    name: "TDS (10%)",
+    name: "Admin(Service)charges (10%)",
     selector: (row: any) => row.deduction ? `₹ ${parseFloat(row.deduction).toLocaleString()}` : "-",
     sortable: true,
   },

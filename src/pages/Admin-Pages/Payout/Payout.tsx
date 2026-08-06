@@ -295,7 +295,7 @@ export const Payables = ({ tabTitle }: { tabTitle: any }) => {
                     <Typography variant="body2" fontWeight="bold">₹{Number(customAmount).toLocaleString()}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2" color="error">TDS Deduction (10%):</Typography>
+                    <Typography variant="body2" color="error">Admin(Service)charges (10%):</Typography>
                     <Typography variant="body2" color="error" fontWeight="bold">-₹{(Number(customAmount) * 0.10).toLocaleString()}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 1, borderTop: '1px solid #ccc' }}>
