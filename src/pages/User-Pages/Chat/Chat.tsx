@@ -40,7 +40,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import EmojiPicker from 'emoji-picker-react';
-import { io, Socket } from 'socket.io-client';
+import { useSocket } from '../../../context/SocketContext';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   useGetRooms,
@@ -56,13 +56,23 @@ import TokenService from '../../../api/token/tokenService';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5051";
+import { useLocation } from 'react-router-dom';
+
 const THEME_COLOR = '#2c8786';
 const BG_COLOR = '#efeae2'; // Subtle chat background
 
 export default function Chat() {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const { socket } = useSocket();
+  const location = useLocation();
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (location.state?.activeRoomId) {
+      setActiveRoomId(location.state.activeRoomId);
+      // Clear the state so it doesn't get stuck on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
   const [messageText, setMessageText] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
@@ -104,16 +114,9 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    if (!currentUserId) return;
+    if (!currentUserId || !socket) return;
     
-    const newSocket = io(SOCKET_URL);
-    setSocket(newSocket);
-
-    newSocket.on("connect", () => {
-      newSocket.emit("join", currentUserId);
-    });
-
-    newSocket.on("receiveMessage", (message: any) => {
+    const handleReceiveMessage = (message: any) => {
       const isGlobalForAdminRoom = message.roomId === "GLOBAL_BROADCAST" && activeRoomId?.includes("ADMIN_");
       if (message.roomId === activeRoomId || isGlobalForAdminRoom) {
         queryClient.setQueryData(["chatMessages", activeRoomId], (oldData: any) => {
@@ -125,9 +128,9 @@ export default function Chat() {
       } else {
         queryClient.invalidateQueries({ queryKey: ["chatRooms"] });
       }
-    });
+    };
 
-    newSocket.on("messageDeleted", ({ messageId, roomId }) => {
+    const handleMessageDeleted = ({ messageId, roomId }: any) => {
       if (roomId === activeRoomId) {
         queryClient.setQueryData(["chatMessages", roomId], (oldData: any) => {
           if (!oldData) return oldData;
@@ -137,12 +140,16 @@ export default function Chat() {
           };
         });
       }
-    });
+    };
+
+    socket.on("receiveMessage", handleReceiveMessage);
+    socket.on("messageDeleted", handleMessageDeleted);
 
     return () => {
-      newSocket.disconnect();
+      socket.off("receiveMessage", handleReceiveMessage);
+      socket.off("messageDeleted", handleMessageDeleted);
     };
-  }, [currentUserId, activeRoomId, queryClient]);
+  }, [currentUserId, activeRoomId, queryClient, socket]);
 
   useEffect(() => {
     if (activeRoomId) {

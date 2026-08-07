@@ -1,6 +1,7 @@
 import { Suspense, lazy, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from 'react-toastify';
+import { SocketProvider } from "./context/SocketContext";
 import {
   BrowserRouter as Router,
   Route,
@@ -200,11 +201,13 @@ function App() {
         <ToastContainer />
         <Router>
           <Suspense fallback={<LoadingComponent />}>
-            <RoutesProvider
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              toggelSideBar={toggelSideBar}
-            />
+            <SocketProvider>
+              <RoutesProvider
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                toggelSideBar={toggelSideBar}
+              />
+            </SocketProvider>
           </Suspense>
         </Router>
       </QueryClientProvider>
