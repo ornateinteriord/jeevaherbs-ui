@@ -20,18 +20,21 @@ import {
   DialogActions,
   // Autocomplete,
   Typography,
-  Box
+  Box,
+  MenuItem
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
+import QRImage from '../../../assets/jee_sc.png';
 // @ts-ignore
 import { load } from '@cashfreepayments/cashfree-js';
 import axios from 'axios';
 
 import WcIcon from '@mui/icons-material/Wc';
 import LockIcon from '@mui/icons-material/Lock';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 // import MapIcon from "@mui/icons-material/Map";
 // import DomainIcon from "@mui/icons-material/Domain";
 // import LocationCityIcon from "@mui/icons-material/LocationCity";
@@ -91,7 +94,7 @@ const NewResgister: React.FC = () => {
       return;
     }
     try {
-      confirmRegistration();
+      setPaymentDialogOpen(true);
     } catch (error) {
       console.error(error);
     }
@@ -435,13 +438,17 @@ const NewResgister: React.FC = () => {
                   }}
                 />
                 
-                {/* <TextField
+                <TextField
                   select
+                  required
                   label="Select Package"
                   name="package_value"
                   value={formData.package_value || ''}
                   onChange={(e) => {
                     handleInputChange({ target: { name: 'package_value', value: e.target.value } } as any);
+                    if (e.target.value === "5000") {
+                      handleInputChange({ target: { name: 'paymentMode', value: 'offline' } } as any);
+                    }
                   }}
                   fullWidth
                   variant="outlined"
@@ -466,8 +473,9 @@ const NewResgister: React.FC = () => {
                   }}
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
+                  <MenuItem value="999">999 INR Package</MenuItem>
                   <MenuItem value="5000">5000 INR Package</MenuItem>
-                </TextField> */}
+                </TextField>
 
               </form>
             </AccordionDetails>
@@ -539,15 +547,16 @@ const NewResgister: React.FC = () => {
               onChange={handleInputChange}
               sx={{
                 display: 'flex',
-                flexDirection: 'column',
-                gap: 2
+                flexDirection: 'row',
+                gap: 1
               }}
             >
               <Box sx={{ 
+                flex: 1,
                 border: '1px solid', 
                 borderColor: formData.paymentMode === 'offline' ? '#2c8786' : '#e2e8f0',
                 borderRadius: 1, 
-                p: 2,
+                p: 1.5,
                 display: 'flex',
                 alignItems: 'center',
                 cursor: 'pointer',
@@ -555,40 +564,55 @@ const NewResgister: React.FC = () => {
               }} onClick={() => handleInputChange({ target: { name: 'paymentMode', value: 'offline' } } as any)}>
                 <FormControlLabel
                   value="offline"
-                  control={<Radio sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
+                  control={<Radio size="small" sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
                   label={
                     <Box>
-                      <Typography variant="subtitle1" fontWeight="bold">Offline Payment</Typography>
-                      <Typography variant="body2" color="text.secondary">Admin will activate your account later</Typography>
+                      <Typography variant="body2" fontWeight="bold">QR Option / Manual Payment</Typography>
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', lineHeight: 1.2 }}>Pay via QR/UPI. Admin will activate your account later</Typography>
                     </Box>
                   }
-                  sx={{ flexGrow: 1, m: 0 }}
+                  sx={{ m: 0 }}
                 />
               </Box>
-              {/* <Box sx={{ 
-                border: '1px solid', 
-                borderColor: formData.paymentMode === 'online' ? '#2c8786' : '#e2e8f0',
-                borderRadius: 1, 
-                p: 2,
-                display: 'flex',
-                alignItems: 'center',
-                cursor: 'pointer',
-                backgroundColor: formData.paymentMode === 'online' ? '#f0fdfa' : 'transparent',
-              }} onClick={() => handleInputChange({ target: { name: 'paymentMode', value: 'online' } } as any)}>
-                <FormControlLabel
-                  value="online"
-                  control={<Radio sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
-                  label={
-                    <Box>
-                      <Typography variant="subtitle1" fontWeight="bold">Online Payment</Typography>
-                      <Typography variant="body2" color="text.secondary">Pay now to activate immediately</Typography>
-                    </Box>
-                  }
-                  sx={{ flexGrow: 1, m: 0 }}
-                />
-              </Box> */}
+              {formData.package_value === "999" && (
+                <Box sx={{ 
+                  flex: 1,
+                  border: '1px solid', 
+                  borderColor: formData.paymentMode === 'online' ? '#2c8786' : '#e2e8f0',
+                  borderRadius: 1, 
+                  p: 1.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  backgroundColor: formData.paymentMode === 'online' ? '#f0fdfa' : 'transparent',
+                }} onClick={() => handleInputChange({ target: { name: 'paymentMode', value: 'online' } } as any)}>
+                  <FormControlLabel
+                    value="online"
+                    control={<Radio size="small" sx={{ "&.Mui-checked": { color: "#2c8786" } }} />}
+                    label={
+                      <Box>
+                        <Typography variant="body2" fontWeight="bold">Cashfree (Online Payment)</Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', lineHeight: 1.2 }}>Pay now to activate immediately</Typography>
+                      </Box>
+                    }
+                    sx={{ m: 0 }}
+                  />
+                </Box>
+              )}
             </RadioGroup>
           </FormControl>
+          
+          {formData.paymentMode === 'offline' && (
+            <Box sx={{ mt: 3, p: 2, border: '1px solid #e2e8f0', borderRadius: 2, textAlign: 'center', backgroundColor: '#f8fafc' }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1e293b', mb: 1 }}>Scan to Pay</Typography>
+              <Box sx={{ mt: 1, mb: 1, height: '200px', width: '100%', overflow: 'hidden', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src={QRImage} alt="QR Code" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+              </Box>
+              <Typography variant="body2" sx={{ mt: 1, fontWeight: 'bold', color: '#2c8786' }}>
+                UPI ID: blusky01qr@fbl
+              </Typography>
+            </Box>
+          )}
         </DialogContent>
         <DialogActions sx={{ padding: '1rem 2rem 2rem', justifyContent: 'space-between' }}>
           <Button 

@@ -12,7 +12,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  InputAdornment
+  InputAdornment,
+  MenuItem
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -38,9 +39,10 @@ const Activation: React.FC = () => {
   const [isTargetActive, setIsTargetActive] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [purchasedPkgDetails, setPurchasedPkgDetails] = useState<any>(null);
+  
+  const [packageAmount, setPackageAmount] = useState<number>(5000);
 
   const topUpBalance = walletOverview?.top_up_wallet_balance || 0;
-  const packageAmount = 5000;
 
   useEffect(() => {
     if (!formData.targetMemberId) {
@@ -206,11 +208,12 @@ const Activation: React.FC = () => {
             />
 
             <TextField
+              select
               label="Package Amount (₹)"
               value={packageAmount}
+              onChange={(e) => setPackageAmount(Number(e.target.value))}
               fullWidth
               variant="outlined"
-              disabled
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -218,8 +221,22 @@ const Activation: React.FC = () => {
                   </InputAdornment>
                 ),
               }}
+              SelectProps={{
+                MenuProps: {
+                  PaperProps: {
+                    sx: {
+                      mt: 1,
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                      borderRadius: "8px",
+                    }
+                  }
+                }
+              }}
               sx={inputStyles}
-            />
+            >
+              <MenuItem value={5000}>Package 5000</MenuItem>
+              <MenuItem value={999}>Package 999</MenuItem>
+            </TextField>
 
             <TextField
               label="Your Top-Up Wallet Balance (₹)"
