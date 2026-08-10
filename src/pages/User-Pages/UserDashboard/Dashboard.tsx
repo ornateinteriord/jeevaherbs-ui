@@ -498,6 +498,37 @@ const UserDashboard = () => {
   const memberName = memberDetails?.Name || memberDetails?.name || memberDetails?.username || 'Member';
   const firstLetter = memberName ? memberName.charAt(0).toUpperCase() : 'M';
 
+  // Dynamic Theme based on Package
+  const is999 = memberDetails?.package_value == 999;
+  
+  // Profile Header Theme
+  const profileBackground = is999
+    ? '#d97706' // Light brown
+    : 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)';
+  const profileBoxShadow = is999
+    ? '0 8px 32px rgba(217, 119, 6, 0.4)'
+    : '0 8px 32px rgba(99, 102, 241, 0.4)';
+
+  // My Transactions Theme
+  const txBackground = is999
+    ? '#b45309' // Slightly darker brown for contrast
+    : 'linear-gradient(135deg, #2c8786 0%, #1d5958 100%)';
+  const txBorder = is999
+    ? '1px solid #92400e'
+    : '1px solid #1f5e5d';
+  const txBoxShadow = is999
+    ? '0 8px 25px rgba(180, 83, 9, 0.3)'
+    : '0 8px 25px rgba(44, 135, 134, 0.3)';
+
+  // Badge Themes (KYC and Package)
+  const kycBg = is999 ? 'rgba(255, 255, 255, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+  const kycBorder = is999 ? '1px solid rgba(255,255,255,0.6)' : '1px solid #ef4444';
+  const kycColor = is999 ? '#ffffff' : '#fca5a5';
+
+  const pkgBg = is999 ? 'rgba(255, 255, 255, 0.25)' : 'rgba(74, 222, 128, 0.2)';
+  const pkgBorder = is999 ? '1px solid #ffffff' : '1px solid #4ade80';
+  const pkgColor = is999 ? '#ffffff' : '#86efac';
+
   return (
     <>
       {/* Payment verification loading overlay */}
@@ -690,9 +721,9 @@ const UserDashboard = () => {
           justifyContent: 'center',
           mt: { xs: 4.5, sm: 3.5, md: 3.5 },
           py: { xs: 4, sm: 3.5, md: 5 },
-          background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)',
+          background: profileBackground,
           position: 'relative',
-          boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)'
+          boxShadow: profileBoxShadow
         }}
       >
         <Box
@@ -799,31 +830,51 @@ const UserDashboard = () => {
                   >
                     Status: {memberDetails?.status || 'Unknown'}
                   </Typography>
-                  {memberDetails?.kycStatus !== 'APPROVED' && (
-                    <Box 
-                      onClick={() => navigate('/user/account/kyc')}
-                      sx={{
-                        mt: 1,
-                        display: 'inline-block',
-                        bgcolor: 'rgba(239, 68, 68, 0.2)',
-                        border: '1px solid #ef4444',
-                        color: '#fca5a5',
-                        px: 1.5,
-                        py: 0.5,
-                        borderRadius: '12px',
-                        fontSize: '0.85rem',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                        '&:hover': {
-                          bgcolor: 'rgba(239, 68, 68, 0.3)',
-                          transform: 'scale(1.05)'
-                        }
-                      }}
-                    >
-                      ⚠️ KYC: {memberDetails?.kycStatus?.toUpperCase() || 'PENDING'}
-                    </Box>
-                  )}
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1, justifyContent: { xs: 'center', md: 'flex-start' } }}>
+                    {memberDetails?.kycStatus !== 'APPROVED' && (
+                      <Box 
+                        onClick={() => navigate('/user/account/kyc')}
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          bgcolor: kycBg,
+                          border: kycBorder,
+                          color: kycColor,
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: '7px',
+                          fontSize: '0.85rem',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            bgcolor: is999 ? 'rgba(255, 255, 255, 0.3)' : 'rgba(239, 68, 68, 0.3)',
+                            transform: 'scale(1.05)'
+                          }
+                        }}
+                      >
+                        KYC: {memberDetails?.kycStatus?.toUpperCase() || 'PENDING'}
+                      </Box>
+                    )}
+                    {memberDetails?.status?.toLowerCase() === 'active' && (
+                      <Box 
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          bgcolor: pkgBg,
+                          border: pkgBorder,
+                          color: pkgColor,
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: '7px',
+                          fontSize: '0.85rem',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Package: {memberDetails?.spackage || 'N/A'}
+                      </Box>
+                    )}
+                  </Box>
                 </Box>
               </Box>
 
@@ -889,10 +940,10 @@ const UserDashboard = () => {
           mx: { xs: 2, sm: 3, md: 4 },
           mt: 3,
           p: 3,
-          background: 'linear-gradient(135deg, #2c8786 0%, #1d5958 100%)',
+          background: txBackground,
           borderRadius: 4,
-          border: '1px solid #1f5e5d',
-          boxShadow: '0 8px 25px rgba(44, 135, 134, 0.3)',
+          border: txBorder,
+          boxShadow: txBoxShadow,
         }}
       >
         <Typography
@@ -1038,14 +1089,25 @@ const UserDashboard = () => {
                       ? transactionsResponse 
                       : (Array.isArray(transactionsResponse?.data) ? transactionsResponse.data : []);
                       
-                    const withdrawals = txList.filter((t: any) => 
-                      t?.transaction_type?.toLowerCase() === 'withdrawal' || 
-                      t?.type?.toLowerCase() === 'withdrawal' ||
-                      t?.description?.toLowerCase()?.includes('withdrawal')
-                    );
+                    const withdrawalsOrPayouts = txList.filter((t: any) => {
+                      const desc = t?.description?.toLowerCase() || '';
+                      const type = (t?.transaction_type || t?.type || t?.payout_type || '').toLowerCase();
+                      
+                      // Skip daily rewards that contain 'reward'
+                      if (desc.includes('reward') || type.includes('reward')) {
+                        return false;
+                      }
+
+                      return (
+                        type === 'withdrawal' ||
+                        type.includes('payout') ||
+                        desc.includes('withdrawal') ||
+                        desc.includes('payout')
+                      );
+                    });
                 
-                    if (withdrawals.length > 0) {
-                      const latest = withdrawals.sort((a: any, b: any) => {
+                    if (withdrawalsOrPayouts.length > 0) {
+                      const latest = withdrawalsOrPayouts.sort((a: any, b: any) => {
                         const dateA = new Date(a.date || a.createdAt || a.transaction_date || 0).getTime();
                         const dateB = new Date(b.date || b.createdAt || b.transaction_date || 0).getTime();
                         return dateB - dateA;

@@ -17,9 +17,15 @@ import {
 } from "../../../utils/DataTableColumnsProvider";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useGetTransactionDetails } from "../../../api/Memeber";
+import { useGetTransactionDetails, useGetMemberDetails } from "../../../api/Memeber";
+import TokenService from "../../../api/token/tokenService";
 
 const WalletTransaction = () => {
+  const memberId = TokenService.getMemberId();
+  const { data: memberDetails } = useGetMemberDetails(memberId);
+  const is999 = memberDetails?.package_value == 999;
+  const themeColor = is999 ? "#a855f7" : "#2c8786";
+
   const {
     data: transactionsResponse,
     isLoading,
@@ -44,10 +50,6 @@ const WalletTransaction = () => {
     // Extract transactions from the response object
     const transactions = transactionsResponse?.data || [];
     
-    console.log("Wallet Transactions Response:", transactionsResponse);
-    console.log("Extracted transactions:", transactions);
-    console.log("Is array?", Array.isArray(transactions));
-
     if (Array.isArray(transactions)) {
       // Filter out loan-related transactions - show everything EXCEPT loans
       const nonLoanTransactions = transactions.filter((tx: any) => {
@@ -63,8 +65,6 @@ const WalletTransaction = () => {
           benefitType.includes('loan')
         );
       });
-
-      console.log("Non-loan transactions:", nonLoanTransactions.length);
 
       // Apply search filter
       if (searchQuery) {
@@ -94,10 +94,20 @@ const WalletTransaction = () => {
   if (isLoading) {
     return (
       <Card sx={{ margin: "2rem", mt: 10, textAlign: "center", p: 3 }}>
-        <CircularProgress size={"4rem"} sx={{ color: "#2c8786" }} />
+        <CircularProgress size={"4rem"} sx={{ color: themeColor }} />
       </Card>
     );
   }
+
+  const dynamicTableStyle = {
+    ...DASHBOARD_CUTSOM_STYLE,
+    headCells: {
+      style: {
+        ...DASHBOARD_CUTSOM_STYLE.headCells.style,
+        backgroundColor: themeColor,
+      },
+    },
+  };
 
   return (
     <Card sx={{ margin: "2rem", mt: 10 }}>
@@ -106,7 +116,7 @@ const WalletTransaction = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: "#2c8786",
+              backgroundColor: themeColor,
               color: "#fff",
               "& .MuiSvgIcon-root": { color: "#fff" },
             }}
@@ -118,7 +128,7 @@ const WalletTransaction = () => {
               columns={getTransactionColumns()}
               data={filteredData}
               pagination
-              customStyles={DASHBOARD_CUTSOM_STYLE}
+              customStyles={dynamicTableStyle}
               paginationPerPage={25}
               paginationRowsPerPageOptions={[25, 50, 100]}
               highlightOnHover

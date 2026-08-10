@@ -94,7 +94,11 @@ const NewResgister: React.FC = () => {
       return;
     }
     try {
-      setPaymentDialogOpen(true);
+      if (formData.package_value === "0") {
+        confirmRegistration();
+      } else {
+        setPaymentDialogOpen(true);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -473,6 +477,7 @@ const NewResgister: React.FC = () => {
                   }}
                 >
                   <MenuItem value="" disabled><em>Select Package</em></MenuItem>
+                  <MenuItem value="0">Without Package</MenuItem>
                   <MenuItem value="999">999 INR Package</MenuItem>
                   <MenuItem value="5000">5000 INR Package</MenuItem>
                 </TextField>
