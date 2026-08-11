@@ -340,7 +340,7 @@ const RoutesProvider = ({
                 path="/admin/income/wallet-balance"
                 element={<AdminWalletBalance />}
               />
-              <Route path="/admin/payout" element={<AdminPayout />} />
+              <Route path="/admin/payout/:packageValue" element={<AdminPayout />} />
 
               {/* admin transaction routes */}
               <Route

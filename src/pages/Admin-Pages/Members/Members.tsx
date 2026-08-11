@@ -1,5 +1,5 @@
 import DataTable from 'react-data-table-component';
-import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, TextField, Typography, Button, Grid, CircularProgress,  } from '@mui/material';
+import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, TextField, Typography, Button, Grid, CircularProgress, MenuItem } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { DASHBOARD_CUTSOM_STYLE, getMembersColumns, getPendingMembersColumns } from '../../../utils/DataTableColumnsProvider';
 import './Members.scss'
@@ -39,6 +39,7 @@ const MemberTable = ({
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [fromDate, setFromDate] = useState<string | null>(null);
   const [toDate, setToDate] = useState<string | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<string>('All');
   const { searchQuery, setSearchQuery, filteredData } = useSearch(data)
 
   const navigate = useNavigate()
@@ -69,6 +70,13 @@ const MemberTable = ({
     }
   };
 
+  const finalFilteredData = filteredData.filter((member: any) => {
+    if (selectedPackage === 'All') return true;
+    if (selectedPackage === '999') return member.package_value == 999 || (member.spackage && member.spackage.toString().includes('999'));
+    if (selectedPackage === '5000') return member.package_value == 5000 || (member.spackage && member.spackage.toString().includes('5000'));
+    return true;
+  });
+
   return (
     <>
       <Grid className="filter-container" sx={{ margin: '2rem', mt: 12 }}>
@@ -78,6 +86,18 @@ const MemberTable = ({
         <Grid className="filter-actions" >
           <MuiDatePicker date={fromDate} setDate={setFromDate} label="From Date" />
           <MuiDatePicker date={toDate} setDate={setToDate} label="To Date" />
+          <TextField
+            select
+            label="Package"
+            value={selectedPackage}
+            onChange={(e) => setSelectedPackage(e.target.value)}
+            size="small"
+            sx={{ minWidth: 150, backgroundColor: '#fff', borderRadius: '4px' }}
+          >
+            <MenuItem value="All">All Packages</MenuItem>
+            <MenuItem value="5000">5000 Package</MenuItem>
+            <MenuItem value="999">999 Package</MenuItem>
+          </TextField>
           <Button
             variant="contained"
             sx={{
@@ -114,7 +134,7 @@ const MemberTable = ({
               </div>
               <DataTable
                 columns={getColumns()}
-                data={filteredData}
+                data={finalFilteredData}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}

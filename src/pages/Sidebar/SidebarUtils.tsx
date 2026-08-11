@@ -278,9 +278,15 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
 
 
   {
-    name: "Payout Processing",
+    name: "Payouts (5000)",
     icon: <CreditCardIcon />,
-    path: "/admin/payout",
+    path: "/admin/payout/5000",
+    isExpandable: false,
+  },
+  {
+    name: "Payouts (999)",
+    icon: <CreditCardIcon />,
+    path: "/admin/payout/999",
     isExpandable: false,
   },
   /* {

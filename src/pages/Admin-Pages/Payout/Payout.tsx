@@ -21,6 +21,7 @@ import {
   Divider
 } from "@mui/material";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import "./Payout.scss";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
@@ -35,6 +36,9 @@ interface PayoutTableProps {
 }
 
 const Payout = () => {
+  const { packageValue } = useParams();
+  const packageFilter = packageValue ? parseInt(packageValue) : undefined;
+  
   const [value, setValue] = useState(0);
 
   const handleChange = (_e: any, newValue: any) => {
@@ -44,11 +48,11 @@ const Payout = () => {
   const renderContent = () => {
     switch (value) {
       case 0:
-        return <Payables tabTitle={"Payables"} />;
+        return <Payables tabTitle={"Payables"} packageFilter={packageFilter} />;
       case 1:
-        return <Requests tabTitle={"Withdrawal Requests"} />;
+        return <Requests tabTitle={"Withdrawal Requests"} packageFilter={packageFilter} />;
       case 2:
-        return <Proccessed tabTitle={"Processed Withdrawals"} />;
+        return <Proccessed tabTitle={"Processed Withdrawals"} packageFilter={packageFilter} />;
     }
   };
 
@@ -126,12 +130,12 @@ const PayoutTable = ({ data, columns, tabTitle, loading }: PayoutTableProps) => 
   );
 };
 
-export const Requests = ({ tabTitle }: { tabTitle: any }) => {
+export const Requests = ({ tabTitle, packageFilter }: { tabTitle: any, packageFilter?: number }) => {
   const { data: pending = [], isFetching } = useGetPendingWithdrawals();
   const { mutate: approveTransaction, isPending } = useApproveWithdrawal();
 
   // Filter only withdrawal requests
-  const withdrawalRequests = pending?.filter((transaction: any) => {
+  let withdrawalRequests = pending?.filter((transaction: any) => {
     const transactionType = String(transaction.transaction_type || '').toLowerCase();
     const description = String(transaction.description || '').toLowerCase();
     
@@ -141,6 +145,14 @@ export const Requests = ({ tabTitle }: { tabTitle: any }) => {
       description.includes('withdrawal')
     );
   }) || [];
+
+  if (packageFilter) {
+    withdrawalRequests = withdrawalRequests.filter((transaction: any) => {
+      const member = transaction.memberDetails;
+      if (!member) return false;
+      return member.package_value == packageFilter || (member.spackage && member.spackage.toString().includes(packageFilter.toString()));
+    });
+  }
 
   return (
     <PayoutTable
@@ -152,11 +164,11 @@ export const Requests = ({ tabTitle }: { tabTitle: any }) => {
   );
 };
 
-export const Proccessed = ({ tabTitle }: { tabTitle: any }) => {
+export const Proccessed = ({ tabTitle, packageFilter }: { tabTitle: any, packageFilter?: number }) => {
   const { data: Approved, isFetching } = useGetApprovedWithdrawals();
 
   // Filter only processed withdrawals (excluding level/direct benefits)
-  const filteredData = Approved?.filter((transaction: any) => {
+  let filteredData = Approved?.filter((transaction: any) => {
     const description = String(transaction.description || '').toLowerCase();
     const transactionType = String(transaction.transaction_type || '').toLowerCase();
     
@@ -181,6 +193,14 @@ export const Proccessed = ({ tabTitle }: { tabTitle: any }) => {
     return isWithdrawal && !isLevelBenefits && !isDirectBenefits;
   }) || [];
 
+  if (packageFilter) {
+    filteredData = filteredData.filter((transaction: any) => {
+      const member = transaction.memberDetails;
+      if (!member) return false;
+      return member.package_value == packageFilter || (member.spackage && member.spackage.toString().includes(packageFilter.toString()));
+    });
+  }
+
   return (
     <PayoutTable
       data={filteredData}
@@ -191,7 +211,7 @@ export const Proccessed = ({ tabTitle }: { tabTitle: any }) => {
   );
 };
 
-export const Payables = ({ tabTitle }: { tabTitle: any }) => {
+export const Payables = ({ tabTitle, packageFilter }: { tabTitle: any, packageFilter?: number }) => {
   const { data: payablesList, isFetching } = useGetPayables();
   const { mutate: processPayout, isPending } = useProcessAdminPayout();
 
@@ -233,10 +253,17 @@ export const Payables = ({ tabTitle }: { tabTitle: any }) => {
     );
   };
 
+  let finalData = payablesList || [];
+  if (packageFilter) {
+    finalData = finalData.filter((member: any) => 
+      member.package_value == packageFilter || (member.spackage && member.spackage.toString().includes(packageFilter.toString()))
+    );
+  }
+
   return (
     <>
       <PayoutTable
-        data={payablesList || []}
+        data={finalData}
         columns={getPayablesColumns(handlePayNow)}
         tabTitle={tabTitle}
         loading={isFetching}
