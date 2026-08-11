@@ -9,8 +9,10 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => { 
+  const navigate = useNavigate(); 
   const { data: members = [], isLoading: membersLoading, error: membersError } = useGetAllMembersDetails();
   const { data: transactionsData, isLoading: transactionsLoading } = useGetTransactionDetails("all");
   const transactions = transactionsData?.data || [];
@@ -213,6 +215,7 @@ const pendingMembers = members.filter((member: any) =>
             title="Total Members" 
             subTitle={`${totalMembers} members in total`} 
             IconComponent={PersonIcon} 
+            onClick={() => navigate('/admin/members')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -221,6 +224,7 @@ const pendingMembers = members.filter((member: any) =>
             title="Active Members" 
             subTitle={`${activeMembers} active members`} 
             IconComponent={PersonIcon} 
+            onClick={() => navigate('/admin/members/active')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -229,6 +233,7 @@ const pendingMembers = members.filter((member: any) =>
             title="Pending Members" 
             subTitle={`${pendingMembers} pending activation`} 
             IconComponent={PersonIcon} 
+            onClick={() => navigate('/admin/members/pending')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -237,6 +242,7 @@ const pendingMembers = members.filter((member: any) =>
             title="Total Daily Incentive" 
             subTitle={`₹${totalDailyIncentive.toFixed(2)} distributed`} 
             IconComponent={PersonIcon} 
+            onClick={() => navigate('/admin/income/daily-incentive')}
           />
         </Grid>
       </Grid>
