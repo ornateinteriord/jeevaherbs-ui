@@ -499,38 +499,101 @@ const UserDashboard = () => {
   const firstLetter = memberName ? memberName.charAt(0).toUpperCase() : 'M';
 
   // Dynamic Theme based on Package
-  const is999 = memberDetails?.package_value == 999;
+  const is999 = memberDetails?.package_value == 999 || memberDetails?.spackage == 999 || memberDetails?.spackage?.toString().includes('999');
+  const is5000 = memberDetails?.package_value == 5000 || memberDetails?.spackage == 5000 || memberDetails?.spackage?.toString().includes('5000');
   
   // Profile Header Theme
-  const profileBackground = is999
-    ? '#d97706' // Light brown
-    : 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)';
-  const profileBoxShadow = is999
-    ? '0 8px 32px rgba(217, 119, 6, 0.4)'
-    : '0 8px 32px rgba(99, 102, 241, 0.4)';
+  const profileBackground = is5000
+    ? 'linear-gradient(135deg, #111111 0%, #ff6600 100%)' // Black to Orange Gradient
+    : is999
+      ? 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)' // Navy Blue
+      : 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)';
+  const profileBoxShadow = is5000
+    ? '0 8px 32px rgba(255, 102, 0, 0.4)'
+    : is999
+      ? '0 8px 32px rgba(30, 58, 138, 0.4)'
+      : '0 8px 32px rgba(99, 102, 241, 0.4)';
 
   // My Transactions Theme
-  const txBackground = is999
-    ? '#b45309' // Slightly darker brown for contrast
-    : 'linear-gradient(135deg, #2c8786 0%, #1d5958 100%)';
-  const txBorder = is999
-    ? '1px solid #92400e'
-    : '1px solid #1f5e5d';
-  const txBoxShadow = is999
-    ? '0 8px 25px rgba(180, 83, 9, 0.3)'
-    : '0 8px 25px rgba(44, 135, 134, 0.3)';
+  const txBackground = is5000
+    ? 'linear-gradient(135deg, #0a0a0a 0%, #2a1100 100%)' // Dark Black-Orange for contrast
+    : is999
+      ? 'linear-gradient(135deg, #1e3a8a 0%, #172554 100%)' // Darker navy for contrast
+      : 'linear-gradient(135deg, #2c8786 0%, #1d5958 100%)';
+  const txBorder = is5000
+    ? '1px solid #ff6600'
+    : is999
+      ? '1px solid #1e3a8a'
+      : '1px solid #1f5e5d';
+  const txBoxShadow = is5000
+    ? '0 8px 25px rgba(255, 102, 0, 0.2)'
+    : is999
+      ? '0 8px 25px rgba(30, 58, 138, 0.3)'
+      : '0 8px 25px rgba(44, 135, 134, 0.3)';
 
   // Badge Themes (KYC and Package)
-  const kycBg = is999 ? 'rgba(255, 255, 255, 0.2)' : 'rgba(239, 68, 68, 0.2)';
-  const kycBorder = is999 ? '1px solid rgba(255,255,255,0.6)' : '1px solid #ef4444';
-  const kycColor = is999 ? '#ffffff' : '#fca5a5';
+  const kycBg = is5000 ? 'rgba(255, 255, 255, 0.15)' : is999 ? 'rgba(255, 255, 255, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+  const kycBorder = is5000 ? '1px solid #ffffff' : is999 ? '1px solid rgba(255,255,255,0.6)' : '1px solid #ef4444';
+  const kycColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#fca5a5';
 
-  const pkgBg = is999 ? 'rgba(255, 255, 255, 0.25)' : 'rgba(74, 222, 128, 0.2)';
-  const pkgBorder = is999 ? '1px solid #ffffff' : '1px solid #4ade80';
-  const pkgColor = is999 ? '#ffffff' : '#86efac';
+  const pkgBg = is5000 ? 'rgba(255, 255, 255, 0.15)' : is999 ? 'rgba(255, 255, 255, 0.25)' : 'rgba(74, 222, 128, 0.2)';
+  const pkgBorder = is5000 ? '1px solid #ffffff' : is999 ? '1px solid #ffffff' : '1px solid #4ade80';
+  const pkgColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#86efac';
+
+  // Earnings/Withdrawals Card Themes
+  const earnBg = is5000 ? 'linear-gradient(135deg, #111111 0%, #441a00 100%)' : is999 ? 'linear-gradient(135deg, #091221 0%, #172a50 100%)' : 'linear-gradient(135deg, #e6fcf5 0%, #b2f5ea 100%)';
+  const earnBorder = is5000 ? '1px solid #ff6600' : is999 ? '1px solid #3b82f6' : '1px solid #38b2ac';
+  const earnShadow = is5000 ? '0 4px 15px rgba(255, 102, 0, 0.2)' : is999 ? '0 4px 15px rgba(59, 130, 246, 0.2)' : '0 4px 15px rgba(56, 178, 172, 0.15)';
+  const earnHoverShadow = is5000 ? '0 6px 20px rgba(255, 102, 0, 0.5)' : is999 ? '0 6px 20px rgba(59, 130, 246, 0.4)' : '0 6px 20px rgba(16, 185, 129, 0.4)';
+  const earnValueColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#2c7a7b';
+  const earnLabelColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#285e61';
+
+  const withBg = is5000 ? 'linear-gradient(135deg, #441a00 0%, #111111 100%)' : is999 ? 'linear-gradient(135deg, #172a50 0%, #091221 100%)' : 'linear-gradient(135deg, #fffaf0 0%, #feebc8 100%)';
+  const withBorder = is5000 ? '1px solid #ff6600' : is999 ? '1px solid #3b82f6' : '1px solid #ed8936';
+  const withShadow = is5000 ? '0 4px 15px rgba(255, 102, 0, 0.2)' : is999 ? '0 4px 15px rgba(59, 130, 246, 0.2)' : '0 4px 15px rgba(237, 137, 54, 0.15)';
+  const withHoverShadow = is5000 ? '0 6px 20px rgba(255, 102, 0, 0.5)' : is999 ? '0 6px 20px rgba(59, 130, 246, 0.4)' : '0 6px 20px rgba(249, 115, 22, 0.4)';
+  const withValueColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#c05621';
+  const withLabelColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#9c4221';
+
+  // Payment Cycle Theme
+  const cycleBg = is5000 ? 'linear-gradient(90deg, #111111 0%, #2a1100 50%, #111111 100%)' : is999 ? 'linear-gradient(90deg, #091221 0%, #172a50 50%, #091221 100%)' : 'linear-gradient(90deg, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%)';
+  const cycleBorder = is5000 ? '1px solid #ff6600' : is999 ? '1px solid #3b82f6' : '1px solid #86efac';
+  const cycleTextColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#166534';
+  const cycleHighlightColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#14532d';
+
+  // My Team Theme
+  const teamBg = is5000 ? '#0a0a0a' : is999 ? '#091221' : '#fff';
+  const teamBorder = is5000 ? '1px solid #ff6600' : is999 ? '1px solid #1e3a8a' : '1px solid #e2e8f0';
+  const teamTitleColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#2c8786';
+  const teamCardBg = is5000 ? 'linear-gradient(135deg, #111111 0%, #331c00 100%)' : is999 ? 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)' : '#f8fafc';
+  const teamCardValueColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#1e293b';
+  const teamCardLabelColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#64748b';
+
+  // Referral Theme
+  const refBg = is5000 ? '#111111' : is999 ? '#091221' : '#f8f5ff9b';
+  const refBorder = is5000 ? '1px solid #ff6600' : is999 ? '1px solid #3b82f6' : '1px solid #e9d5ff';
+  const refTitleColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#2c8786';
+  const refShadow = is5000 ? '0 2px 8px rgba(255, 102, 0, 0.15)' : is999 ? '0 2px 8px rgba(59, 130, 246, 0.2)' : '0 2px 8px rgba(44, 135, 134, 0.10)';
+  const refLinkColor = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#2c8786';
+  const refBtnBg = is5000 ? '#ff6600' : is999 ? '#3b82f6' : '#2c8786';
+  const refBtnHover = is5000 ? '#cc5200' : is999 ? '#2563eb' : '#236d6c';
+  const refBtnOutBg = is5000 ? '#331c00' : is999 ? '#1e3a8a' : '#f3e8ff';
+
+  // Grid Dashboard Cards
+  const gridCardBlue = is5000 ? 'linear-gradient(135deg, #111111 0%, #ff6600 100%)' : is999 ? 'linear-gradient(135deg, #091221 0%, #1e3a8a 100%)' : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+  const gridCardOrange = is5000 ? 'linear-gradient(135deg, #ff6600 0%, #111111 100%)' : is999 ? 'linear-gradient(135deg, #1e3a8a 0%, #091221 100%)' : 'linear-gradient(135deg, #fb923c 0%, #f97316 100%)';
+  
+  // TopUp Card
+  const topUpCardBg = is5000 ? 'linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(68, 26, 0, 0.8) 100%)' : is999 ? 'linear-gradient(135deg, rgba(9, 18, 33, 0.8) 0%, rgba(30, 58, 138, 0.8) 100%)' : 'linear-gradient(135deg, rgba(230, 245, 245, 0.8) 0%, rgba(200, 235, 235, 0.8) 100%)';
+  const topUpCardText = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#1e293b';
+  const topUpCardBorder = is5000 ? '1px solid rgba(255, 102, 0, 0.3)' : is999 ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid rgba(44, 135, 134, 0.3)';
+  const topUpCardValue = is5000 ? '#ffffff' : is999 ? '#ffffff' : '#2c8786';
+  const topUpBtnColor = is5000 ? '#ff6600' : is999 ? '#60a5fa' : '#2c8786';
+  const topUpBtnHover = is5000 ? '#ff8c00' : is999 ? '#93c5fd' : '#236d6c';
+  const topUpBtnBg = is5000 ? '#ff6600' : is999 ? '#3b82f6' : '#2c8786';
 
   return (
-    <>
+    <Box sx={{ minHeight: '100vh', bgcolor: is5000 ? '#050505' : is999 ? '#020617' : 'transparent', transition: 'background-color 0.3s ease' }}>
       {/* Payment verification loading overlay */}
       {isVerifyingPayment && (
         <Box
@@ -572,8 +635,9 @@ const UserDashboard = () => {
             position: 'relative', 
             overflow: 'hidden',
             borderRadius: 3,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            backgroundColor: '#ffffff'
+            boxShadow: is5000 ? '0 4px 12px rgba(255, 102, 0, 0.2)' : is999 ? '0 4px 12px rgba(30, 58, 138, 0.2)' : '0 4px 12px rgba(0,0,0,0.1)',
+            backgroundColor: is5000 ? '#111111' : is999 ? '#0f172a' : '#ffffff',
+            border: is5000 ? '1px solid #ff6600' : is999 ? '1px solid #1e3a8a' : 'none'
           }}
         >
           {slideImages.map((img, index) => (
@@ -624,8 +688,9 @@ const UserDashboard = () => {
             position: 'relative', 
             overflow: 'hidden',
             borderRadius: 3,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            backgroundColor: '#000',
+            boxShadow: is5000 ? '0 4px 12px rgba(255, 102, 0, 0.2)' : is999 ? '0 4px 12px rgba(30, 58, 138, 0.2)' : '0 4px 12px rgba(0,0,0,0.1)',
+            backgroundColor: is5000 ? '#111111' : is999 ? '#0f172a' : '#000',
+            border: is5000 ? '1px solid #ff6600' : is999 ? '1px solid #1e3a8a' : 'none',
             cursor: 'pointer'
           }}
         >
@@ -958,7 +1023,7 @@ const UserDashboard = () => {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: memberDetails?.status?.toLowerCase() === 'active' ? '#4ade80' : '#f87171',
+                      color: is5000 || is999 ? '#ffffff' : (memberDetails?.status?.toLowerCase() === 'active' ? '#4ade80' : '#f87171'),
                       fontSize: { xs: '1rem', md: '1.1rem' },
                       fontWeight: 'bold',
                       mt: 0.5,
@@ -967,7 +1032,8 @@ const UserDashboard = () => {
                   >
                     Status: {memberDetails?.status || 'Unknown'}
                   </Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1, justifyContent: { xs: 'center', md: 'flex-start' } }}>
+                  
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1, justifyContent: { xs: 'start', md: 'flex-start' } }}>
                     {memberDetails?.kycStatus !== 'APPROVED' && (
                       <Box 
                         onClick={() => navigate('/user/account/kyc')}
@@ -1014,8 +1080,7 @@ const UserDashboard = () => {
                   </Box>
                 </Box>
               </Box>
-
-              </Box>
+            </Box>
 
           {/* Show status button when Processing or Approved, otherwise show Claim Reward if eligible */}
           {hasProcessingOrApprovedStatus ? (
@@ -1112,9 +1177,9 @@ const UserDashboard = () => {
                 onClick={() => navigate('/user/earnings')}
                 sx={{
                   textAlign: 'center',
-                  background: 'linear-gradient(135deg, #e6fcf5 0%, #b2f5ea 100%)',
-                  border: '1px solid #38b2ac',
-                  boxShadow: '0 4px 15px rgba(56, 178, 172, 0.15)',
+                  background: earnBg,
+                  border: earnBorder,
+                  boxShadow: earnShadow,
                   backdropFilter: 'blur(10px)',
                   borderRadius: '16px',
                   px: { xs: 2, sm: 3 },
@@ -1124,7 +1189,7 @@ const UserDashboard = () => {
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
+                    boxShadow: earnHoverShadow,
                   }
                 }}
               >
@@ -1134,13 +1199,13 @@ const UserDashboard = () => {
                     fontSize: { xs: '1.2rem', md: '1.6rem' },
                     fontWeight: 'bold',
                     mb: 0.3,
-                    color: '#2c7a7b'
+                    color: earnValueColor
                   }}
                 >
                   {loading ? '₹0' : totalEarningsAmount}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Typography variant="caption" sx={{ color: '#285e61', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
+                  <Typography variant="caption" sx={{ color: earnLabelColor, fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
                     Earnings
                   </Typography>
                 </Box>
@@ -1151,9 +1216,9 @@ const UserDashboard = () => {
                 onClick={() => navigate('/user/withdrawals')}
                 sx={{
                   textAlign: 'center',
-                  background: 'linear-gradient(135deg, #fffaf0 0%, #feebc8 100%)',
-                  border: '1px solid #ed8936',
-                  boxShadow: '0 4px 15px rgba(237, 137, 54, 0.15)',
+                  background: withBg,
+                  border: withBorder,
+                  boxShadow: withShadow,
                   backdropFilter: 'blur(10px)',
                   borderRadius: '16px',
                   px: { xs: 2, sm: 3 },
@@ -1163,7 +1228,7 @@ const UserDashboard = () => {
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 20px rgba(249, 115, 22, 0.4)',
+                    boxShadow: withHoverShadow,
                   }
                 }}
               >
@@ -1173,13 +1238,13 @@ const UserDashboard = () => {
                     fontSize: { xs: '1.2rem', md: '1.6rem' },
                     fontWeight: 'bold',
                     mb: 0.3,
-                    color: '#c05621'
+                    color: withValueColor
                   }}
                 >
                   {loading ? '₹0' : totalWithdrawsAmount}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Typography variant="caption" sx={{ color: '#9c4221', fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
+                  <Typography variant="caption" sx={{ color: withLabelColor, fontWeight: 600, letterSpacing: 0.5, fontSize: { xs: '0.65rem', sm: '0.7rem' }, textTransform: 'uppercase' }}>
                     Withdrawals
                   </Typography>
                 </Box>
@@ -1191,8 +1256,8 @@ const UserDashboard = () => {
             <Box sx={{ 
               mt: {xs: 1, md: 3}, 
               width: '100%',
-              background: 'linear-gradient(90deg, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%)',
-              border: '1px solid #86efac',
+              background: cycleBg,
+              border: cycleBorder,
               borderRadius: '12px',
               p: 1.5,
               display: 'flex',
@@ -1210,12 +1275,12 @@ const UserDashboard = () => {
                 boxShadow: '0 0 10px #34d399'
               }} />
               <Typography variant="body1" sx={{ 
-                color: '#166534', 
+                color: cycleTextColor, 
                 fontWeight: '500',
                 letterSpacing: 0.5,
                 fontSize: { xs: '0.9rem', md: '1rem' }
               }}>
-                Your next payment cycle on <span style={{ color: '#14532d', fontWeight: '800', marginLeft: '4px' }}>
+                Your next payment cycle on <span style={{ color: cycleHighlightColor, fontWeight: '800', marginLeft: '4px' }}>
                 {(() => {
                   const baseDateStr = memberDetails?.activationDate || memberDetails?.activation_date || memberDetails?.createdAt || memberDetails?.created_at;
                   
@@ -1271,9 +1336,9 @@ const UserDashboard = () => {
           mt: 3,
           mb: 2,
           p: 2,
-          backgroundColor: '#fff',
+          backgroundColor: teamBg,
           borderRadius: 2,
-          border: '1px solid #e2e8f0',
+          border: teamBorder,
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
         }}
       >
@@ -1281,7 +1346,7 @@ const UserDashboard = () => {
           variant="h6"
           sx={{
             mb: 2,
-            color: '#2c8786',
+            color: teamTitleColor,
             fontWeight: 'bold',
             textAlign: 'center'
           }}
@@ -1301,15 +1366,15 @@ const UserDashboard = () => {
               flex: 1,
               textAlign: 'center',
               p: { xs: 1.5, sm: 2 },
-              backgroundColor: '#f8fafc',
+              background: teamCardBg,
               borderRadius: 2,
-              border: '1px solid #e2e8f0'
+              border: teamBorder
             }}
           >
-            <Typography variant="h4" sx={{ color: '#1e293b', fontWeight: 'bold', fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
+            <Typography variant="h4" sx={{ color: teamCardValueColor, fontWeight: 'bold', fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
               {memberDetails ? (memberDetails.registration_stats?.direct ?? memberDetails.direct_referrals?.length ?? 0) : '—'}
             </Typography>
-            <Typography variant="body1" sx={{ color: '#64748b', fontSize: { xs: '0.85rem', sm: '1rem' } }}>
+            <Typography variant="body1" sx={{ color: teamCardLabelColor, fontSize: { xs: '0.85rem', sm: '1rem' } }}>
               Direct Team
             </Typography>
           </Box>
@@ -1318,15 +1383,15 @@ const UserDashboard = () => {
               flex: 1,
               textAlign: 'center',
               p: { xs: 1.5, sm: 2 },
-              backgroundColor: '#f8fafc',
+              background: teamCardBg,
               borderRadius: 2,
-              border: '1px solid #e2e8f0'
+              border: teamBorder
             }}
           >
-            <Typography variant="h4" sx={{ color: '#1e293b', fontWeight: 'bold', fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
+            <Typography variant="h4" sx={{ color: teamCardValueColor, fontWeight: 'bold', fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
               {memberDetails ? (memberDetails.registration_stats?.total ?? memberDetails.total_team ?? 0) : '—'}
             </Typography>
-            <Typography variant="body1" sx={{ color: '#64748b', fontSize: { xs: '0.85rem', sm: '1rem' } }}>
+            <Typography variant="body1" sx={{ color: teamCardLabelColor, fontSize: { xs: '0.85rem', sm: '1rem' } }}>
               Total Team
             </Typography>
           </Box>
@@ -1339,17 +1404,17 @@ const UserDashboard = () => {
           mx: { xs: 2, sm: 3, md: 4 },
           my: 1.5,
           p: 2,
-          backgroundColor: '#f8f5ff9b',
+          background: refBg,
           borderRadius: 2,
-          border: '1px solid #e9d5ff',
-          boxShadow: '0 2px 8px rgba(44, 135, 134, 0.10)',
+          border: refBorder,
+          boxShadow: refShadow,
         }}
       >
         <Typography
           variant="h6"
           sx={{
             mb: 1,
-            color: '#2c8786',
+            color: refTitleColor,
             fontWeight: 'bold',
             textAlign: 'center'
           }}
@@ -1378,16 +1443,16 @@ const UserDashboard = () => {
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: '#2c8786',
+                color: refLinkColor,
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'underline',
                 },
                 display: 'block',
                 p: 1.5,
-                backgroundColor: 'white',
+                backgroundColor: is5000 ? '#000000' : is999 ? '#091221' : 'white',
                 borderRadius: 1,
-                border: '1px solid #d8b4fe',
+                border: refBorder,
                 wordBreak: 'break-all',
                 textAlign: 'center',
                 fontSize: { xs: '0.8rem', sm: '0.9rem' }
@@ -1396,7 +1461,7 @@ const UserDashboard = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#2c8786',
+                  color: refLinkColor,
                   fontWeight: 'medium',
                 }}
               >
@@ -1423,10 +1488,10 @@ const UserDashboard = () => {
               onClick={handleCopyReferralLink}
               disabled={!memberDetails?.Member_id}
               sx={{
-                backgroundColor: '#2c8786',
+                backgroundColor: refBtnBg,
                 color: 'white',
                 '&:hover': {
-                  backgroundColor: '#236d6c',
+                  backgroundColor: refBtnHover,
                 },
                 fontWeight: 'bold',
                 textTransform: 'none',
@@ -1442,11 +1507,11 @@ const UserDashboard = () => {
               onClick={handleShareReferralLink}
               disabled={!memberDetails?.Member_id}
               sx={{
-                borderColor: '#2c8786',
-                color: '#2c8786',
+                borderColor: refBtnBg,
+                color: refBtnBg,
                 '&:hover': {
-                  backgroundColor: '#f3e8ff',
-                  borderColor: '#236d6c',
+                  backgroundColor: refBtnOutBg,
+                  borderColor: refBtnHover,
                 },
                 fontWeight: 'bold',
                 textTransform: 'none',
@@ -1491,10 +1556,10 @@ const UserDashboard = () => {
           <Card
             onClick={() => navigate('/user/topup-wallet')}
             sx={{
-              background: 'linear-gradient(135deg, rgba(230, 245, 245, 0.8) 0%, rgba(200, 235, 235, 0.8) 100%)',
-              color: '#1e293b',
+              background: topUpCardBg,
+              color: topUpCardText,
               backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(44, 135, 134, 0.3)',
+              border: topUpCardBorder,
               borderRadius: '24px',
               padding: { xs: '6px', sm: '8px' },
               display: 'flex',
@@ -1517,7 +1582,7 @@ const UserDashboard = () => {
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
                 Top Up Wallet
               </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: { xs: '1.3rem', sm: '1.5rem' }, color: '#2c8786' }}>
+              <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: { xs: '1.3rem', sm: '1.5rem' }, color: topUpCardValue }}>
                 ₹{memberDetails?.top_up_wallet_balance?.toFixed(2) || '0.00'}
               </Typography>
             </CardContent>
@@ -1529,9 +1594,9 @@ const UserDashboard = () => {
                   navigate('/user/wallet-transfer');
                 }}
                 sx={{
-                  borderColor: '#2c8786',
-                  color: '#2c8786',
-                  '&:hover': { backgroundColor: 'rgba(44, 135, 134, 0.1)', borderColor: '#236d6c' },
+                  borderColor: topUpBtnColor,
+                  color: topUpBtnColor,
+                  '&:hover': { backgroundColor: is5000 ? 'rgba(255,102,0,0.1)' : is999 ? 'rgba(147, 197, 253, 0.1)' : 'rgba(44, 135, 134, 0.1)', borderColor: topUpBtnHover },
                   fontWeight: 'bold',
                   textTransform: 'none',
                   borderRadius: 2,
@@ -1548,9 +1613,9 @@ const UserDashboard = () => {
                   setTopUpDialogOpen(true);
                 }}
                 sx={{
-                  backgroundColor: '#2c8786',
-                  color: '#fff',
-                  '&:hover': { backgroundColor: '#236d6c' },
+                  backgroundColor: topUpBtnBg,
+                  color: is999 ? '#ffffff' : '#fff',
+                  '&:hover': { backgroundColor: topUpBtnHover },
                   fontWeight: 'bold',
                   textTransform: 'none',
                   borderRadius: 2,
@@ -1565,22 +1630,22 @@ const UserDashboard = () => {
         </Grid>
 
         <Grid item xs={6} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
+          <DashboardCard onClick={() => navigate('/user/income/direct')} amount={loading ? 0 : directBenefitsAmount} title="Direct Income" background={gridCardBlue} />
         </Grid>
         <Grid item xs={6} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
+          <DashboardCard onClick={() => navigate('/user/income/level')} amount={loading ? 0 : levelBenefitsAmount} title="Level Income" background={gridCardBlue} />
         </Grid>
         <Grid item xs={6} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-roi')} amount={loading ? 0 : dailyRoiAmount} title="Cash Back" background={gridCardBlue} />
         </Grid>
         <Grid item xs={6} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
+          <DashboardCard onClick={() => navigate('/user/income/daily-incentive')} amount={loading ? 0 : dailyIncentiveAmount} title="Daily Incentive" background={gridCardBlue} />
         </Grid>
         <Grid item xs={6} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" />
+          <DashboardCard onClick={() => navigate('/user/income/global')} amount={loading ? 0 : globalIncomeAmount} title="Rewards" background={gridCardBlue} />
         </Grid>
         <Grid item xs={6} sm={6} md={4}>
-          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background="linear-gradient(135deg, #fb923c 0%, #f97316 100%)" />
+          <DashboardCard onClick={() => navigate('/user/wallet')} amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" background={gridCardOrange} />
         </Grid>
 
         {isLoanApproved && (
@@ -1590,7 +1655,7 @@ const UserDashboard = () => {
               dueAmount={dueAmount}
               title="Loan Amount"
               type="loan"
-              background="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)"
+              background={gridCardBlue}
               onRepay={handleRepayClick}
               isRepayEnabled={isRepayEnabled}
               alreadyRepaidToday={alreadyRepaidToday}
@@ -2041,7 +2106,7 @@ const UserDashboard = () => {
           </CardContent>
         </Card>
       </Box> */}
-    </>
+    </Box>
   );
 }
 
