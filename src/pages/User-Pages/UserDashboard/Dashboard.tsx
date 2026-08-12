@@ -710,6 +710,143 @@ const UserDashboard = () => {
         </Box>
       </Box>
 
+      {/* Re-top up button for 5000 package after 100 days ROI */}
+      {walletOverview?.reTopUp?.is5000Required && (
+        <Box 
+          sx={{ 
+            mt: 3, 
+            width: '100%', 
+            display: 'flex',
+            justifyContent: 'center',
+            px: { xs: 2, sm: 3, md: 4 }
+          }}
+        >
+          <Box 
+            sx={{
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              background: 'linear-gradient(135deg, #ffffff 0%, #fff5eb 100%)',
+              border: '1px solid #ffd8a8',
+              borderRadius: '16px',
+              p: { xs: 2.5, sm: 3 },
+              width: '100%',
+              boxShadow: '0 8px 32px rgba(255, 140, 0, 0.15)'
+            }}
+          >
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: '#d97706', 
+                mb: 2, 
+                textAlign: 'center', 
+                fontWeight: 'bold',
+                fontSize: { xs: '1rem', sm: '1.15rem' },
+                lineHeight: 1.3
+              }}
+            >
+              ROI Cycle Complete. Re-Top Up to Keep Earning!
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() => navigate('/user/activation')}
+              sx={{
+                fontWeight: 'bold',
+                px: { xs: 4, md: 6 },
+                py: 1.5,
+                borderRadius: '12px',
+                textTransform: 'uppercase',
+                fontSize: { xs: '0.9rem', md: '1rem' },
+                background: 'linear-gradient(45deg, #FF8C00 30%, #FFB75E 90%)',
+                color: '#fff',
+                boxShadow: '0 4px 14px rgba(255, 140, 0, 0.5)',
+                animation: 'pulse 2s infinite',
+                '@keyframes pulse': {
+                  '0%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(255, 140, 0, 0.7)' },
+                  '70%': { transform: 'scale(1.05)', boxShadow: '0 0 0 10px rgba(255, 140, 0, 0)' },
+                  '100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(255, 140, 0, 0)' }
+                },
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                  background: 'linear-gradient(45deg, #e67e22 30%, #f39c12 90%)'
+                }
+              }}
+            >
+              Re-Top Up
+            </Button>
+          </Box>
+        </Box>
+      )}
+
+      {/* Re-top up button for 999 package based on earning limits and directs */}
+      {walletOverview?.reTopUp?.is999Required && (
+        <Box 
+          sx={{ 
+            mt: 3, 
+            width: '100%', 
+            display: 'flex',
+            justifyContent: 'center',
+            px: { xs: 2, sm: 3, md: 4 }
+          }}
+        >
+          <Box 
+            sx={{
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              background: 'linear-gradient(135deg, #ffffff 0%, #fff5eb 100%)',
+              border: '1px solid #ffd8a8',
+              borderRadius: '16px',
+              p: { xs: 2.5, sm: 3 },
+              width: '100%',
+              maxWidth: '600px',
+              boxShadow: '0 8px 32px rgba(255, 140, 0, 0.15)'
+            }}
+          >
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: '#d97706', 
+                mb: 2, 
+                textAlign: 'center', 
+                fontWeight: 'bold',
+                fontSize: { xs: '1rem', sm: '1.15rem' },
+                lineHeight: 1.3
+              }}
+            >
+              Earnings Limit Reached. Re-Top Up to Keep Earning!
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() => navigate('/user/activation')}
+              sx={{
+                fontWeight: 'bold',
+                px: { xs: 4, md: 6 },
+                py: 1.5,
+                borderRadius: '12px',
+                textTransform: 'uppercase',
+                fontSize: { xs: '0.9rem', md: '1rem' },
+                background: 'linear-gradient(45deg, #FF8C00 30%, #FFB75E 90%)',
+                color: '#fff',
+                boxShadow: '0 4px 14px rgba(255, 140, 0, 0.5)',
+                animation: 'pulse 2s infinite',
+                '@keyframes pulse': {
+                  '0%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(255, 140, 0, 0.7)' },
+                  '70%': { transform: 'scale(1.05)', boxShadow: '0 0 0 10px rgba(255, 140, 0, 0)' },
+                  '100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(255, 140, 0, 0)' }
+                },
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                  background: 'linear-gradient(45deg, #e67e22 30%, #f39c12 90%)'
+                }
+              }}
+            >
+              Re-Top Up
+            </Button>
+          </Box>
+        </Box>
+      )}
+
       <Box
         sx={{
           minHeight: { xs: 'auto', md: '140px' },

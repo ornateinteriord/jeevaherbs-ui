@@ -291,6 +291,22 @@ export const Payables = ({ tabTitle, packageFilter }: { tabTitle: any, packageFi
                 <Typography variant="body2" fontWeight="500">₹{selectedMember.totalPaid?.toLocaleString() || 0}</Typography>
               </Box>
               <Divider />
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="textSecondary">Last Payout Amount:</Typography>
+                <Typography variant="body2" fontWeight="500">
+                  {selectedMember.lastPayoutAmount ? `₹${selectedMember.lastPayoutAmount.toLocaleString()}` : 'N/A'}
+                </Typography>
+              </Box>
+              <Divider />
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="textSecondary">Last Payout Date:</Typography>
+                <Typography variant="body2" fontWeight="500">
+                  {selectedMember.lastPayoutDate ? new Date(selectedMember.lastPayoutDate).toLocaleDateString() : 'N/A'}
+                </Typography>
+              </Box>
+              <Divider />
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="body2" color="textSecondary">Direct Referrals:</Typography>
