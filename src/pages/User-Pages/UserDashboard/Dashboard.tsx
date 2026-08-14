@@ -593,7 +593,7 @@ const UserDashboard = () => {
   const topUpBtnBg = is5000 ? '#ff6600' : is999 ? '#3b82f6' : '#2c8786';
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: is5000 ? '#050505' : is999 ? '#020617' : 'transparent', transition: 'background-color 0.3s ease' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: is5000 ? '#effff' : is999 ? '#020617' : 'transparent', transition: 'background-color 0.3s ease' }}>
       {/* Payment verification loading overlay */}
       {isVerifyingPayment && (
         <Box
